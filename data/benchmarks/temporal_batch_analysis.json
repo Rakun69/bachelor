@@ -1,0 +1,476 @@
+{
+  "1_day": {
+    "1_hour": {
+      "readings_per_batch": 60,
+      "num_batches": 408,
+      "total_readings": 24480,
+      "standard_snark": {
+        "total_time": 6.4849853515625e-05,
+        "proof_generation_time": 65.27999999999932,
+        "total_proof_size": 319464,
+        "peak_memory_mb": 31.2,
+        "proofs_generated": 408,
+        "throughput": 375.0000000000039,
+        "avg_proof_time": 0.15999999999999834
+      },
+      "recursive_snark": {
+        "total_time": 3.1948089599609375e-05,
+        "proof_generation_time": 65.58056335871953,
+        "individual_proof_time": 65.27999999999932,
+        "recursive_composition_time": 0.3005633587202081,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 50.6,
+        "proofs_generated": 1,
+        "individual_proofs": 408,
+        "throughput": 373.2813313313077,
+        "compression_ratio": 155.98828125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9954168835501433,
+        "size_efficiency": 155.98828125,
+        "memory_efficiency": 0.616600790513834,
+        "throughput_efficiency": 0.9954168835501435,
+        "overall_efficiency": 52.6597050057001
+      }
+    },
+    "4_hour": {
+      "readings_per_batch": 240,
+      "num_batches": 102,
+      "total_readings": 24480,
+      "standard_snark": {
+        "total_time": 1.7404556274414062e-05,
+        "proof_generation_time": 34.680000000000014,
+        "total_proof_size": 79866,
+        "peak_memory_mb": 34.8,
+        "proofs_generated": 102,
+        "throughput": 705.8823529411762,
+        "avg_proof_time": 0.34000000000000014
+      },
+      "recursive_snark": {
+        "total_time": 1.0013580322265625e-05,
+        "proof_generation_time": 34.911248640664226,
+        "individual_proof_time": 34.680000000000014,
+        "recursive_composition_time": 0.23124864066421355,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 52.4,
+        "proofs_generated": 1,
+        "individual_proofs": 102,
+        "throughput": 701.206658403102,
+        "compression_ratio": 38.9970703125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.993376099404395,
+        "size_efficiency": 38.9970703125,
+        "memory_efficiency": 0.6641221374045801,
+        "throughput_efficiency": 0.9933760994043948,
+        "overall_efficiency": 13.661274170436263
+      }
+    },
+    "12_hour": {
+      "readings_per_batch": 720,
+      "num_batches": 34,
+      "total_readings": 24480,
+      "standard_snark": {
+        "total_time": 7.152557373046875e-06,
+        "proof_generation_time": 27.880000000000006,
+        "total_proof_size": 26622,
+        "peak_memory_mb": 44.4,
+        "proofs_generated": 34,
+        "throughput": 878.0487804878047,
+        "avg_proof_time": 0.8200000000000002
+      },
+      "recursive_snark": {
+        "total_time": 7.152557373046875e-06,
+        "proof_generation_time": 28.056318026230816,
+        "individual_proof_time": 27.880000000000006,
+        "recursive_composition_time": 0.17631802623080808,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 57.2,
+        "proofs_generated": 1,
+        "individual_proofs": 34,
+        "throughput": 872.5307425269705,
+        "compression_ratio": 12.9990234375
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9937155678779388,
+        "size_efficiency": 12.9990234375,
+        "memory_efficiency": 0.7762237762237761,
+        "throughput_efficiency": 0.9937155678779388,
+        "overall_efficiency": 4.995484857751959
+      }
+    },
+    "full_day": {
+      "readings_per_batch": 1440,
+      "num_batches": 17,
+      "total_readings": 24480,
+      "standard_snark": {
+        "total_time": 4.5299530029296875e-06,
+        "proof_generation_time": 26.179999999999993,
+        "total_proof_size": 13311,
+        "peak_memory_mb": 58.8,
+        "proofs_generated": 17,
+        "throughput": 935.0649350649353,
+        "avg_proof_time": 1.5399999999999996
+      },
+      "recursive_snark": {
+        "total_time": 6.198883056640625e-06,
+        "proof_generation_time": 26.321660667202803,
+        "individual_proof_time": 26.179999999999993,
+        "recursive_composition_time": 0.1416606672028108,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 64.4,
+        "proofs_generated": 1,
+        "individual_proofs": 17,
+        "throughput": 930.032504769065,
+        "compression_ratio": 6.49951171875
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9946180953780275,
+        "size_efficiency": 6.49951171875,
+        "memory_efficiency": 0.9130434782608694,
+        "throughput_efficiency": 0.9946180953780276,
+        "overall_efficiency": 2.829582636502018
+      }
+    }
+  },
+  "1_week": {
+    "6_hour": {
+      "readings_per_batch": 360,
+      "num_batches": 95,
+      "total_readings": 34272,
+      "standard_snark": {
+        "total_time": 1.5974044799804688e-05,
+        "proof_generation_time": 43.70000000000006,
+        "total_proof_size": 74385,
+        "peak_memory_mb": 37.2,
+        "proofs_generated": 95,
+        "throughput": 784.2562929061775,
+        "avg_proof_time": 0.46000000000000063
+      },
+      "recursive_snark": {
+        "total_time": 9.298324584960938e-06,
+        "proof_generation_time": 43.927693844580084,
+        "individual_proof_time": 43.70000000000006,
+        "recursive_composition_time": 0.22769384458002706,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 53.6,
+        "proofs_generated": 1,
+        "individual_proofs": 95,
+        "throughput": 780.191196042689,
+        "compression_ratio": 36.32080078125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9948166219381872,
+        "size_efficiency": 36.32080078125,
+        "memory_efficiency": 0.6940298507462687,
+        "throughput_efficiency": 0.9948166219381872,
+        "overall_efficiency": 12.770144675042124
+      }
+    },
+    "12_hour": {
+      "readings_per_batch": 720,
+      "num_batches": 47,
+      "total_readings": 34272,
+      "standard_snark": {
+        "total_time": 8.821487426757812e-06,
+        "proof_generation_time": 38.540000000000006,
+        "total_proof_size": 36801,
+        "peak_memory_mb": 44.4,
+        "proofs_generated": 47,
+        "throughput": 889.2579138557342,
+        "avg_proof_time": 0.8200000000000002
+      },
+      "recursive_snark": {
+        "total_time": 7.3909759521484375e-06,
+        "proof_generation_time": 38.73250738008551,
+        "individual_proof_time": 38.540000000000006,
+        "recursive_composition_time": 0.19250738008550294,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 57.2,
+        "proofs_generated": 1,
+        "individual_proofs": 47,
+        "throughput": 884.8381454803801,
+        "compression_ratio": 17.96923828125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9950298239616555,
+        "size_efficiency": 17.96923828125,
+        "memory_efficiency": 0.7762237762237761,
+        "throughput_efficiency": 0.9950298239616555,
+        "overall_efficiency": 6.653099309724436
+      }
+    },
+    "1_day": {
+      "readings_per_batch": 1440,
+      "num_batches": 23,
+      "total_readings": 34272,
+      "standard_snark": {
+        "total_time": 4.291534423828125e-06,
+        "proof_generation_time": 35.41999999999999,
+        "total_proof_size": 18009,
+        "peak_memory_mb": 58.8,
+        "proofs_generated": 23,
+        "throughput": 967.5889328063245,
+        "avg_proof_time": 1.5399999999999994
+      },
+      "recursive_snark": {
+        "total_time": 3.0994415283203125e-06,
+        "proof_generation_time": 35.57677471079644,
+        "individual_proof_time": 35.41999999999999,
+        "recursive_composition_time": 0.1567747107964575,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 64.4,
+        "proofs_generated": 1,
+        "individual_proofs": 23,
+        "throughput": 963.3250984271915,
+        "compression_ratio": 8.79345703125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9955933411032654,
+        "size_efficiency": 8.79345703125,
+        "memory_efficiency": 0.9130434782608694,
+        "throughput_efficiency": 0.9955933411032654,
+        "overall_efficiency": 3.594881237818844
+      }
+    },
+    "3_day": {
+      "readings_per_batch": 4320,
+      "num_batches": 7,
+      "total_readings": 34272,
+      "standard_snark": {
+        "total_time": 2.6226043701171875e-06,
+        "proof_generation_time": 30.940000000000005,
+        "total_proof_size": 5481,
+        "peak_memory_mb": 116.4,
+        "proofs_generated": 7,
+        "throughput": 1107.6923076923076,
+        "avg_proof_time": 4.420000000000001
+      },
+      "recursive_snark": {
+        "total_time": 5.4836273193359375e-06,
+        "proof_generation_time": 31.03729550745277,
+        "individual_proof_time": 30.940000000000005,
+        "recursive_composition_time": 0.09729550745276566,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 93.2,
+        "proofs_generated": 1,
+        "individual_proofs": 7,
+        "throughput": 1104.21992121609,
+        "compression_ratio": 2.67626953125
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9968652066534146,
+        "size_efficiency": 2.67626953125,
+        "memory_efficiency": 1.2489270386266094,
+        "throughput_efficiency": 0.9968652066534146,
+        "overall_efficiency": 1.5566666481856097
+      }
+    },
+    "full_week": {
+      "readings_per_batch": 10080,
+      "num_batches": 3,
+      "total_readings": 34272,
+      "standard_snark": {
+        "total_time": 2.384185791015625e-06,
+        "proof_generation_time": 30.54,
+        "total_proof_size": 2349,
+        "peak_memory_mb": 231.6,
+        "proofs_generated": 3,
+        "throughput": 1122.2003929273085,
+        "avg_proof_time": 10.18
+      },
+      "recursive_snark": {
+        "total_time": 5.7220458984375e-06,
+        "proof_generation_time": 30.594930614433405,
+        "individual_proof_time": 30.54,
+        "recursive_composition_time": 0.054930614433405495,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 150.8,
+        "proofs_generated": 1,
+        "individual_proofs": 3,
+        "throughput": 1120.185576882201,
+        "compression_ratio": 1.14697265625
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9982045844415972,
+        "size_efficiency": 1.14697265625,
+        "memory_efficiency": 1.5358090185676392,
+        "throughput_efficiency": 0.9982045844415972,
+        "overall_efficiency": 1.0477939417110649
+      }
+    }
+  },
+  "1_month": {
+    "1_day": {
+      "readings_per_batch": 1440,
+      "num_batches": 34,
+      "total_readings": 48960,
+      "standard_snark": {
+        "total_time": 7.152557373046875e-06,
+        "proof_generation_time": 52.35999999999998,
+        "total_proof_size": 26622,
+        "peak_memory_mb": 58.8,
+        "proofs_generated": 34,
+        "throughput": 935.0649350649354,
+        "avg_proof_time": 1.5399999999999994
+      },
+      "recursive_snark": {
+        "total_time": 7.152557373046875e-06,
+        "proof_generation_time": 52.53631802623079,
+        "individual_proof_time": 52.35999999999998,
+        "recursive_composition_time": 0.17631802623080808,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 64.4,
+        "proofs_generated": 1,
+        "individual_proofs": 34,
+        "throughput": 931.926747808151,
+        "compression_ratio": 12.9990234375
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9966438830726055,
+        "size_efficiency": 12.9990234375,
+        "memory_efficiency": 0.9130434782608694,
+        "throughput_efficiency": 0.9966438830726057,
+        "overall_efficiency": 4.997437067881737
+      }
+    },
+    "3_day": {
+      "readings_per_batch": 4320,
+      "num_batches": 11,
+      "total_readings": 48960,
+      "standard_snark": {
+        "total_time": 5.0067901611328125e-06,
+        "proof_generation_time": 48.62000000000001,
+        "total_proof_size": 8613,
+        "peak_memory_mb": 116.4,
+        "proofs_generated": 11,
+        "throughput": 1006.9930069930067,
+        "avg_proof_time": 4.420000000000001
+      },
+      "recursive_snark": {
+        "total_time": 6.198883056640625e-06,
+        "proof_generation_time": 48.73989476363993,
+        "individual_proof_time": 48.62000000000001,
+        "recursive_composition_time": 0.11989476363991854,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 93.2,
+        "proofs_generated": 1,
+        "individual_proofs": 11,
+        "throughput": 1004.5159152974674,
+        "compression_ratio": 4.20556640625
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.997540110330124,
+        "size_efficiency": 4.20556640625,
+        "memory_efficiency": 1.2489270386266094,
+        "throughput_efficiency": 0.9975401103301241,
+        "overall_efficiency": 2.066882208970083
+      }
+    },
+    "1_week": {
+      "readings_per_batch": 10080,
+      "num_batches": 4,
+      "total_readings": 48960,
+      "standard_snark": {
+        "total_time": 2.384185791015625e-06,
+        "proof_generation_time": 40.72,
+        "total_proof_size": 3132,
+        "peak_memory_mb": 231.6,
+        "proofs_generated": 4,
+        "throughput": 1202.3575638506877,
+        "avg_proof_time": 10.18
+      },
+      "recursive_snark": {
+        "total_time": 5.9604644775390625e-06,
+        "proof_generation_time": 40.78931471805599,
+        "individual_proof_time": 40.72,
+        "recursive_composition_time": 0.06931471805599453,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 150.8,
+        "proofs_generated": 1,
+        "individual_proofs": 4,
+        "throughput": 1200.3143553261789,
+        "compression_ratio": 1.529296875
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9983006648055965,
+        "size_efficiency": 1.529296875,
+        "memory_efficiency": 1.5358090185676392,
+        "throughput_efficiency": 0.9983006648055964,
+        "overall_efficiency": 1.1752994015370644
+      }
+    },
+    "2_week": {
+      "readings_per_batch": 20160,
+      "num_batches": 2,
+      "total_readings": 48960,
+      "standard_snark": {
+        "total_time": 2.1457672119140625e-06,
+        "proof_generation_time": 40.52,
+        "total_proof_size": 1566,
+        "peak_memory_mb": 433.2,
+        "proofs_generated": 2,
+        "throughput": 1208.2922013820335,
+        "avg_proof_time": 20.26
+      },
+      "recursive_snark": {
+        "total_time": 5.7220458984375e-06,
+        "proof_generation_time": 40.554657359028,
+        "individual_proof_time": 40.52,
+        "recursive_composition_time": 0.03465735902799726,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 251.6,
+        "proofs_generated": 1,
+        "individual_proofs": 2,
+        "throughput": 1207.2596142672344,
+        "compression_ratio": 0.7646484375
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 0.9991454160561344,
+        "size_efficiency": 0.7646484375,
+        "memory_efficiency": 1.7217806041335453,
+        "throughput_efficiency": 0.9991454160561344,
+        "overall_efficiency": 0.9209797565374229
+      }
+    },
+    "full_month": {
+      "readings_per_batch": 43200,
+      "num_batches": 1,
+      "total_readings": 48960,
+      "standard_snark": {
+        "total_time": 1.6689300537109375e-06,
+        "proof_generation_time": 43.300000000000004,
+        "total_proof_size": 783,
+        "peak_memory_mb": 894.0,
+        "proofs_generated": 1,
+        "throughput": 1130.715935334873,
+        "avg_proof_time": 43.300000000000004
+      },
+      "recursive_snark": {
+        "total_time": 5.9604644775390625e-06,
+        "proof_generation_time": 43.300000000000004,
+        "individual_proof_time": 43.300000000000004,
+        "recursive_composition_time": 0.0,
+        "total_proof_size": 2048,
+        "peak_memory_mb": 482.0,
+        "proofs_generated": 1,
+        "individual_proofs": 1,
+        "throughput": 1130.715935334873,
+        "compression_ratio": 0.38232421875
+      },
+      "efficiency_ratio": {
+        "time_efficiency": 1.0,
+        "size_efficiency": 0.38232421875,
+        "memory_efficiency": 1.8547717842323652,
+        "throughput_efficiency": 1.0,
+        "overall_efficiency": 0.7941080729166666
+      }
+    }
+  },
+  "visualizations": {
+    "temporal_batch_analysis": "/home/ramon/bachelor/data/visualizations/temporal_batch_analysis_mueller_style.png",
+    "temporal_detail_1_day": "/home/ramon/bachelor/data/visualizations/temporal_batch_detail_1_day.png",
+    "temporal_detail_1_week": "/home/ramon/bachelor/data/visualizations/temporal_batch_detail_1_week.png",
+    "temporal_detail_1_month": "/home/ramon/bachelor/data/visualizations/temporal_batch_detail_1_month.png"
+  }
+}

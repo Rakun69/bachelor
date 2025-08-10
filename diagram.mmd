@@ -1,0 +1,43 @@
+flowchart TD
+  %% System entry (file names only)
+  ORCH["orchestrator.py"]
+
+  %% IoT simulation
+  SMART["smart_home.py"]
+  ORCH -->|load config & start simulation| SMART
+  SMART -->|simulate readings| RAW["iot_readings.json"]
+
+  %% Data processing (batching inside benchmark_framework)
+  BF["benchmark_framework.py"]
+  RAW -->|filter / validate / batch| BF
+  BF -->|produce circuit inputs| CI["circuit inputs"]
+
+  %% Circuit library (file names)
+  BASIC["filter_range.zok\nmin_max.zok\nmedian.zok"]
+  RECUR_CIRC["iot_recursive.zok"]
+  ORCH -->|select standard circuits| BASIC
+  ORCH -->|select recursive circuits| RECUR_CIRC
+
+  %% Managers handle compile + prove
+  SM["snark_manager.py"]
+  RM["zokrates_nova_manager.py"]
+  CI -->|compile + prove| SM
+  CI -->|compile + fold| RM
+  BASIC -->|provide circuit| SM
+  RECUR_CIRC -->|provide circuit| RM
+  SM -->|output| P_STD["proofs"]
+  RM -->|output| P_REC["folded_proof"]
+
+  %% Benchmarking & analysis
+  P_STD -->|benchmark| BF
+  P_REC -->|benchmark| BF
+  BF -->|compute analysis| ANALYSIS["analysis (crossover / privacy / scaling)"]
+
+  %% Visualization & reporting
+  VE["visualization_engine.py"]
+  ANALYSIS -->|visualize| VE
+  FR["final_report.json"]
+  VE -->|attach charts| FR
+  ANALYSIS -->|summarize| FR
+
+

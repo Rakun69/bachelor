@@ -1,0 +1,18 @@
+INFO - This is Biber 2.19
+INFO - Logfile is 'bachelorarbeit.blg'
+INFO - Reading 'bachelorarbeit.bcf'
+INFO - Found 24 citekeys in bib section 0
+INFO - Processing section 0
+INFO - Looking for bibtex file 'bib/references.bib' for section 0
+INFO - LaTeX decoding ...
+INFO - Found BibTeX data source 'bib/references.bib'
+INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+INFO - No sort tailoring available for locale 'en-US'
+INFO - Writing 'bachelorarbeit.bbl' with encoding 'UTF-8'
+INFO - Output to bachelorarbeit.bbl
+WARN - Duplicate entry key: 'guo_benchmarking_2024' in file 'bib/references.bib', skipping ...
+WARN - Duplicate entry key: 'babel_bringing_2023' in file 'bib/references.bib', skipping ...
+WARN - I didn't find a database entry for 'HaloIntroRecursive2019' (section 0)
+INFO - WARNINGS: 3

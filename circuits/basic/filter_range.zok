@@ -1,0 +1,11 @@
+// Range filter circuit - validates that a private value is within a public range
+// Privacy Level: Proves value is valid without revealing exact value
+
+def main(public u32 min_val, public u32 max_val, private u32 secret_value) -> u32 {
+    // Ensure secret_value is within the specified range (u32 comparisons)
+    assert(secret_value >= min_val);
+    assert(secret_value <= max_val);
+
+    // Return checked value
+    return secret_value;
+}

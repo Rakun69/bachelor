@@ -1,0 +1,317 @@
+================================================================================
+TEMPORAL BATCH ANALYSIS SUMMARY
+================================================================================
+
+📊 PERIOD: 1_DAY
+----------------------------------------
+
+🔹 1 Hour Batching:
+   • Readings per batch: 60
+   • Number of batches: 408
+   • Total readings: 24480
+   • Standard SNARK:
+     - Proof time: 65.280s
+     - Total proof size: 319464 bytes
+     - Peak memory: 31.2 MB
+     - Throughput: 375.0 readings/s
+   • Recursive SNARK:
+     - Proof time: 65.581s
+     - Final proof size: 2048 bytes
+     - Peak memory: 50.6 MB
+     - Throughput: 373.3 readings/s
+     - Compression ratio: 156.0x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 155.99x
+     - Memory efficiency: 0.62x
+     - Overall efficiency: 52.66x
+
+🔹 4 Hour Batching:
+   • Readings per batch: 240
+   • Number of batches: 102
+   • Total readings: 24480
+   • Standard SNARK:
+     - Proof time: 34.680s
+     - Total proof size: 79866 bytes
+     - Peak memory: 34.8 MB
+     - Throughput: 705.9 readings/s
+   • Recursive SNARK:
+     - Proof time: 34.911s
+     - Final proof size: 2048 bytes
+     - Peak memory: 52.4 MB
+     - Throughput: 701.2 readings/s
+     - Compression ratio: 39.0x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 0.99x
+     - Size efficiency: 39.00x
+     - Memory efficiency: 0.66x
+     - Overall efficiency: 13.66x
+
+🔹 12 Hour Batching:
+   • Readings per batch: 720
+   • Number of batches: 34
+   • Total readings: 24480
+   • Standard SNARK:
+     - Proof time: 27.880s
+     - Total proof size: 26622 bytes
+     - Peak memory: 44.4 MB
+     - Throughput: 878.0 readings/s
+   • Recursive SNARK:
+     - Proof time: 28.056s
+     - Final proof size: 2048 bytes
+     - Peak memory: 57.2 MB
+     - Throughput: 872.5 readings/s
+     - Compression ratio: 13.0x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 0.99x
+     - Size efficiency: 13.00x
+     - Memory efficiency: 0.78x
+     - Overall efficiency: 5.00x
+
+🔹 Full Day Batching:
+   • Readings per batch: 1440
+   • Number of batches: 17
+   • Total readings: 24480
+   • Standard SNARK:
+     - Proof time: 26.180s
+     - Total proof size: 13311 bytes
+     - Peak memory: 58.8 MB
+     - Throughput: 935.1 readings/s
+   • Recursive SNARK:
+     - Proof time: 26.322s
+     - Final proof size: 2048 bytes
+     - Peak memory: 64.4 MB
+     - Throughput: 930.0 readings/s
+     - Compression ratio: 6.5x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 0.99x
+     - Size efficiency: 6.50x
+     - Memory efficiency: 0.91x
+     - Overall efficiency: 2.83x
+
+============================================================
+
+📊 PERIOD: 1_WEEK
+----------------------------------------
+
+🔹 6 Hour Batching:
+   • Readings per batch: 360
+   • Number of batches: 95
+   • Total readings: 34272
+   • Standard SNARK:
+     - Proof time: 43.700s
+     - Total proof size: 74385 bytes
+     - Peak memory: 37.2 MB
+     - Throughput: 784.3 readings/s
+   • Recursive SNARK:
+     - Proof time: 43.928s
+     - Final proof size: 2048 bytes
+     - Peak memory: 53.6 MB
+     - Throughput: 780.2 readings/s
+     - Compression ratio: 36.3x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 0.99x
+     - Size efficiency: 36.32x
+     - Memory efficiency: 0.69x
+     - Overall efficiency: 12.77x
+
+🔹 12 Hour Batching:
+   • Readings per batch: 720
+   • Number of batches: 47
+   • Total readings: 34272
+   • Standard SNARK:
+     - Proof time: 38.540s
+     - Total proof size: 36801 bytes
+     - Peak memory: 44.4 MB
+     - Throughput: 889.3 readings/s
+   • Recursive SNARK:
+     - Proof time: 38.733s
+     - Final proof size: 2048 bytes
+     - Peak memory: 57.2 MB
+     - Throughput: 884.8 readings/s
+     - Compression ratio: 18.0x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 17.97x
+     - Memory efficiency: 0.78x
+     - Overall efficiency: 6.65x
+
+🔹 1 Day Batching:
+   • Readings per batch: 1440
+   • Number of batches: 23
+   • Total readings: 34272
+   • Standard SNARK:
+     - Proof time: 35.420s
+     - Total proof size: 18009 bytes
+     - Peak memory: 58.8 MB
+     - Throughput: 967.6 readings/s
+   • Recursive SNARK:
+     - Proof time: 35.577s
+     - Final proof size: 2048 bytes
+     - Peak memory: 64.4 MB
+     - Throughput: 963.3 readings/s
+     - Compression ratio: 8.8x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 8.79x
+     - Memory efficiency: 0.91x
+     - Overall efficiency: 3.59x
+
+🔹 3 Day Batching:
+   • Readings per batch: 4320
+   • Number of batches: 7
+   • Total readings: 34272
+   • Standard SNARK:
+     - Proof time: 30.940s
+     - Total proof size: 5481 bytes
+     - Peak memory: 116.4 MB
+     - Throughput: 1107.7 readings/s
+   • Recursive SNARK:
+     - Proof time: 31.037s
+     - Final proof size: 2048 bytes
+     - Peak memory: 93.2 MB
+     - Throughput: 1104.2 readings/s
+     - Compression ratio: 2.7x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 2.68x
+     - Memory efficiency: 1.25x
+     - Overall efficiency: 1.56x
+
+🔹 Full Week Batching:
+   • Readings per batch: 10080
+   • Number of batches: 3
+   • Total readings: 34272
+   • Standard SNARK:
+     - Proof time: 30.540s
+     - Total proof size: 2349 bytes
+     - Peak memory: 231.6 MB
+     - Throughput: 1122.2 readings/s
+   • Recursive SNARK:
+     - Proof time: 30.595s
+     - Final proof size: 2048 bytes
+     - Peak memory: 150.8 MB
+     - Throughput: 1120.2 readings/s
+     - Compression ratio: 1.1x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 1.15x
+     - Memory efficiency: 1.54x
+     - Overall efficiency: 1.05x
+
+============================================================
+
+📊 PERIOD: 1_MONTH
+----------------------------------------
+
+🔹 1 Day Batching:
+   • Readings per batch: 1440
+   • Number of batches: 34
+   • Total readings: 48960
+   • Standard SNARK:
+     - Proof time: 52.360s
+     - Total proof size: 26622 bytes
+     - Peak memory: 58.8 MB
+     - Throughput: 935.1 readings/s
+   • Recursive SNARK:
+     - Proof time: 52.536s
+     - Final proof size: 2048 bytes
+     - Peak memory: 64.4 MB
+     - Throughput: 931.9 readings/s
+     - Compression ratio: 13.0x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 13.00x
+     - Memory efficiency: 0.91x
+     - Overall efficiency: 5.00x
+
+🔹 3 Day Batching:
+   • Readings per batch: 4320
+   • Number of batches: 11
+   • Total readings: 48960
+   • Standard SNARK:
+     - Proof time: 48.620s
+     - Total proof size: 8613 bytes
+     - Peak memory: 116.4 MB
+     - Throughput: 1007.0 readings/s
+   • Recursive SNARK:
+     - Proof time: 48.740s
+     - Final proof size: 2048 bytes
+     - Peak memory: 93.2 MB
+     - Throughput: 1004.5 readings/s
+     - Compression ratio: 4.2x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 4.21x
+     - Memory efficiency: 1.25x
+     - Overall efficiency: 2.07x
+
+🔹 1 Week Batching:
+   • Readings per batch: 10080
+   • Number of batches: 4
+   • Total readings: 48960
+   • Standard SNARK:
+     - Proof time: 40.720s
+     - Total proof size: 3132 bytes
+     - Peak memory: 231.6 MB
+     - Throughput: 1202.4 readings/s
+   • Recursive SNARK:
+     - Proof time: 40.789s
+     - Final proof size: 2048 bytes
+     - Peak memory: 150.8 MB
+     - Throughput: 1200.3 readings/s
+     - Compression ratio: 1.5x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 1.53x
+     - Memory efficiency: 1.54x
+     - Overall efficiency: 1.18x
+
+🔹 2 Week Batching:
+   • Readings per batch: 20160
+   • Number of batches: 2
+   • Total readings: 48960
+   • Standard SNARK:
+     - Proof time: 40.520s
+     - Total proof size: 1566 bytes
+     - Peak memory: 433.2 MB
+     - Throughput: 1208.3 readings/s
+   • Recursive SNARK:
+     - Proof time: 40.555s
+     - Final proof size: 2048 bytes
+     - Peak memory: 251.6 MB
+     - Throughput: 1207.3 readings/s
+     - Compression ratio: 0.8x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 0.76x
+     - Memory efficiency: 1.72x
+     - Overall efficiency: 0.92x
+
+🔹 Full Month Batching:
+   • Readings per batch: 43200
+   • Number of batches: 1
+   • Total readings: 48960
+   • Standard SNARK:
+     - Proof time: 43.300s
+     - Total proof size: 783 bytes
+     - Peak memory: 894.0 MB
+     - Throughput: 1130.7 readings/s
+   • Recursive SNARK:
+     - Proof time: 43.300s
+     - Final proof size: 2048 bytes
+     - Peak memory: 482.0 MB
+     - Throughput: 1130.7 readings/s
+     - Compression ratio: 0.4x
+   • Efficiency (Recursive vs Standard):
+     - Time efficiency: 1.00x
+     - Size efficiency: 0.38x
+     - Memory efficiency: 1.85x
+     - Overall efficiency: 0.79x
+
+============================================================
+
+📊 PERIOD: VISUALIZATIONS
+----------------------------------------
+
+🔹 Temporal Batch Analysis Batching:

@@ -1,0 +1,974 @@
+{
+  "analysis_summary": {
+    "devices_tested": [
+      "raspberry_pi_zero",
+      "esp32",
+      "arduino_nano_33",
+      "raspberry_pi_4"
+    ],
+    "data_sizes": [
+      10,
+      50
+    ],
+    "batch_sizes": [
+      5,
+      10
+    ],
+    "operations": [
+      "standard_snark",
+      "recursive_snark"
+    ]
+  },
+  "detailed_results": {
+    "raspberry_pi_zero": {
+      "data_10_batch_5": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 75.0,
+          "memory_usage_mb": 5.0,
+          "processing_time_ms": 3000.0,
+          "power_consumption_mw": 350.0,
+          "battery_drain_percent": 0.011666666666666667,
+          "operations_per_second": 0.3333333333333333,
+          "energy_per_operation_mj": 1.05,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.0
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 6.907755278982136,
+          "memory_usage_mb": 2.5,
+          "processing_time_ms": 276.3102111592855,
+          "power_consumption_mw": 280.0,
+          "battery_drain_percent": 0.0008596317680511104,
+          "operations_per_second": 3.6191206825270985,
+          "energy_per_operation_mj": 0.07736685912459992,
+          "memory_efficiency_mb_per_op": 0.25,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.25,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_10_batch_10": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 5.0,
+          "processing_time_ms": 4000.0,
+          "power_consumption_mw": 420.0,
+          "battery_drain_percent": 0.018666666666666665,
+          "operations_per_second": 0.25,
+          "energy_per_operation_mj": 1.68,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 6.447238260383329,
+          "memory_usage_mb": 3.0,
+          "processing_time_ms": 257.8895304153331,
+          "power_consumption_mw": 280.0,
+          "battery_drain_percent": 0.0008023229835143697,
+          "operations_per_second": 3.8776293027076054,
+          "energy_per_operation_mj": 0.07220906851629327,
+          "memory_efficiency_mb_per_op": 0.3,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.3,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_50_batch_5": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 25.0,
+          "processing_time_ms": 15000.0,
+          "power_consumption_mw": 420.0,
+          "battery_drain_percent": 0.06999999999999999,
+          "operations_per_second": 0.06666666666666667,
+          "energy_per_operation_mj": 6.3,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 58.68034508142219,
+          "memory_usage_mb": 10.5,
+          "processing_time_ms": 2347.213803256888,
+          "power_consumption_mw": 280.0,
+          "battery_drain_percent": 0.007302442943465873,
+          "operations_per_second": 0.42603703105888574,
+          "energy_per_operation_mj": 0.6572198649119285,
+          "memory_efficiency_mb_per_op": 0.21,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.21,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_50_batch_10": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 25.0,
+          "processing_time_ms": 20000.0,
+          "power_consumption_mw": 420.0,
+          "battery_drain_percent": 0.09333333333333334,
+          "operations_per_second": 0.05,
+          "energy_per_operation_mj": 8.4,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi Zero",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 54.76832207599405,
+          "memory_usage_mb": 11.0,
+          "processing_time_ms": 2190.732883039762,
+          "power_consumption_mw": 280.0,
+          "battery_drain_percent": 0.0068156134139014815,
+          "operations_per_second": 0.45646824756309184,
+          "energy_per_operation_mj": 0.6134052072511333,
+          "memory_efficiency_mb_per_op": 0.22,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.22,
+          "power_scaling_factor": 0.8
+        }
+      }
+    },
+    "esp32": {
+      "data_10_batch_5": {
+        "standard_snark": {
+          "device_type": "ESP32",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 4000000.0,
+          "power_consumption_mw": 192.0,
+          "battery_drain_percent": 21.333333333333336,
+          "operations_per_second": 0.00025,
+          "energy_per_operation_mj": 768.0,
+          "memory_efficiency_mb_per_op": 0.4,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.4,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "ESP32",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 2.5,
+          "processing_time_ms": 147365.44595161895,
+          "power_consumption_mw": 153.6,
+          "battery_drain_percent": 0.6287592360602409,
+          "operations_per_second": 0.006785851279738309,
+          "energy_per_operation_mj": 22.635332498168673,
+          "memory_efficiency_mb_per_op": 0.25,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.25,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_10_batch_10": {
+        "standard_snark": {
+          "device_type": "ESP32",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 5333333.333333334,
+          "power_consumption_mw": 192.0,
+          "battery_drain_percent": 28.444444444444443,
+          "operations_per_second": 0.00018749999999999998,
+          "energy_per_operation_mj": 1024.0000000000002,
+          "memory_efficiency_mb_per_op": 0.4,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.4,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "ESP32",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 3.0,
+          "processing_time_ms": 137541.08288817768,
+          "power_consumption_mw": 153.6,
+          "battery_drain_percent": 0.5868419536562247,
+          "operations_per_second": 0.007270554942576759,
+          "energy_per_operation_mj": 21.12631033162409,
+          "memory_efficiency_mb_per_op": 0.3,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.3,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_50_batch_5": {
+        "standard_snark": {
+          "device_type": "ESP32",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 100000000.00000001,
+          "power_consumption_mw": 192.0,
+          "battery_drain_percent": 533.3333333333334,
+          "operations_per_second": 9.999999999999999e-06,
+          "energy_per_operation_mj": 19200.000000000004,
+          "memory_efficiency_mb_per_op": 0.08,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.08,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "ESP32",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 6572198.649119286,
+          "power_consumption_mw": 153.6,
+          "battery_drain_percent": 28.04138090290895,
+          "operations_per_second": 0.00015215608252103062,
+          "energy_per_operation_mj": 1009.4897125047222,
+          "memory_efficiency_mb_per_op": 0.08,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.08,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_50_batch_10": {
+        "standard_snark": {
+          "device_type": "ESP32",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 133333333.33333334,
+          "power_consumption_mw": 192.0,
+          "battery_drain_percent": 711.1111111111112,
+          "operations_per_second": 7.499999999999999e-06,
+          "energy_per_operation_mj": 25600.0,
+          "memory_efficiency_mb_per_op": 0.08,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.08,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "ESP32",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 4,
+          "processing_time_ms": 6426149.790249967,
+          "power_consumption_mw": 153.6,
+          "battery_drain_percent": 27.418239105066526,
+          "operations_per_second": 0.00015561417530559954,
+          "energy_per_operation_mj": 987.0566077823948,
+          "memory_efficiency_mb_per_op": 0.08,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.08,
+          "power_scaling_factor": 0.96
+        }
+      }
+    },
+    "arduino_nano_33": {
+      "data_10_batch_5": {
+        "standard_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 5120000000.0,
+          "power_consumption_mw": 60.0,
+          "battery_drain_percent": 17066.666666666664,
+          "operations_per_second": 1.953125e-07,
+          "energy_per_operation_mj": 307200.0,
+          "memory_efficiency_mb_per_op": 0.025,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.025,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 235784713.52259034,
+          "power_consumption_mw": 48.0,
+          "battery_drain_percent": 628.7592360602409,
+          "operations_per_second": 4.241157049836442e-06,
+          "energy_per_operation_mj": 11317.666249084337,
+          "memory_efficiency_mb_per_op": 0.025,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.025,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_10_batch_10": {
+        "standard_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 6826666666.666666,
+          "power_consumption_mw": 60.0,
+          "battery_drain_percent": 22755.555555555555,
+          "operations_per_second": 1.4648437500000001e-07,
+          "energy_per_operation_mj": 409599.99999999994,
+          "memory_efficiency_mb_per_op": 0.025,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.025,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 264078879.14530116,
+          "power_consumption_mw": 48.0,
+          "battery_drain_percent": 704.2103443874698,
+          "operations_per_second": 3.7867473659253952e-06,
+          "energy_per_operation_mj": 12675.786198974456,
+          "memory_efficiency_mb_per_op": 0.025,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.025,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_50_batch_5": {
+        "standard_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 128000000000.0,
+          "power_consumption_mw": 60.0,
+          "battery_drain_percent": 426666.6666666667,
+          "operations_per_second": 7.8125e-09,
+          "energy_per_operation_mj": 7680000.0,
+          "memory_efficiency_mb_per_op": 0.005,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.005,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 8412414270.872684,
+          "power_consumption_mw": 48.0,
+          "battery_drain_percent": 22433.10472232716,
+          "operations_per_second": 1.188719394695552e-07,
+          "energy_per_operation_mj": 403795.88500188885,
+          "memory_efficiency_mb_per_op": 0.005,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.005,
+          "power_scaling_factor": 0.96
+        }
+      },
+      "data_50_batch_10": {
+        "standard_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 170666666666.6667,
+          "power_consumption_mw": 60.0,
+          "battery_drain_percent": 568888.888888889,
+          "operations_per_second": 5.859374999999999e-09,
+          "energy_per_operation_mj": 10240000.000000002,
+          "memory_efficiency_mb_per_op": 0.005,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.005,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Arduino Nano 33 IoT",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 0.25,
+          "processing_time_ms": 8225471731.519958,
+          "power_consumption_mw": 48.0,
+          "battery_drain_percent": 21934.591284053222,
+          "operations_per_second": 1.2157357445749964e-07,
+          "energy_per_operation_mj": 394822.64311295794,
+          "memory_efficiency_mb_per_op": 0.005,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.005,
+          "power_scaling_factor": 0.96
+        }
+      }
+    },
+    "raspberry_pi_4": {
+      "data_10_batch_5": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 33.333333333333336,
+          "memory_usage_mb": 5.0,
+          "processing_time_ms": 1000.0,
+          "power_consumption_mw": 1200.0,
+          "battery_drain_percent": 0.0033333333333333327,
+          "operations_per_second": 1.0,
+          "energy_per_operation_mj": 1.2,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.0
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 5,
+          "cpu_utilization_percent": 3.070113457325395,
+          "memory_usage_mb": 2.5,
+          "processing_time_ms": 92.10340371976184,
+          "power_consumption_mw": 960.0,
+          "battery_drain_percent": 0.00024560907658603156,
+          "operations_per_second": 10.857362047581294,
+          "energy_per_operation_mj": 0.08841926757097138,
+          "memory_efficiency_mb_per_op": 0.25,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.25,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_10_batch_10": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "standard_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 44.444444444444436,
+          "memory_usage_mb": 5.0,
+          "processing_time_ms": 1333.3333333333333,
+          "power_consumption_mw": 1200.0,
+          "battery_drain_percent": 0.004444444444444444,
+          "operations_per_second": 0.75,
+          "energy_per_operation_mj": 1.6,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.0
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "recursive_snark",
+          "data_size": 10,
+          "batch_size": 10,
+          "cpu_utilization_percent": 2.865439226837035,
+          "memory_usage_mb": 3.0,
+          "processing_time_ms": 85.96317680511105,
+          "power_consumption_mw": 960.0,
+          "battery_drain_percent": 0.00022923513814696278,
+          "operations_per_second": 11.632887908122816,
+          "energy_per_operation_mj": 0.08252464973290662,
+          "memory_efficiency_mb_per_op": 0.3,
+          "throughput_degradation_factor": 0.1,
+          "memory_scaling_factor": 0.3,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_50_batch_5": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 25.0,
+          "processing_time_ms": 5000.0,
+          "power_consumption_mw": 1440.0,
+          "battery_drain_percent": 0.02,
+          "operations_per_second": 0.2,
+          "energy_per_operation_mj": 7.2,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 5,
+          "cpu_utilization_percent": 26.080153369520975,
+          "memory_usage_mb": 10.5,
+          "processing_time_ms": 782.4046010856292,
+          "power_consumption_mw": 960.0,
+          "battery_drain_percent": 0.0020864122695616783,
+          "operations_per_second": 1.2781110931766573,
+          "energy_per_operation_mj": 0.7511084170422041,
+          "memory_efficiency_mb_per_op": 0.21,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.21,
+          "power_scaling_factor": 0.8
+        }
+      },
+      "data_50_batch_10": {
+        "standard_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "standard_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 95.0,
+          "memory_usage_mb": 25.0,
+          "processing_time_ms": 6666.666666666667,
+          "power_consumption_mw": 1440.0,
+          "battery_drain_percent": 0.02666666666666667,
+          "operations_per_second": 0.15,
+          "energy_per_operation_mj": 9.6,
+          "memory_efficiency_mb_per_op": 0.5,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.5,
+          "power_scaling_factor": 1.2
+        },
+        "recursive_snark": {
+          "device_type": "Raspberry Pi 4",
+          "operation_type": "recursive_snark",
+          "data_size": 50,
+          "batch_size": 10,
+          "cpu_utilization_percent": 24.341476478219576,
+          "memory_usage_mb": 11.0,
+          "processing_time_ms": 730.2442943465873,
+          "power_consumption_mw": 960.0,
+          "battery_drain_percent": 0.001947318118257566,
+          "operations_per_second": 1.3694047426892757,
+          "energy_per_operation_mj": 0.7010345225727237,
+          "memory_efficiency_mb_per_op": 0.22,
+          "throughput_degradation_factor": 0.5,
+          "memory_scaling_factor": 0.22,
+          "power_scaling_factor": 0.8
+        }
+      }
+    }
+  },
+  "comparative_analysis": {
+    "performance_advantages": {
+      "raspberry_pi_zero": {
+        "processing_time_improvements": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 10.857362047581296,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 15.510517210830422,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 6.390555465883286,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 9.129364951261838,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "memory_efficiency_gains": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 2.0,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.6666666666666667,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 2.380952380952381,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 2.272727272727273,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "power_savings": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.5,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.5,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.5,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "threshold_data_size": 10,
+        "threshold_batch_size": 5
+      },
+      "esp32": {
+        "processing_time_improvements": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 27.143405118953233,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 38.77629302707606,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 15.215608252103063,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 20.74855670741327,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "memory_efficiency_gains": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.6,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.3333333333333333,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.0,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.0,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "power_savings": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.25,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "threshold_data_size": 10,
+        "threshold_batch_size": 5
+      },
+      "arduino_nano_33": {
+        "processing_time_improvements": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 21.714724095162588,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 25.850862018050698,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 15.215608252103065,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 20.74855670741327,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "memory_efficiency_gains": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.0,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.0,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.0,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.0,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "power_savings": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.25,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "threshold_data_size": 10,
+        "threshold_batch_size": 5
+      },
+      "raspberry_pi_4": {
+        "processing_time_improvements": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 10.857362047581294,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 15.51051721083042,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 6.390555465883287,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 9.129364951261838,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "memory_efficiency_gains": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 2.0,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.6666666666666667,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 2.380952380952381,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 2.272727272727273,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "power_savings": [
+          {
+            "test": "data_10_batch_5",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 5
+          },
+          {
+            "test": "data_10_batch_10",
+            "improvement_factor": 1.25,
+            "data_size": 10,
+            "batch_size": 10
+          },
+          {
+            "test": "data_50_batch_5",
+            "improvement_factor": 1.5,
+            "data_size": 50,
+            "batch_size": 5
+          },
+          {
+            "test": "data_50_batch_10",
+            "improvement_factor": 1.5,
+            "data_size": 50,
+            "batch_size": 10
+          }
+        ],
+        "threshold_data_size": 10,
+        "threshold_batch_size": 5
+      }
+    },
+    "efficiency_gains": {},
+    "threshold_points": {},
+    "device_rankings": {}
+  },
+  "recommendations": {
+    "general": [
+      "Recursive SNARKs zeigen deutliche Vorteile bei Batch-Gr\u00f6\u00dfen > 10",
+      "Memory-limitierte Devices (< 512MB RAM) profitieren besonders von Recursive SNARKs",
+      "F\u00fcr Real-Time-Anwendungen (< 100ms) sind Standard SNARKs oft besser geeignet",
+      "Power-Effizienz ist bei Recursive SNARKs durchschnittlich 20% besser"
+    ],
+    "device_specific": {
+      "raspberry_pi_zero": [
+        "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+        "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+        "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+      ],
+      "esp32": [
+        "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+        "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+        "Durchschnittlich 25.5x schneller mit Recursive SNARKs"
+      ],
+      "arduino_nano_33": [
+        "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+        "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+        "Durchschnittlich 20.9x schneller mit Recursive SNARKs"
+      ],
+      "raspberry_pi_4": [
+        "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+        "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+        "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+      ]
+    },
+    "use_case_specific": {}
+  }
+}

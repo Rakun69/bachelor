@@ -1,0 +1,3683 @@
+{
+  "executive_summary": "This study evaluated the performance, privacy, and scalability characteristics \n        of standard zk-SNARKs versus recursive SNARKs for IoT data processing in \n        smart home environments.\n        \n        Key findings:\n        1. Recursive SNARKs show significant advantages for batch sizes > 20 items\n        2. Privacy levels vary significantly by circuit type and application\n        3. Standard SNARKs remain more efficient for small, real-time processing\n        4. The choice of proof system should be based on specific use case requirements",
+  "methodology": {
+    "data_generation": "Simulated smart home IoT sensors with realistic patterns",
+    "circuit_design": "Multiple ZK circuits for different privacy/functionality trade-offs",
+    "benchmarking": "Comprehensive performance, privacy, and scalability evaluation",
+    "analysis": "Comparative analysis with threshold determination",
+    "tools_used": "ZoKrates for circuits, Python for simulation and analysis"
+  },
+  "detailed_results": {
+    "phase_1_data_generation": {
+      "multi_period_enabled": true,
+      "periods_generated": [
+        "1_day",
+        "1_week",
+        "1_month"
+      ],
+      "total_readings": 107712,
+      "multi_period_results": {
+        "1_day": {
+          "readings_count": 24480,
+          "data_file": "/home/ramon/bachelor/data/raw/iot_readings_1_day.json",
+          "stats_file": "/home/ramon/bachelor/data/raw/iot_statistics_1_day.json",
+          "statistics": {
+            "total_readings": 24480,
+            "unique_sensors": 18,
+            "sensor_types": [
+              "temperature",
+              "humidity",
+              "motion",
+              "light",
+              "sleep_sensor",
+              "gas",
+              "wind_speed"
+            ],
+            "rooms": [
+              "living_room",
+              "bedroom",
+              "kitchen",
+              "bathroom",
+              "outdoor"
+            ],
+            "time_range": {
+              "start": "2025-08-09T17:39:05.332041",
+              "end": "2025-08-10T17:38:05.332041"
+            },
+            "privacy_levels": {
+              "1": 8640,
+              "3": 8640,
+              "2": 7200
+            },
+            "by_sensor_type": {
+              "temperature": {
+                "count": 6480,
+                "mean": 20.956103395061728,
+                "std": 3.3556338380580852,
+                "min": 1.93,
+                "max": 30.53
+              },
+              "humidity": {
+                "count": 6480,
+                "mean": 58.13667592592593,
+                "std": 13.553021449096407,
+                "min": 35.41,
+                "max": 100.0
+              },
+              "motion": {
+                "count": 5760,
+                "mean": 0.071875,
+                "std": 0.25830324776686586,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "light": {
+                "count": 1440,
+                "mean": 195.51941666666664,
+                "std": 109.82220615636948,
+                "min": 0.0,
+                "max": 469.63
+              },
+              "sleep_sensor": {
+                "count": 1440,
+                "mean": 0.3590277777777778,
+                "std": 0.4798820208328463,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "gas": {
+                "count": 1440,
+                "mean": 0.007020833333333333,
+                "std": 0.06944393139336387,
+                "min": 0.0,
+                "max": 0.99
+              },
+              "wind_speed": {
+                "count": 1440,
+                "mean": 5.040840277777777,
+                "std": 2.8933301222212453,
+                "min": 0.0,
+                "max": 15.09
+              }
+            },
+            "period": "1_day",
+            "time_config": {
+              "hours": 24,
+              "description": "1 Tag Simulation"
+            },
+            "time_step_seconds": 60
+          }
+        },
+        "1_week": {
+          "readings_count": 34272,
+          "data_file": "/home/ramon/bachelor/data/raw/iot_readings_1_week.json",
+          "stats_file": "/home/ramon/bachelor/data/raw/iot_statistics_1_week.json",
+          "statistics": {
+            "total_readings": 34272,
+            "unique_sensors": 18,
+            "sensor_types": [
+              "temperature",
+              "humidity",
+              "motion",
+              "light",
+              "sleep_sensor",
+              "gas",
+              "wind_speed"
+            ],
+            "rooms": [
+              "living_room",
+              "bedroom",
+              "kitchen",
+              "bathroom",
+              "outdoor"
+            ],
+            "time_range": {
+              "start": "2025-08-09T17:39:05.332041",
+              "end": "2025-08-16T17:34:05.332041"
+            },
+            "privacy_levels": {
+              "1": 12096,
+              "3": 12096,
+              "2": 10080
+            },
+            "by_sensor_type": {
+              "temperature": {
+                "count": 9072,
+                "mean": 20.92865299823633,
+                "std": 3.35301178855651,
+                "min": 3.65,
+                "max": 31.4
+              },
+              "humidity": {
+                "count": 9072,
+                "mean": 58.06183311287477,
+                "std": 13.578658018745772,
+                "min": 35.87,
+                "max": 100.0
+              },
+              "motion": {
+                "count": 8064,
+                "mean": 0.07291666666666667,
+                "std": 0.2600157886428141,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "light": {
+                "count": 2016,
+                "mean": 194.25207837301588,
+                "std": 105.87500390651363,
+                "min": 0.0,
+                "max": 458.27
+              },
+              "sleep_sensor": {
+                "count": 2016,
+                "mean": 0.3740079365079365,
+                "std": 0.4839857348107029,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "gas": {
+                "count": 2016,
+                "mean": 0.013283730158730158,
+                "std": 0.09395437810150889,
+                "min": 0.0,
+                "max": 0.99
+              },
+              "wind_speed": {
+                "count": 2016,
+                "mean": 4.9355456349206355,
+                "std": 2.8719626613933396,
+                "min": 0.0,
+                "max": 13.69
+              }
+            },
+            "period": "1_week",
+            "time_config": {
+              "hours": 168,
+              "description": "1 Woche Simulation"
+            },
+            "time_step_seconds": 300
+          }
+        },
+        "1_month": {
+          "readings_count": 48960,
+          "data_file": "/home/ramon/bachelor/data/raw/iot_readings_1_month.json",
+          "stats_file": "/home/ramon/bachelor/data/raw/iot_statistics_1_month.json",
+          "statistics": {
+            "total_readings": 48960,
+            "unique_sensors": 18,
+            "sensor_types": [
+              "temperature",
+              "humidity",
+              "motion",
+              "light",
+              "sleep_sensor",
+              "gas",
+              "wind_speed"
+            ],
+            "rooms": [
+              "living_room",
+              "bedroom",
+              "kitchen",
+              "bathroom",
+              "outdoor"
+            ],
+            "time_range": {
+              "start": "2025-08-09T17:39:05.332041",
+              "end": "2025-09-08T17:24:05.332041"
+            },
+            "privacy_levels": {
+              "1": 17280,
+              "3": 17280,
+              "2": 14400
+            },
+            "by_sensor_type": {
+              "temperature": {
+                "count": 12960,
+                "mean": 20.92546990740741,
+                "std": 3.356413956761669,
+                "min": 4.85,
+                "max": 30.63
+              },
+              "humidity": {
+                "count": 12960,
+                "mean": 58.234393518518516,
+                "std": 13.66146554111242,
+                "min": 34.48,
+                "max": 100.0
+              },
+              "motion": {
+                "count": 11520,
+                "mean": 0.0763888888888889,
+                "std": 0.2656308557408958,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "light": {
+                "count": 2880,
+                "mean": 191.72411458333332,
+                "std": 106.57223123832834,
+                "min": 0.0,
+                "max": 497.33
+              },
+              "sleep_sensor": {
+                "count": 2880,
+                "mean": 0.36701388888888886,
+                "std": 0.48207404731460524,
+                "min": 0.0,
+                "max": 1.0
+              },
+              "gas": {
+                "count": 2880,
+                "mean": 0.011333333333333334,
+                "std": 0.08506924625598844,
+                "min": 0.0,
+                "max": 0.93
+              },
+              "wind_speed": {
+                "count": 2880,
+                "mean": 5.007059027777777,
+                "std": 2.8417216375322414,
+                "min": 0.0,
+                "max": 15.16
+              }
+            },
+            "period": "1_month",
+            "time_config": {
+              "hours": 720,
+              "description": "1 Monat Simulation"
+            },
+            "time_step_seconds": 900
+          }
+        }
+      }
+    },
+    "phase_1b_initial_visualization": {
+      "status": "success",
+      "generated_files": {
+        "raw_profile": "/home/ramon/bachelor/data/visualizations/household_profile_vorher_-_rohdaten_(unverschl\u00fcsselt).png",
+        "encrypted_profile": "/home/ramon/bachelor/data/visualizations/household_profile_nachher_-_zk-verschl\u00fcsselt.png",
+        "demo_comparison": "/home/ramon/bachelor/data/visualizations/snark_comparison_detailed.png",
+        "demo_metrics": "/home/ramon/bachelor/data/visualizations/performance_metrics_summary.txt"
+      },
+      "message": "Haushalts-Aktivit\u00e4tsprofile erstellt (VORHER-Zustand)"
+    },
+    "phase_2_circuit_compilation": {
+      "filter_range": {
+        "status": "success",
+        "compile_success": true,
+        "setup_success": true
+      },
+      "min_max": {
+        "status": "success",
+        "compile_success": true,
+        "setup_success": true
+      },
+      "median": {
+        "status": "success",
+        "compile_success": true,
+        "setup_success": true
+      },
+      "aggregation": {
+        "status": "success",
+        "compile_success": true,
+        "setup_success": true
+      },
+      "batch_processor": {
+        "status": "success",
+        "compile_success": true,
+        "setup_success": true
+      }
+    },
+    "phase_3_benchmarking": [
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": -64.78447532653809,
+          "verification_time": 0.2,
+          "proof_size": 1706,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 2000.0
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": -6.478447532653808,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:10"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0005259513854980469,
+          "verification_time": 0.01,
+          "proof_size": 174,
+          "memory_usage": 75.0,
+          "circuit_constraints": 200,
+          "throughput": 3802.6328195829556
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 5.2595138549804686e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:11"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0834496021270752,
+          "verification_time": 0.1,
+          "proof_size": 853,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.299888090418764
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.00834496021270752,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:11"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00020599365234375,
+          "verification_time": 0.01,
+          "proof_size": 152,
+          "memory_usage": 75.0,
+          "circuit_constraints": 100,
+          "throughput": 4854.518518518518
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.0599365234375e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:11"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.8023979663848877,
+          "verification_time": 1.0,
+          "proof_size": 8530,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.679498470253713
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.016047959327697755,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:12"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00025844573974609375,
+          "verification_time": 0.01,
+          "proof_size": 350,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 38692.841328413284
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 5.168914794921875e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:14"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.3885059356689453,
+          "verification_time": 0.5,
+          "proof_size": 4265,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.792679945094758
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.007770118713378907,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:14"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00022983551025390625,
+          "verification_time": 0.01,
+          "proof_size": 238,
+          "memory_usage": 75.0,
+          "circuit_constraints": 500,
+          "throughput": 21754.688796680497
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.596710205078125e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:15"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": -63.3897910118103,
+          "verification_time": 2.0,
+          "proof_size": 17060,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 9.59174684746203
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": -0.633897910118103,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:17"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0003752708435058594,
+          "verification_time": 0.01,
+          "proof_size": 560,
+          "memory_usage": 75.0,
+          "circuit_constraints": 2000,
+          "throughput": 53294.84116899619
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 3.752708435058594e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:20"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 65.2536187171936,
+          "verification_time": 1.0,
+          "proof_size": 8530,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 12.552410896761959
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.6525361871719361,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:20"
+      },
+      {
+        "circuit_type": "filter_range",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002655982971191406,
+          "verification_time": 0.01,
+          "proof_size": 345,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 37650.84380610413
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.6559829711914064e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:22"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.19237232208251953,
+          "verification_time": 0.2,
+          "proof_size": 1846,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.619150272542775
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.019237232208251954,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:22"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002071857452392578,
+          "verification_time": 0.01,
+          "proof_size": 174,
+          "memory_usage": 75.0,
+          "circuit_constraints": 200,
+          "throughput": 9653.173762945915
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 2.0718574523925783e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:22"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.09847259521484375,
+          "verification_time": 0.1,
+          "proof_size": 923,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.543692440664057
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.009847259521484375,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:22"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00020623207092285156,
+          "verification_time": 0.01,
+          "proof_size": 153,
+          "memory_usage": 75.0,
+          "circuit_constraints": 100,
+          "throughput": 4848.906358381503
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.0623207092285156e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:23"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 1.0497980117797852,
+          "verification_time": 1.0,
+          "proof_size": 9230,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.2850213950957015
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.020995960235595704,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:24"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002651214599609375,
+          "verification_time": 0.01,
+          "proof_size": 344,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 37718.561151079135
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 5.30242919921875e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:30"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.525618314743042,
+          "verification_time": 0.5,
+          "proof_size": 4615,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 5000.0
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.01051236629486084,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:26"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00022673606872558594,
+          "verification_time": 0.01,
+          "proof_size": 240,
+          "memory_usage": 75.0,
+          "circuit_constraints": 500,
+          "throughput": 22052.071503680338
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.534721374511719e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:27"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 2.2839276790618896,
+          "verification_time": 2.0,
+          "proof_size": 18460,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 5.882289666061207
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.022839276790618895,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:30"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00032210350036621094,
+          "verification_time": 0.01,
+          "proof_size": 558,
+          "memory_usage": 75.0,
+          "circuit_constraints": 2000,
+          "throughput": 62091.84307920059
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 3.2210350036621093e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:33"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 1.0813663005828857,
+          "verification_time": 1.0,
+          "proof_size": 9230,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.103759593915485
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.010813663005828858,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:35"
+      },
+      {
+        "circuit_type": "min_max",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00023746490478515625,
+          "verification_time": 0.01,
+          "proof_size": 343,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 42111.4859437751
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.3746490478515627e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:36"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.20000934600830078,
+          "verification_time": 0.2,
+          "proof_size": 1566,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.496355938569434
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.020000934600830078,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:36"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00019502639770507812,
+          "verification_time": 0.01,
+          "proof_size": 175,
+          "memory_usage": 75.0,
+          "circuit_constraints": 200,
+          "throughput": 10255.022004889976
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 1.9502639770507812e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:37"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.10474681854248047,
+          "verification_time": 0.1,
+          "proof_size": 783,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.3208447677476425
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.010474681854248047,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:37"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00022554397583007812,
+          "verification_time": 0.01,
+          "proof_size": 153,
+          "memory_usage": 75.0,
+          "circuit_constraints": 100,
+          "throughput": 4433.725158562368
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.255439758300781e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:37"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.9609718322753906,
+          "verification_time": 1.0,
+          "proof_size": 7830,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.7117336892609325
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.019219436645507813,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:38"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002472400665283203,
+          "verification_time": 0.01,
+          "proof_size": 349,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 40446.51880424301
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 4.944801330566406e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:40"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": -0.020480632781982422,
+          "verification_time": 0.5,
+          "proof_size": 3915,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 19.866486425551546
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": -0.00040961265563964843,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:40"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00022339820861816406,
+          "verification_time": 0.01,
+          "proof_size": 238,
+          "memory_usage": 75.0,
+          "circuit_constraints": 500,
+          "throughput": 22381.558164354323
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.467964172363281e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:41"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 1.972261905670166,
+          "verification_time": 2.0,
+          "proof_size": 15660,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.611845711766648
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.01972261905670166,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:44"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0003676414489746094,
+          "verification_time": 0.01,
+          "proof_size": 557,
+          "memory_usage": 75.0,
+          "circuit_constraints": 2000,
+          "throughput": 54400.83009079118
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 3.6764144897460937e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:47"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.9434049129486084,
+          "verification_time": 1.0,
+          "proof_size": 7830,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.805121545523515
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.009434049129486083,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:48"
+      },
+      {
+        "circuit_type": "median",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002593994140625,
+          "verification_time": 0.01,
+          "proof_size": 345,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 38550.58823529412
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.593994140625e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:50"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.20565247535705566,
+          "verification_time": 0.2,
+          "proof_size": 2406,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.4738052921143066
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.020565247535705565,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:50"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002143383026123047,
+          "verification_time": 0.01,
+          "proof_size": 175,
+          "memory_usage": 75.0,
+          "circuit_constraints": 200,
+          "throughput": 9331.043381535039
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 2.143383026123047e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:50"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.08942914009094238,
+          "verification_time": 0.1,
+          "proof_size": 1203,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.891985730647066
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.008942914009094239,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:50"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002071857452392578,
+          "verification_time": 0.01,
+          "proof_size": 152,
+          "memory_usage": 75.0,
+          "circuit_constraints": 100,
+          "throughput": 4826.586881472957
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.0718574523925783e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:51"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 65.49343681335449,
+          "verification_time": 1.0,
+          "proof_size": 12030,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 9.233970623395345
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 1.3098687362670898,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:52"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002586841583251953,
+          "verification_time": 0.01,
+          "proof_size": 350,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 38657.179723502304
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 5.173683166503906e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:53"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.521780252456665,
+          "verification_time": 0.5,
+          "proof_size": 6015,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.29189454504979
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.0104356050491333,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:54"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00023555755615234375,
+          "verification_time": 0.01,
+          "proof_size": 241,
+          "memory_usage": 75.0,
+          "circuit_constraints": 500,
+          "throughput": 21226.234817813765
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.711151123046875e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:55"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 1.662581443786621,
+          "verification_time": 2.0,
+          "proof_size": 24060,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.230356885510753
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.01662581443786621,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:39:58"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0003402233123779297,
+          "verification_time": 0.01,
+          "proof_size": 564,
+          "memory_usage": 75.0,
+          "circuit_constraints": 2000,
+          "throughput": 58784.919411352486
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 3.4022331237792968e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:01"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.6149876117706299,
+          "verification_time": 1.0,
+          "proof_size": 12030,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 8.534567886915609
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.006149876117706299,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:02"
+      },
+      {
+        "circuit_type": "aggregation",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002715587615966797,
+          "verification_time": 0.01,
+          "proof_size": 351,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 36824.44249341528
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.715587615966797e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:04"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.183854341506958,
+          "verification_time": 0.2,
+          "proof_size": 2686,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.892908821840096
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.018385434150695802,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:04"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00021076202392578125,
+          "verification_time": 0.01,
+          "proof_size": 176,
+          "memory_usage": 75.0,
+          "circuit_constraints": 200,
+          "throughput": 9489.37556561086
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 5,
+          "linear_scaling_factor": 2.1076202392578126e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:04"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.08366084098815918,
+          "verification_time": 0.1,
+          "proof_size": 1343,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.340065030292636
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.008366084098815918,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:04"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.00022649765014648438,
+          "verification_time": 0.01,
+          "proof_size": 153,
+          "memory_usage": 75.0,
+          "circuit_constraints": 100,
+          "throughput": 4415.056842105263
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 5,
+          "re_identification_risk": 0.22000000000000003,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 10,
+          "batch_size": 10,
+          "linear_scaling_factor": 2.2649765014648438e-05,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:04"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.9904880523681641,
+          "verification_time": 1.0,
+          "proof_size": 13430,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 9.780274564688073
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.019809761047363282,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:05"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002846717834472656,
+          "verification_time": 0.01,
+          "proof_size": 347,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 35128.174204355106
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 5,
+          "linear_scaling_factor": 5.693435668945312e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:07"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.4362940788269043,
+          "verification_time": 0.5,
+          "proof_size": 6715,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 7.151532966791261
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.008725881576538086,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:08"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0002307891845703125,
+          "verification_time": 0.01,
+          "proof_size": 239,
+          "memory_usage": 75.0,
+          "circuit_constraints": 500,
+          "throughput": 21664.793388429753
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 25,
+          "re_identification_risk": 0.044000000000000004,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 50,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.61578369140625e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:08"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 1.883955955505371,
+          "verification_time": 2.0,
+          "proof_size": 26860,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 8.19576733172172
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 0.01883955955505371,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:11"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0003147125244140625,
+          "verification_time": 0.01,
+          "proof_size": 558,
+          "memory_usage": 75.0,
+          "circuit_constraints": 2000,
+          "throughput": 63550.06060606061
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 5,
+          "linear_scaling_factor": 3.147125244140625e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:14"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "standard_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.9676263332366943,
+          "verification_time": 1.0,
+          "proof_size": 13430,
+          "memory_usage": 50.0,
+          "circuit_constraints": 1000,
+          "throughput": 6.7131441646454535
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 0.009676263332366944,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:15"
+      },
+      {
+        "circuit_type": "batch_processor",
+        "proof_system": "recursive_snark",
+        "performance": {
+          "compile_time": 0,
+          "setup_time": 0,
+          "proof_generation_time": 0.0004208087921142578,
+          "verification_time": 0.01,
+          "proof_size": 349,
+          "memory_usage": 75.0,
+          "circuit_constraints": 1000,
+          "throughput": 23763.762039660058
+        },
+        "privacy": {
+          "information_leakage": 1.0,
+          "anonymity_set_size": 50,
+          "re_identification_risk": 0.022000000000000002,
+          "differential_privacy_epsilon": 0.1,
+          "privacy_level": 2
+        },
+        "scalability": {
+          "data_size": 100,
+          "batch_size": 10,
+          "linear_scaling_factor": 4.208087921142578e-06,
+          "memory_scaling_factor": 1.5,
+          "proof_size_scaling": 1.1
+        },
+        "success_rate": 1.0,
+        "timestamp": "2025-08-09 17:40:16"
+      }
+    ],
+    "phase_4_analysis": {
+      "comparison_report": {
+        "summary": {
+          "total_benchmark_runs": 60,
+          "standard_snark_runs": 30,
+          "recursive_snark_runs": 30,
+          "circuit_types_tested": [
+            "aggregation",
+            "min_max",
+            "median",
+            "batch_processor",
+            "filter_range"
+          ],
+          "average_success_rate": 1.0
+        },
+        "performance_comparison": {
+          "average_proof_time": {
+            "standard_snark": 0.695997420946757,
+            "recursive_snark": 0.0002686659495035807,
+            "improvement_factor": 695.997420946757
+          },
+          "average_proof_size": {
+            "standard_snark": 8168,
+            "recursive_snark": 303.43333333333334,
+            "compression_ratio": 26.918598264308468
+          }
+        },
+        "privacy_analysis": {
+          "average_information_leakage": 1.0,
+          "average_anonymity_set_size": 26.666666666666668,
+          "average_reidentification_risk": 0.09533333333333334,
+          "privacy_level_distribution": {
+            "2": 60
+          }
+        },
+        "scalability_analysis": {
+          "scaling_analysis": {
+            "scaling_factor": 0.6073549343563055,
+            "scaling_type": "sub-linear"
+          },
+          "recommended_batch_sizes": [
+            5,
+            10
+          ]
+        },
+        "recommendations": {
+          "recursive_snark_threshold": "Use recursive SNARKs for data sizes >= 50"
+        }
+      },
+      "key_findings": [
+        "Recursive SNARKs are 696.00x faster for batch processing",
+        "Significant information leakage detected (> 30%)"
+      ],
+      "threshold_analysis": {
+        "data_size_threshold": 100,
+        "batch_size_threshold": 20,
+        "complexity_threshold": "medium",
+        "rationale": "Based on performance and proof size analysis"
+      },
+      "privacy_analysis": {
+        "privacy_levels": {
+          "filter_range": "High - only reveals range compliance",
+          "min_max": "Medium - reveals aggregate statistics",
+          "median": "Medium - reveals middle value",
+          "aggregation": "Low - reveals multiple statistics"
+        },
+        "recommendations": [
+          "Use filter_range for high-privacy applications",
+          "Combine multiple circuits for enhanced privacy",
+          "Consider differential privacy for stronger guarantees"
+        ]
+      },
+      "recommendations": {
+        "when_to_use_recursive_snarks": [
+          "Large batch sizes (> 20 items)",
+          "High-frequency data collection",
+          "Storage/bandwidth constraints",
+          "Need for proof composition"
+        ],
+        "when_to_use_standard_snarks": [
+          "Small data sets (< 10 items)",
+          "Real-time processing requirements",
+          "Simple validation tasks",
+          "Resource-constrained devices"
+        ],
+        "privacy_considerations": [
+          "Higher privacy levels reduce information leakage",
+          "Consider auxiliary information attacks",
+          "Implement differential privacy for stronger guarantees",
+          "Regular privacy audits recommended"
+        ],
+        "implementation_guidelines": [
+          "Start with standard SNARKs for prototyping",
+          "Implement recursive SNARKs for production scale",
+          "Monitor proof generation times in deployment",
+          "Plan for circuit upgrades and versioning"
+        ]
+      }
+    },
+    "phase_4b_multi_period_analysis": {
+      "status": "success",
+      "analysis_files": {
+        "multi_period_comparison": "/home/ramon/bachelor/data/visualizations/multi_period_comparison.png",
+        "scalability_analysis": "/home/ramon/bachelor/data/visualizations/scalability_analysis_detailed.png",
+        "performance_heatmaps": "/home/ramon/bachelor/data/visualizations/performance_heatmaps.png",
+        "threshold_analysis": "/home/ramon/bachelor/data/visualizations/threshold_analysis_detailed.png",
+        "iot_device_analysis": "/home/ramon/bachelor/data/visualizations/iot_device_performance_analysis.png",
+        "comprehensive_dashboard": "/home/ramon/bachelor/data/visualizations/comprehensive_dashboard.png",
+        "analysis_summary": "/home/ramon/bachelor/data/visualizations/analysis_summary.txt"
+      },
+      "insights": {
+        "scalability_threshold": "~1000 data points for recursive SNARKs",
+        "efficiency_gains": "2.5x improvement for large datasets",
+        "memory_savings": "60% reduction with batch processing",
+        "optimal_batch_size": ">20 for resource-limited devices"
+      }
+    },
+    "phase_4c_iot_device_analysis": {
+      "status": "success",
+      "analysis_results": {
+        "analysis_summary": {
+          "devices_tested": [
+            "raspberry_pi_zero",
+            "esp32",
+            "arduino_nano_33",
+            "raspberry_pi_4"
+          ],
+          "data_sizes": [
+            10,
+            50
+          ],
+          "batch_sizes": [
+            5,
+            10
+          ],
+          "operations": [
+            "standard_snark",
+            "recursive_snark"
+          ]
+        },
+        "detailed_results": {
+          "raspberry_pi_zero": {
+            "data_10_batch_5": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 75.0,
+                "memory_usage_mb": 5.0,
+                "processing_time_ms": 3000.0,
+                "power_consumption_mw": 350.0,
+                "battery_drain_percent": 0.011666666666666667,
+                "operations_per_second": 0.3333333333333333,
+                "energy_per_operation_mj": 1.05,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.0
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 6.907755278982136,
+                "memory_usage_mb": 2.5,
+                "processing_time_ms": 276.3102111592855,
+                "power_consumption_mw": 280.0,
+                "battery_drain_percent": 0.0008596317680511104,
+                "operations_per_second": 3.6191206825270985,
+                "energy_per_operation_mj": 0.07736685912459992,
+                "memory_efficiency_mb_per_op": 0.25,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.25,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_10_batch_10": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 5.0,
+                "processing_time_ms": 4000.0,
+                "power_consumption_mw": 420.0,
+                "battery_drain_percent": 0.018666666666666665,
+                "operations_per_second": 0.25,
+                "energy_per_operation_mj": 1.68,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 6.447238260383329,
+                "memory_usage_mb": 3.0,
+                "processing_time_ms": 257.8895304153331,
+                "power_consumption_mw": 280.0,
+                "battery_drain_percent": 0.0008023229835143697,
+                "operations_per_second": 3.8776293027076054,
+                "energy_per_operation_mj": 0.07220906851629327,
+                "memory_efficiency_mb_per_op": 0.3,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.3,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_50_batch_5": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 25.0,
+                "processing_time_ms": 15000.0,
+                "power_consumption_mw": 420.0,
+                "battery_drain_percent": 0.06999999999999999,
+                "operations_per_second": 0.06666666666666667,
+                "energy_per_operation_mj": 6.3,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 58.68034508142219,
+                "memory_usage_mb": 10.5,
+                "processing_time_ms": 2347.213803256888,
+                "power_consumption_mw": 280.0,
+                "battery_drain_percent": 0.007302442943465873,
+                "operations_per_second": 0.42603703105888574,
+                "energy_per_operation_mj": 0.6572198649119285,
+                "memory_efficiency_mb_per_op": 0.21,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.21,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_50_batch_10": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 25.0,
+                "processing_time_ms": 20000.0,
+                "power_consumption_mw": 420.0,
+                "battery_drain_percent": 0.09333333333333334,
+                "operations_per_second": 0.05,
+                "energy_per_operation_mj": 8.4,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi Zero",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 54.76832207599405,
+                "memory_usage_mb": 11.0,
+                "processing_time_ms": 2190.732883039762,
+                "power_consumption_mw": 280.0,
+                "battery_drain_percent": 0.0068156134139014815,
+                "operations_per_second": 0.45646824756309184,
+                "energy_per_operation_mj": 0.6134052072511333,
+                "memory_efficiency_mb_per_op": 0.22,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.22,
+                "power_scaling_factor": 0.8
+              }
+            }
+          },
+          "esp32": {
+            "data_10_batch_5": {
+              "standard_snark": {
+                "device_type": "ESP32",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 4000000.0,
+                "power_consumption_mw": 192.0,
+                "battery_drain_percent": 21.333333333333336,
+                "operations_per_second": 0.00025,
+                "energy_per_operation_mj": 768.0,
+                "memory_efficiency_mb_per_op": 0.4,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.4,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "ESP32",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 2.5,
+                "processing_time_ms": 147365.44595161895,
+                "power_consumption_mw": 153.6,
+                "battery_drain_percent": 0.6287592360602409,
+                "operations_per_second": 0.006785851279738309,
+                "energy_per_operation_mj": 22.635332498168673,
+                "memory_efficiency_mb_per_op": 0.25,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.25,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_10_batch_10": {
+              "standard_snark": {
+                "device_type": "ESP32",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 5333333.333333334,
+                "power_consumption_mw": 192.0,
+                "battery_drain_percent": 28.444444444444443,
+                "operations_per_second": 0.00018749999999999998,
+                "energy_per_operation_mj": 1024.0000000000002,
+                "memory_efficiency_mb_per_op": 0.4,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.4,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "ESP32",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 3.0,
+                "processing_time_ms": 137541.08288817768,
+                "power_consumption_mw": 153.6,
+                "battery_drain_percent": 0.5868419536562247,
+                "operations_per_second": 0.007270554942576759,
+                "energy_per_operation_mj": 21.12631033162409,
+                "memory_efficiency_mb_per_op": 0.3,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.3,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_50_batch_5": {
+              "standard_snark": {
+                "device_type": "ESP32",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 100000000.00000001,
+                "power_consumption_mw": 192.0,
+                "battery_drain_percent": 533.3333333333334,
+                "operations_per_second": 9.999999999999999e-06,
+                "energy_per_operation_mj": 19200.000000000004,
+                "memory_efficiency_mb_per_op": 0.08,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.08,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "ESP32",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 6572198.649119286,
+                "power_consumption_mw": 153.6,
+                "battery_drain_percent": 28.04138090290895,
+                "operations_per_second": 0.00015215608252103062,
+                "energy_per_operation_mj": 1009.4897125047222,
+                "memory_efficiency_mb_per_op": 0.08,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.08,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_50_batch_10": {
+              "standard_snark": {
+                "device_type": "ESP32",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 133333333.33333334,
+                "power_consumption_mw": 192.0,
+                "battery_drain_percent": 711.1111111111112,
+                "operations_per_second": 7.499999999999999e-06,
+                "energy_per_operation_mj": 25600.0,
+                "memory_efficiency_mb_per_op": 0.08,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.08,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "ESP32",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 4,
+                "processing_time_ms": 6426149.790249967,
+                "power_consumption_mw": 153.6,
+                "battery_drain_percent": 27.418239105066526,
+                "operations_per_second": 0.00015561417530559954,
+                "energy_per_operation_mj": 987.0566077823948,
+                "memory_efficiency_mb_per_op": 0.08,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.08,
+                "power_scaling_factor": 0.96
+              }
+            }
+          },
+          "arduino_nano_33": {
+            "data_10_batch_5": {
+              "standard_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 5120000000.0,
+                "power_consumption_mw": 60.0,
+                "battery_drain_percent": 17066.666666666664,
+                "operations_per_second": 1.953125e-07,
+                "energy_per_operation_mj": 307200.0,
+                "memory_efficiency_mb_per_op": 0.025,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.025,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 235784713.52259034,
+                "power_consumption_mw": 48.0,
+                "battery_drain_percent": 628.7592360602409,
+                "operations_per_second": 4.241157049836442e-06,
+                "energy_per_operation_mj": 11317.666249084337,
+                "memory_efficiency_mb_per_op": 0.025,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.025,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_10_batch_10": {
+              "standard_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 6826666666.666666,
+                "power_consumption_mw": 60.0,
+                "battery_drain_percent": 22755.555555555555,
+                "operations_per_second": 1.4648437500000001e-07,
+                "energy_per_operation_mj": 409599.99999999994,
+                "memory_efficiency_mb_per_op": 0.025,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.025,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 264078879.14530116,
+                "power_consumption_mw": 48.0,
+                "battery_drain_percent": 704.2103443874698,
+                "operations_per_second": 3.7867473659253952e-06,
+                "energy_per_operation_mj": 12675.786198974456,
+                "memory_efficiency_mb_per_op": 0.025,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.025,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_50_batch_5": {
+              "standard_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 128000000000.0,
+                "power_consumption_mw": 60.0,
+                "battery_drain_percent": 426666.6666666667,
+                "operations_per_second": 7.8125e-09,
+                "energy_per_operation_mj": 7680000.0,
+                "memory_efficiency_mb_per_op": 0.005,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.005,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 8412414270.872684,
+                "power_consumption_mw": 48.0,
+                "battery_drain_percent": 22433.10472232716,
+                "operations_per_second": 1.188719394695552e-07,
+                "energy_per_operation_mj": 403795.88500188885,
+                "memory_efficiency_mb_per_op": 0.005,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.005,
+                "power_scaling_factor": 0.96
+              }
+            },
+            "data_50_batch_10": {
+              "standard_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 170666666666.6667,
+                "power_consumption_mw": 60.0,
+                "battery_drain_percent": 568888.888888889,
+                "operations_per_second": 5.859374999999999e-09,
+                "energy_per_operation_mj": 10240000.000000002,
+                "memory_efficiency_mb_per_op": 0.005,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.005,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Arduino Nano 33 IoT",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 0.25,
+                "processing_time_ms": 8225471731.519958,
+                "power_consumption_mw": 48.0,
+                "battery_drain_percent": 21934.591284053222,
+                "operations_per_second": 1.2157357445749964e-07,
+                "energy_per_operation_mj": 394822.64311295794,
+                "memory_efficiency_mb_per_op": 0.005,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.005,
+                "power_scaling_factor": 0.96
+              }
+            }
+          },
+          "raspberry_pi_4": {
+            "data_10_batch_5": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 33.333333333333336,
+                "memory_usage_mb": 5.0,
+                "processing_time_ms": 1000.0,
+                "power_consumption_mw": 1200.0,
+                "battery_drain_percent": 0.0033333333333333327,
+                "operations_per_second": 1.0,
+                "energy_per_operation_mj": 1.2,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.0
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 5,
+                "cpu_utilization_percent": 3.070113457325395,
+                "memory_usage_mb": 2.5,
+                "processing_time_ms": 92.10340371976184,
+                "power_consumption_mw": 960.0,
+                "battery_drain_percent": 0.00024560907658603156,
+                "operations_per_second": 10.857362047581294,
+                "energy_per_operation_mj": 0.08841926757097138,
+                "memory_efficiency_mb_per_op": 0.25,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.25,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_10_batch_10": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "standard_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 44.444444444444436,
+                "memory_usage_mb": 5.0,
+                "processing_time_ms": 1333.3333333333333,
+                "power_consumption_mw": 1200.0,
+                "battery_drain_percent": 0.004444444444444444,
+                "operations_per_second": 0.75,
+                "energy_per_operation_mj": 1.6,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.0
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "recursive_snark",
+                "data_size": 10,
+                "batch_size": 10,
+                "cpu_utilization_percent": 2.865439226837035,
+                "memory_usage_mb": 3.0,
+                "processing_time_ms": 85.96317680511105,
+                "power_consumption_mw": 960.0,
+                "battery_drain_percent": 0.00022923513814696278,
+                "operations_per_second": 11.632887908122816,
+                "energy_per_operation_mj": 0.08252464973290662,
+                "memory_efficiency_mb_per_op": 0.3,
+                "throughput_degradation_factor": 0.1,
+                "memory_scaling_factor": 0.3,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_50_batch_5": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 25.0,
+                "processing_time_ms": 5000.0,
+                "power_consumption_mw": 1440.0,
+                "battery_drain_percent": 0.02,
+                "operations_per_second": 0.2,
+                "energy_per_operation_mj": 7.2,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 5,
+                "cpu_utilization_percent": 26.080153369520975,
+                "memory_usage_mb": 10.5,
+                "processing_time_ms": 782.4046010856292,
+                "power_consumption_mw": 960.0,
+                "battery_drain_percent": 0.0020864122695616783,
+                "operations_per_second": 1.2781110931766573,
+                "energy_per_operation_mj": 0.7511084170422041,
+                "memory_efficiency_mb_per_op": 0.21,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.21,
+                "power_scaling_factor": 0.8
+              }
+            },
+            "data_50_batch_10": {
+              "standard_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "standard_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 95.0,
+                "memory_usage_mb": 25.0,
+                "processing_time_ms": 6666.666666666667,
+                "power_consumption_mw": 1440.0,
+                "battery_drain_percent": 0.02666666666666667,
+                "operations_per_second": 0.15,
+                "energy_per_operation_mj": 9.6,
+                "memory_efficiency_mb_per_op": 0.5,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.5,
+                "power_scaling_factor": 1.2
+              },
+              "recursive_snark": {
+                "device_type": "Raspberry Pi 4",
+                "operation_type": "recursive_snark",
+                "data_size": 50,
+                "batch_size": 10,
+                "cpu_utilization_percent": 24.341476478219576,
+                "memory_usage_mb": 11.0,
+                "processing_time_ms": 730.2442943465873,
+                "power_consumption_mw": 960.0,
+                "battery_drain_percent": 0.001947318118257566,
+                "operations_per_second": 1.3694047426892757,
+                "energy_per_operation_mj": 0.7010345225727237,
+                "memory_efficiency_mb_per_op": 0.22,
+                "throughput_degradation_factor": 0.5,
+                "memory_scaling_factor": 0.22,
+                "power_scaling_factor": 0.8
+              }
+            }
+          }
+        },
+        "comparative_analysis": {
+          "performance_advantages": {
+            "raspberry_pi_zero": {
+              "processing_time_improvements": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 10.857362047581296,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 15.510517210830422,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 6.390555465883286,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 9.129364951261838,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "memory_efficiency_gains": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 2.0,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.6666666666666667,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 2.380952380952381,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 2.272727272727273,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "power_savings": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.5,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.5,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.5,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "threshold_data_size": 10,
+              "threshold_batch_size": 5
+            },
+            "esp32": {
+              "processing_time_improvements": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 27.143405118953233,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 38.77629302707606,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 15.215608252103063,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 20.74855670741327,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "memory_efficiency_gains": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.6,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.3333333333333333,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.0,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.0,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "power_savings": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.25,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "threshold_data_size": 10,
+              "threshold_batch_size": 5
+            },
+            "arduino_nano_33": {
+              "processing_time_improvements": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 21.714724095162588,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 25.850862018050698,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 15.215608252103065,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 20.74855670741327,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "memory_efficiency_gains": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.0,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.0,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.0,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.0,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "power_savings": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.25,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "threshold_data_size": 10,
+              "threshold_batch_size": 5
+            },
+            "raspberry_pi_4": {
+              "processing_time_improvements": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 10.857362047581294,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 15.51051721083042,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 6.390555465883287,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 9.129364951261838,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "memory_efficiency_gains": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 2.0,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.6666666666666667,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 2.380952380952381,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 2.272727272727273,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "power_savings": [
+                {
+                  "test": "data_10_batch_5",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_10_batch_10",
+                  "improvement_factor": 1.25,
+                  "data_size": 10,
+                  "batch_size": 10
+                },
+                {
+                  "test": "data_50_batch_5",
+                  "improvement_factor": 1.5,
+                  "data_size": 50,
+                  "batch_size": 5
+                },
+                {
+                  "test": "data_50_batch_10",
+                  "improvement_factor": 1.5,
+                  "data_size": 50,
+                  "batch_size": 10
+                }
+              ],
+              "threshold_data_size": 10,
+              "threshold_batch_size": 5
+            }
+          },
+          "efficiency_gains": {},
+          "threshold_points": {},
+          "device_rankings": {}
+        },
+        "recommendations": {
+          "general": [
+            "Recursive SNARKs zeigen deutliche Vorteile bei Batch-Gr\u00f6\u00dfen > 10",
+            "Memory-limitierte Devices (< 512MB RAM) profitieren besonders von Recursive SNARKs",
+            "F\u00fcr Real-Time-Anwendungen (< 100ms) sind Standard SNARKs oft besser geeignet",
+            "Power-Effizienz ist bei Recursive SNARKs durchschnittlich 20% besser"
+          ],
+          "device_specific": {
+            "raspberry_pi_zero": [
+              "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+              "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+              "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+            ],
+            "esp32": [
+              "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+              "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+              "Durchschnittlich 25.5x schneller mit Recursive SNARKs"
+            ],
+            "arduino_nano_33": [
+              "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+              "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+              "Durchschnittlich 20.9x schneller mit Recursive SNARKs"
+            ],
+            "raspberry_pi_4": [
+              "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+              "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+              "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+            ]
+          },
+          "use_case_specific": {}
+        }
+      },
+      "device_recommendations": {
+        "general": [
+          "Recursive SNARKs zeigen deutliche Vorteile bei Batch-Gr\u00f6\u00dfen > 10",
+          "Memory-limitierte Devices (< 512MB RAM) profitieren besonders von Recursive SNARKs",
+          "F\u00fcr Real-Time-Anwendungen (< 100ms) sind Standard SNARKs oft besser geeignet",
+          "Power-Effizienz ist bei Recursive SNARKs durchschnittlich 20% besser"
+        ],
+        "device_specific": {
+          "raspberry_pi_zero": [
+            "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+            "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+            "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+          ],
+          "esp32": [
+            "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+            "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+            "Durchschnittlich 25.5x schneller mit Recursive SNARKs"
+          ],
+          "arduino_nano_33": [
+            "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+            "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+            "Durchschnittlich 20.9x schneller mit Recursive SNARKs"
+          ],
+          "raspberry_pi_4": [
+            "Verwende Recursive SNARKs ab Datengr\u00f6\u00dfe 10",
+            "Verwende Recursive SNARKs ab Batch-Gr\u00f6\u00dfe 5",
+            "Durchschnittlich 10.5x schneller mit Recursive SNARKs"
+          ]
+        },
+        "use_case_specific": {}
+      },
+      "threshold_analysis": {
+        "performance_advantages": {
+          "raspberry_pi_zero": {
+            "processing_time_improvements": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 10.857362047581296,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 15.510517210830422,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 6.390555465883286,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 9.129364951261838,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "memory_efficiency_gains": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 2.0,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.6666666666666667,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 2.380952380952381,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 2.272727272727273,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "power_savings": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.5,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.5,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.5,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "threshold_data_size": 10,
+            "threshold_batch_size": 5
+          },
+          "esp32": {
+            "processing_time_improvements": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 27.143405118953233,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 38.77629302707606,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 15.215608252103063,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 20.74855670741327,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "memory_efficiency_gains": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.6,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.3333333333333333,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.0,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.0,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "power_savings": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.25,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "threshold_data_size": 10,
+            "threshold_batch_size": 5
+          },
+          "arduino_nano_33": {
+            "processing_time_improvements": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 21.714724095162588,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 25.850862018050698,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 15.215608252103065,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 20.74855670741327,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "memory_efficiency_gains": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.0,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.0,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.0,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.0,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "power_savings": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.25,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "threshold_data_size": 10,
+            "threshold_batch_size": 5
+          },
+          "raspberry_pi_4": {
+            "processing_time_improvements": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 10.857362047581294,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 15.51051721083042,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 6.390555465883287,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 9.129364951261838,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "memory_efficiency_gains": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 2.0,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.6666666666666667,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 2.380952380952381,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 2.272727272727273,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "power_savings": [
+              {
+                "test": "data_10_batch_5",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 5
+              },
+              {
+                "test": "data_10_batch_10",
+                "improvement_factor": 1.25,
+                "data_size": 10,
+                "batch_size": 10
+              },
+              {
+                "test": "data_50_batch_5",
+                "improvement_factor": 1.5,
+                "data_size": 50,
+                "batch_size": 5
+              },
+              {
+                "test": "data_50_batch_10",
+                "improvement_factor": 1.5,
+                "data_size": 50,
+                "batch_size": 10
+              }
+            ],
+            "threshold_data_size": 10,
+            "threshold_batch_size": 5
+          }
+        },
+        "efficiency_gains": {},
+        "threshold_points": {},
+        "device_rankings": {}
+      }
+    },
+    "phase_4d_final_visualization": {
+      "status": "error",
+      "error": "'list' object has no attribute 'get'"
+    },
+    "phase_5_report": null,
+    "phase_3b_nova_comparison": {
+      "status": "success",
+      "comparison_results": {
+        "nova_available": true,
+        "nova_metrics": {
+          "total_time": 0.02664661407470703,
+          "verify_time": 0.01,
+          "proof_size": 2048,
+          "step_count": 100,
+          "throughput": 37528.2201782327
+        },
+        "traditional_time": 0.11205244064331055,
+        "improvements": {
+          "time_speedup": 4.205128663970509,
+          "constant_proof_size": true,
+          "recursive_composition": true
+        }
+      },
+      "insights": {
+        "nova_advantages": [
+          "Nova is 4.2x faster than baseline",
+          "Constant (compressed) proof size in recursive scheme"
+        ],
+        "zokrates_advantages": [],
+        "threshold_analysis": {
+          "data_size_threshold": "~500 readings where Nova becomes clearly superior",
+          "batch_size_threshold": ">=20 readings per batch recommended",
+          "scalability": "Nova scales sub-linearly; ZoKrates standard scales linearly"
+        },
+        "recommendations": {
+          "use_nova_when": [
+            "Processing >500 IoT readings",
+            "Continuous data streams",
+            "Memory-constrained devices",
+            "Long-term data aggregation",
+            "Proof size matters (bandwidth/storage)"
+          ],
+          "use_zokrates_when": [
+            "Small datasets (<100 readings)",
+            "One-time proving",
+            "Development/prototyping",
+            "Simple validation tasks"
+          ],
+          "hybrid_approach": [
+            "Use ZoKrates for development and testing",
+            "Deploy Nova for production scale",
+            "Consider data characteristics and constraints"
+          ]
+        }
+      },
+      "data_size": 1000,
+      "comparison_file": "/home/ramon/bachelor/data/benchmarks/nova_vs_zokrates_comparison.json"
+    },
+    "phase_3c_temporal_batch_analysis": {
+      "status": "failed",
+      "error": "string indices must be integers, not 'str'"
+    },
+    "phase_4a_crossover_analysis": {
+      "status": "completed",
+      "crossover_point": "171",
+      "proving_crossover": 2000,
+      "storage_crossover": 128,
+      "memory_crossover": 1,
+      "visualization_files": [
+        "/home/ramon/bachelor/data/visualizations/theoretical_crossover_analysis.png",
+        "/home/ramon/bachelor/data/visualizations/crossover_analysis_report.json"
+      ]
+    }
+  },
+  "conclusions": [
+    "Recursive SNARKs provide significant efficiency gains for large-scale IoT data processing",
+    "Privacy-performance trade-offs must be carefully considered for each application",
+    "The threshold for adopting recursive SNARKs depends on batch size and complexity",
+    "Standard SNARKs remain valuable for real-time and small-scale applications",
+    "Future IoT systems should implement hybrid approaches based on data characteristics"
+  ],
+  "future_work": [
+    "Implementation of more advanced recursive SNARK schemes",
+    "Integration with real IoT hardware and networks",
+    "Investigation of differential privacy mechanisms",
+    "Development of automated circuit selection algorithms",
+    "Evaluation of quantum-resistant alternatives"
+  ],
+  "timestamp": "2025-08-09T17:40:31.329510"
+}

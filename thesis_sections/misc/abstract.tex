@@ -1,0 +1,13 @@
+\thispagestyle{empty}
+\vspace*{1.0cm}
+
+\begin{center}
+    \textbf{Abstract}
+\end{center}
+
+\vspace*{0.5cm}
+
+\noindent
+Resource‐constrained Internet of Things (IoT) devices generate large volumes of time‐series data that must be aggregated efficiently while preserving both integrity and user privacy. This thesis introduces a novel, modular architecture based on recursive zk‑SNARKs that enables continuous, batch‐wise data aggregation with succinct, constant‐size proofs. Individual edge devices first generate local zk‑SNARK proofs attesting to the correctness of each aggregation interval; a recursive combiner then incrementally merges these interval proofs into a single ongoing proof that cryptographically binds every batch to its predecessors. By revealing only a compact recursive proof, the system prevents leakage of fine‐grained sensor readings and guards against tampering at any stage of the pipeline.\\
+
+We implement the proposed design in the ZoKrates framework and deploy it within a realistic smart‐home testbed using Docker containers to emulate resource‐limited hardware. Comprehensive benchmarks measure proof generation time, verification latency, memory consumption, and communication overhead across varying batch sizes. Our results demonstrate that recursive composition incurs only marginal additional cost compared to non‑recursive zk‑SNARKs—while enabling unbounded, streaming‐compatible aggregation—and that verification remains constant‐time and lightweight. A privacy analysis further confirms that the architecture meets stringent confidentiality goals, and a case study outlines thresholds where recursive proofs become advantageous. This work provides a reusable blueprint for scalable, privacy‐preserving data transformations in IoT and related continuous‐streaming domains.

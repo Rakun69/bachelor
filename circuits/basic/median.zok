@@ -1,0 +1,29 @@
+// Median calculation circuit
+// Computes median of array while keeping individual values private
+
+def bubble_sort(u32[5] mut arr) -> u32[5] {
+    for u32 i in 0..5 {
+        for u32 j in 0..(4-i) {
+            u32 a = arr[j];
+            u32 b = arr[j+1];
+            u32 minv = a < b ? a : b;
+            u32 maxv = a < b ? b : a;
+            arr[j] = minv;
+            arr[j+1] = maxv;
+        }
+    }
+    return arr;
+}
+
+def main(private u32[5] values, public u32 expected_median) -> u32 {
+    // Sort the array
+    u32[5] sorted = bubble_sort(values);
+    
+    // For array of 5 elements, median is the middle element (index 2)
+    u32 median = sorted[2];
+    
+    // Verify the computed median matches expected value
+    assert(median == expected_median);
+    
+    return median;
+}

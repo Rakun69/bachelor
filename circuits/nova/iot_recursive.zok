@@ -1,0 +1,42 @@
+// ZoKrates Nova Recursive zkSNARK Circuit for IoT Data Processing
+// Ultra-simple version avoiding ternary operators
+
+// Define State (what is accumulated across recursive steps)
+struct State {
+    field sum;         // Sum of all values
+    field count;       // Count of values processed
+}
+
+// Define StepInput (input for each step)
+struct StepInput {
+    field[3] values;   // 3 sensor readings per step
+    field batch_id;    // Batch identifier
+}
+
+// Main Nova function: (State, StepInput) -> State
+def main(public State state, private StepInput step_input) -> State {
+    
+    // Start with previous state
+    field mut new_sum = state.sum;
+    field mut new_count = state.count;
+    
+    // Process each value in this step
+    for u32 i in 0..3 {
+        field value = step_input.values[i];
+        
+        // Simply add to sum (including zeros)
+        new_sum = new_sum + value;
+        
+        // Always increment count for simplicity
+        new_count = new_count + 1;
+    }
+    
+    // Add constraint to ensure batch_id is used
+    assert(step_input.batch_id >= 0);
+    
+    // Return new state
+    return State {
+        sum: new_sum,
+        count: new_count
+    };
+}

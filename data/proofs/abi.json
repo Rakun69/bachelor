@@ -1,0 +1,21 @@
+{
+  "inputs": [
+    {
+      "name": "values",
+      "public": false,
+      "type": "array",
+      "components": {
+        "size": 5,
+        "type": "u32"
+      }
+    },
+    {
+      "name": "expected_median",
+      "public": true,
+      "type": "u32"
+    }
+  ],
+  "output": {
+    "type": "u32"
+  }
+}

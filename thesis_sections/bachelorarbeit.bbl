@@ -1,0 +1,1168 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{SmartMeterPrivacySurvey2023}{article}{}
+      \name{author}{4}{}{%
+        {{hash=1c1efd1c50847f71ff4731d871beebed}{%
+           family={Kua},
+           familyi={K\bibinitperiod},
+           given={Jonathan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d6676799efaa15e85b88d3f0b50ec0a9}{%
+           family={Hossain},
+           familyi={H\bibinitperiod},
+           given={Mohammad\bibnamedelima Belayet},
+           giveni={M\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=e1d7d6ad9b9196959dc12379a1bba90d}{%
+           family={Natgunanathan},
+           familyi={N\bibinitperiod},
+           given={Iynkaran},
+           giveni={I\bibinitperiod}}}%
+        {{hash=e9896675bab35e3fde1643a6b617a8eb}{%
+           family={Xiang},
+           familyi={X\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{eb317ef18b8a6e9b53f8923890c2d7ad}
+      \strng{fullhash}{a21872097a63dd621c833b6eb6700879}
+      \strng{bibnamehash}{a21872097a63dd621c833b6eb6700879}
+      \strng{authorbibnamehash}{a21872097a63dd621c833b6eb6700879}
+      \strng{authornamehash}{eb317ef18b8a6e9b53f8923890c2d7ad}
+      \strng{authorfullhash}{a21872097a63dd621c833b6eb6700879}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Recent years have seen the rapid development of technologies in Smart Grids (SGs) to enhance electricity networks with digital and data communication technologies. SGs can proactively detect, react, and respond to dynamic changes in the network. SGs can also enhance the efficiency and reliability of electricity supplies and promote the integration of renewable energy sources. Smart Meters (SMs) are often seen as the first step to a successful implementation of SGs. While SMs enable Utility Providers and consumers to obtain near real-time information of energy consumption, they can also be exploited to infer sensitive consumer data. Therefore, privacy preservation in SMs is paramount in ensuring the widespread and successful deployment of SGs. In this paper, we present a comprehensive survey of the state-of-the-art SM privacy-preserving techniques published in the literature over the past decade. We categorize these techniques based on the attack types and their objectives. We aim to offer a unique perspective in this survey article through the lens of privacy preservation, cross-cutting the wide range of techniques presented in the literature. We conclude by identifying the challenges and highlighting key future research directions in the field.}
+      \field{issn}{1424-8220}
+      \field{journaltitle}{Sensors}
+      \field{month}{1}
+      \field{note}{Number: 7 Publisher: Multidisciplinary Digital Publishing Institute}
+      \field{number}{7}
+      \field{shorttitle}{Privacy {Preservation} in {Smart} {Meters}}
+      \field{title}{Privacy {Preservation} in {Smart} {Meters}: {Current} {Status}, {Challenges} and {Future} {Directions}}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{volume}{23}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \field{pages}{3697}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/s23073697
+      \endverb
+      \verb{urlraw}
+      \verb https://www.mdpi.com/1424-8220/23/7/3697
+      \endverb
+      \verb{url}
+      \verb https://www.mdpi.com/1424-8220/23/7/3697
+      \endverb
+      \keyw{adversaries,privacy preservation,renewable energy,smart grids,smart meters}
+    \endentry
+    \entry{AStudyOnPrivacyPreserving2021}{book}{}
+      \name{author}{3}{}{%
+        {{hash=4a67c6d146e318c1e3e082f517807105}{%
+           family={Kabir},
+           familyi={K\bibinitperiod},
+           given={Farzana},
+           giveni={F\bibinitperiod}}}%
+        {{hash=a65a132f1ea2e27075f87fcc1aecf2ae}{%
+           family={Qureshi},
+           familyi={Q\bibinitperiod},
+           given={Amna},
+           giveni={A\bibinitperiod}}}%
+        {{hash=09e55ae1728eab6fbbdb58d6daca9597}{%
+           family={Megias},
+           familyi={M\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {eng}%
+      }
+      \strng{namehash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \strng{fullhash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \strng{bibnamehash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \strng{authorbibnamehash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \strng{authornamehash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \strng{authorfullhash}{009657548e0c4a2abb93fdfee5d4ec38}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Due to the recent growth in the use of smart meters in smart homes, secure data aggregation in a smart metering system has become a challenging issue. Data aggregation is one of the solutions for securing the consumers’ data by combining the meter reading at the gateway so that the attacker cannot identify an individual user’s information. This paper provides a comprehensive review of recent works on secure and privacy-preserving technologies for smart meter data collection. In addition, a brief comparative analysis of some state-of-the-art privacy-preserving data aggregation schemes is presented in terms of security and privacy requirements, and performance evaluation. This review paper points out some research challenges and unique future directions for researchers. To the best of our knowledge, no prior work has addressed issues such as managing multiple attacks and aggregation of multidimensional data (water, gas and electricity consumption data).}
+      \field{isbn}{978-84-09-29150-2}
+      \field{month}{4}
+      \field{note}{Accepted: 2024-11-15T08:32:37Z}
+      \field{title}{A {Study} on {Privacy}-{Preserving} {Data} {Aggregation} {Techniques} for {Secure} {Smart} {Metering} {System}}
+      \field{urlday}{18}
+      \field{urlmonth}{5}
+      \field{urlyear}{2025}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://openaccess.uoc.edu/handle/10609/151535
+      \endverb
+      \verb{url}
+      \verb https://openaccess.uoc.edu/handle/10609/151535
+      \endverb
+    \endentry
+    \entry{muellerGewinnungVerhaltensprofilenAm2010}{article}{}
+      \name{author}{1}{}{%
+        {{hash=88143686820263d51e587deb830885f3}{%
+           family={Müller},
+           familyi={M\bibinitperiod},
+           given={Klaus\bibnamedelima J.},
+           giveni={K\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {de}%
+      }
+      \strng{namehash}{88143686820263d51e587deb830885f3}
+      \strng{fullhash}{88143686820263d51e587deb830885f3}
+      \strng{bibnamehash}{88143686820263d51e587deb830885f3}
+      \strng{authorbibnamehash}{88143686820263d51e587deb830885f3}
+      \strng{authornamehash}{88143686820263d51e587deb830885f3}
+      \strng{authorfullhash}{88143686820263d51e587deb830885f3}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Smart Meter sollen dem Nutzer seinen Energieverbrauch transparent machen. Durch eine zeitnahe Rückmeldung soll ein sparsamer Umgang mit Energie gefördert werden. In Deutschland müssen die Energieversorgungsunternehmen seit Jahresbeginn für Neubauten und bei größeren Renovierungen intelligente Stromzähler anbieten. In absehbarer Zeit wird daher ein Grossteil der Haushalte einen solchen haben. Der Beitrag zeigt, welche Informationen Smart Meter — neben dem unbestrittenen Nutzen — dem Energieversorgungsunternehmen über die Vorgänge in einem Haushalt preisgeben.}
+      \field{issn}{1862-2607}
+      \field{journaltitle}{Datenschutz und Datensicherheit - DuD}
+      \field{month}{6}
+      \field{number}{6}
+      \field{title}{Gewinnung von {Verhaltensprofilen} am intelligenten {Stromzähler}}
+      \field{urlday}{6}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{volume}{34}
+      \field{year}{2010}
+      \field{urldateera}{ce}
+      \field{pages}{359\bibrangedash 364}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1007/s11623-010-0107-2
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/s11623-010-0107-2
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/s11623-010-0107-2
+      \endverb
+    \endentry
+    \entry{bohliPrivacyModelSmart2010aa}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=9f5c99b6e5aca9a11ebd4d33a1d4c217}{%
+           family={Bohli},
+           familyi={B\bibinitperiod},
+           given={Jens-Matthias},
+           giveni={J\bibinithyphendelim M\bibinitperiod}}}%
+        {{hash=1a9bfd19f102edc4187a7b9c9aee5860}{%
+           family={Sorge},
+           familyi={S\bibinitperiod},
+           given={Christoph},
+           giveni={C\bibinitperiod}}}%
+        {{hash=edda1018e047076218cca01868d0f61a}{%
+           family={Ugus},
+           familyi={U\bibinitperiod},
+           given={Osman},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \strng{fullhash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \strng{bibnamehash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \strng{authorbibnamehash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \strng{authornamehash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \strng{authorfullhash}{4eb9045f0a5b01addb4f45a97b16e9c5}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Electricity suppliers have started replacing traditional electricity meters with so-called smart meters, which can transmit current power consumption levels to the supplier within short intervals. Though this is advantageous for the electricity suppliers' planning purposes, and also allows the customers a more detailed look at their usage behavior, it means a considerable risk for privacy. The detailed information can be used to judge whether persons are in the household, when they come home, which electric devices they use (e.g. when they watch TV), and so forth. In this work, we introduce the "smart metering privacy model" for measuring the degree of privacy that a smart metering application can provide. Moreover, we present two design solutions both with and without involvement of trusted third parties. We show that the solution with trusted party can provide "perfect privacy" under certain conditions.}
+      \field{booktitle}{2010 {IEEE} {International} {Conference} on {Communications} {Workshops}}
+      \field{month}{5}
+      \field{note}{ISSN: 2164-7038}
+      \field{title}{A {Privacy} {Model} for {Smart} {Metering}}
+      \field{urlday}{6}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{year}{2010}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/ICCW.2010.5503916
+      \endverb
+      \verb{urlraw}
+      \verb https://ieeexplore.ieee.org/document/5503916/
+      \endverb
+      \verb{url}
+      \verb https://ieeexplore.ieee.org/document/5503916/
+      \endverb
+      \keyw{Electronic mail,Energy consumption,Europe,Laboratories,National electric code,Privacy,Protection,TV,Watches,Watthour meters}
+    \endentry
+    \entry{IDCExpect175}{misc}{}
+      \list{language}{1}{%
+        {en}%
+      }
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{By 2025, IDC says worldwide data will grow 61\% to 175 zettabytes, with as much of the data residing in the cloud as in data centers.}
+      \field{journaltitle}{Network World}
+      \field{shorttitle}{{IDC}}
+      \field{title}{{IDC}: {Expect} 175 zettabytes of data worldwide by 2025}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.networkworld.com/article/966746/idc-expect-175-zettabytes-of-data-worldwide-by-2025.html
+      \endverb
+      \verb{url}
+      \verb https://www.networkworld.com/article/966746/idc-expect-175-zettabytes-of-data-worldwide-by-2025.html
+      \endverb
+    \endentry
+    \entry{HowMuchData}{misc}{}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{title}{How much data is generated every day?}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://soax.com/research/data-generated-per-day?utm_source=chatgpt.com
+      \endverb
+      \verb{url}
+      \verb https://soax.com/research/data-generated-per-day?utm_source=chatgpt.com
+      \endverb
+    \endentry
+    \entry{alderDecember2023Healthcare2024}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=04ccb5ff52836cfb842728d4a82be229}{%
+           family={Alder},
+           familyi={A\bibinitperiod},
+           given={Steve},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \strng{namehash}{04ccb5ff52836cfb842728d4a82be229}
+      \strng{fullhash}{04ccb5ff52836cfb842728d4a82be229}
+      \strng{bibnamehash}{04ccb5ff52836cfb842728d4a82be229}
+      \strng{authorbibnamehash}{04ccb5ff52836cfb842728d4a82be229}
+      \strng{authornamehash}{04ccb5ff52836cfb842728d4a82be229}
+      \strng{authorfullhash}{04ccb5ff52836cfb842728d4a82be229}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{There was no letup in healthcare data breaches as the year drew to a close, with December seeing the second-highest number of data breaches of the year. 74 large healthcare data breaches were reported in December, bringing the year’s total up to 725 breaches – a new record. Another unwanted record was set in December. 2023 was the worst ever year for breached healthcare records – 133 million records were breached in 2023.}
+      \field{journaltitle}{The HIPAA Journal}
+      \field{month}{1}
+      \field{title}{December 2023 {Healthcare} {Data} {Breach} {Report}}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.hipaajournal.com/december-2023-healthcare-data-breach-report/
+      \endverb
+      \verb{url}
+      \verb https://www.hipaajournal.com/december-2023-healthcare-data-breach-report/
+      \endverb
+    \endentry
+    \entry{ElHajj2024BenchmarkStudy}{article}{}
+      \name{author}{2}{}{%
+        {{hash=3200b4ba464de921c62d5fa04c1febf0}{%
+           family={El-Hajj},
+           familyi={E\bibinithyphendelim H\bibinitperiod},
+           given={Mohammed},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bd858814ff5c652cfacac3055518f439}{%
+           family={Oude\bibnamedelima Roelink},
+           familyi={O\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={Bjorn},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{4413f390c2cacf577f4c6c0652136dcf}
+      \strng{fullhash}{4413f390c2cacf577f4c6c0652136dcf}
+      \strng{bibnamehash}{4413f390c2cacf577f4c6c0652136dcf}
+      \strng{authorbibnamehash}{4413f390c2cacf577f4c6c0652136dcf}
+      \strng{authornamehash}{4413f390c2cacf577f4c6c0652136dcf}
+      \strng{authorfullhash}{4413f390c2cacf577f4c6c0652136dcf}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{This study builds on our previous systematic literature review (SLR) that assessed the applications and performance of zk-SNARK, zk-STARK, and Bulletproof non-interactive zero-knowledge proof (NIZKP) protocols. To address the identified research gaps, we designed and implemented a benchmark comparing these three protocols using a dynamic minimized multiplicative complexity (MiMC) hash application. We evaluated performance across four general-purpose programming libraries and two programming languages. Our results show that zk-SNARK produced the smallest proofs, while zk-STARK generated the largest. In terms of proof generation and verification times, zk-STARK was the fastest, and Bulletproof was the slowest. Interestingly, zk-SNARK proofs verified marginally faster than zk-STARK, contrary to other findings. These insights enhance our understanding of the functionality, security, and performance of NIZKP protocols, providing valuable guidance for selecting the most suitable protocol for specific applications.}
+      \field{issn}{2078-2489}
+      \field{journaltitle}{Information}
+      \field{month}{8}
+      \field{note}{Number: 8 Publisher: Multidisciplinary Digital Publishing Institute}
+      \field{number}{8}
+      \field{shorttitle}{Evaluating the {Efficiency} of zk-{SNARK}, zk-{STARK}, and {Bulletproof} in {Real}-{World} {Scenarios}}
+      \field{title}{Evaluating the {Efficiency} of zk-{SNARK}, zk-{STARK}, and {Bulletproof} in {Real}-{World} {Scenarios}: {A} {Benchmark} {Study}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{volume}{15}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \field{pages}{463}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/info15080463
+      \endverb
+      \verb{urlraw}
+      \verb https://www.mdpi.com/2078-2489/15/8/463
+      \endverb
+      \verb{url}
+      \verb https://www.mdpi.com/2078-2489/15/8/463
+      \endverb
+      \keyw{Bulletproof,authentication performance,non-interactive zero-knowledge proof,privacy-preserving,zk-SNARK,zk-STARK}
+    \endentry
+    \entry{Genes2025EfficientRecursiveSnark}{article}{}
+      \name{author}{3}{}{%
+        {{hash=47007177ea8f28a3f0ba223b2545e4ab}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jiaxi},
+           giveni={J\bibinitperiod}}}%
+        {{hash=cbbe0aee45b05ee2e216204167adfdac}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+        {{hash=a92f475015444a4bf48ac0db15b237d5}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Tianyu},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \strng{fullhash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \strng{bibnamehash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \strng{authorbibnamehash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \strng{authornamehash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \strng{authorfullhash}{24e82ab3b194f8950cec4006fa2bac2f}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The rapid development of blockchain has significantly promoted research on zero-knowledge proofs (ZKPs), especially zero-knowledge succinct noninteractive arguments of knowledge (zk-SNARK). As is well known, protocol proof and verification time, as well as proof size, are the main obstacles that restrict the implementation of ZKPs in practical applications, so they have become the main concerns of researchers in recent years. This work achieves a new recursive zk-SNARK called GENES, which does not have a trusted setup and is secure under the standard discrete logarithm assumption. GENES is designed from the form of the rank-1 constraint system (R1CS) satisfiability problem. Recursive proof composition is achieved by merging multiple R1CS instances, which transforms the verification of numerous proofs into the verification of a single proof. Moreover, multi-helpers amortize proof commitments in this study, significantly reducing the computational pressure and time cost of proof generation. Compared with previous work, GENES effectively improves the proof time and verification time, but at the cost of larger proof sizes. We provide a blockchain Layer-1 scaling solution leveraging GENES to demonstrate its practicality.}
+      \field{issn}{2079-9292}
+      \field{journaltitle}{Electronics}
+      \field{month}{1}
+      \field{note}{Number: 3 Publisher: Multidisciplinary Digital Publishing Institute}
+      \field{number}{3}
+      \field{shorttitle}{{GENES}}
+      \field{title}{{GENES}: {An} {Efficient} {Recursive} zk-{SNARK} and {Its} {Novel} {Application} in {Blockchain}}
+      \field{urlday}{18}
+      \field{urlmonth}{4}
+      \field{urlyear}{2025}
+      \field{volume}{14}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \field{pages}{492}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/electronics14030492
+      \endverb
+      \verb{urlraw}
+      \verb https://www.mdpi.com/2079-9292/14/3/492
+      \endverb
+      \verb{url}
+      \verb https://www.mdpi.com/2079-9292/14/3/492
+      \endverb
+      \keyw{R1CS,blockchain,inner product argument,zero-knowledge proofs,zk-SNARK}
+    \endentry
+    \entry{Rondelet2020Zecale}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=e4987e306cd8fdd9e968895a1aeeb751}{%
+           family={Rondelet},
+           familyi={R\bibinitperiod},
+           given={Antoine},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \strng{fullhash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \strng{bibnamehash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \strng{authorbibnamehash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \strng{authornamehash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \strng{authorfullhash}{e4987e306cd8fdd9e968895a1aeeb751}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{In this paper, we present Zecale, a general purpose SNARK proof aggregator that uses recursive composition of SNARKs. We start by introducing the notion of recursive composition of SNARKs, before introducing Zecale as a privacy preserving scalability solution. Then, we list application types that can emerge and be built with Zecale. Finally, we argue that such scalability solutions for privacy preserving state transitions are paramount to emulate "cash" on blockchain systems.}
+      \field{month}{10}
+      \field{note}{arXiv:2008.05958 [cs]}
+      \field{shorttitle}{Zecale}
+      \field{title}{Zecale: {Reconciling} {Privacy} and {Scalability} on {Ethereum}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2008.05958
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2008.05958
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2008.05958
+      \endverb
+      \keyw{Computer Science - Cryptography and Security}
+    \endentry
+    \entry{InayatAliPrivacyPreservingDataAggregation2018}{misc}{}
+      \name{author}{3}{}{%
+        {{hash=f404a3d11054c837765b783aae944dbe}{%
+           family={Ali},
+           familyi={A\bibinitperiod},
+           given={Inayat},
+           giveni={I\bibinitperiod}}}%
+        {{hash=e548257a6efda56386a54528a3c6d8a6}{%
+           family={Sabir},
+           familyi={S\bibinitperiod},
+           given={Sonia},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5e50347e1c9b13cf33c556bf52f1e1d7}{%
+           family={Khan},
+           familyi={K\bibinitperiod},
+           given={Eraj},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{47d38482968a4a9b5e83f0b5f88561da}
+      \strng{fullhash}{47d38482968a4a9b5e83f0b5f88561da}
+      \strng{bibnamehash}{47d38482968a4a9b5e83f0b5f88561da}
+      \strng{authorbibnamehash}{47d38482968a4a9b5e83f0b5f88561da}
+      \strng{authornamehash}{47d38482968a4a9b5e83f0b5f88561da}
+      \strng{authorfullhash}{47d38482968a4a9b5e83f0b5f88561da}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Privacy problems are lethal and getting more attention than any other issue with the notion of the Internet of Things (IoT). Since IoT has many application areas including smart home, smart grids, smart healthcare system, smart and intelligent transportation and many more. Most of these applications are fueled by the resource-constrained sensor network, such as Smart healthcare system is powered by Wireless Body Area Network (WBAN) and Smart home and weather monitoring systems are fueled by Wireless Sensor Networks (WSN). In the mentioned application areas sensor node life is a very important aspect of these technologies as it explicitly effects the network life and performance. Data aggregation techniques are used to increase sensor node life by decreasing communication overhead. However, when the data is aggregated at intermediate nodes to reduce communication overhead, data privacy problems becomes more vulnerable. Different Privacy-Preserving Data Aggregation (PPDA) techniques have been proposed to ensure data privacy during data aggregation in resource-constrained sensor nodes. We provide a review and comparative analysis of the state of the art PPDA techniques in this paper. The comparative analysis is based on Computation Cost, Communication overhead, Privacy Level, resistance against malicious aggregator, sensor node life and energy consumption by the sensor node. We have studied the most recent techniques and provide in-depth analysis of the minute steps involved in these techniques. To the best of our knowledge, this survey is the most recent and comprehensive study of PPDA techniques.}
+      \field{month}{12}
+      \field{note}{arXiv:1812.04216 [cs]}
+      \field{shorttitle}{Privacy-preserving data aggregation in resource-constrained sensor nodes in {Internet} of {Things}}
+      \field{title}{Privacy-preserving data aggregation in resource-constrained sensor nodes in {Internet} of {Things}: {A} review}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.1812.04216
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/1812.04216
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/1812.04216
+      \endverb
+      \keyw{Computer Science - Cryptography and Security}
+    \endentry
+    \entry{GoyalLiPI2022}{misc}{}
+      \name{author}{3}{}{%
+        {{hash=f774450c712312a1f03d8d1fcd73ec2d}{%
+           family={Goyal},
+           familyi={G\bibinitperiod},
+           given={Himanshu},
+           giveni={H\bibinitperiod}}}%
+        {{hash=2cb3abfcab0c1a08ffdde63383d2c8c1}{%
+           family={Kodali},
+           familyi={K\bibinitperiod},
+           given={Krishna},
+           giveni={K\bibinitperiod}}}%
+        {{hash=95f9e3e7af7df7024160e77fbe0e66ee}{%
+           family={Saha},
+           familyi={S\bibinitperiod},
+           given={Sudipta},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{80015c8806493687e878395c4fd3bdc4}
+      \strng{fullhash}{80015c8806493687e878395c4fd3bdc4}
+      \strng{bibnamehash}{80015c8806493687e878395c4fd3bdc4}
+      \strng{authorbibnamehash}{80015c8806493687e878395c4fd3bdc4}
+      \strng{authornamehash}{80015c8806493687e878395c4fd3bdc4}
+      \strng{authorfullhash}{80015c8806493687e878395c4fd3bdc4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{In the modern digital world, a user of a smart system remains surrounded with as well as observed by a number of tiny IoT devices round the clock almost everywhere. Unfortunately, the ability of these devices to sense and share various physical parameters, although play a key role in these smart systems but also causes the threat of breach of the privacy of the users. Existing solutions for privacy-preserving computation for decentralized systems either use too complex cryptographic techniques or exploit an extremely high degree of message passing and hence, are not suitable for the resource-constrained IoT devices that constitute a significant fraction of a smart system. In this work, we propose a novel lightweight strategy LiPI for Privacy-Preserving Data Aggregation in low-power IoT systems. The design of the strategy is based on decentralized and collaborative data obfuscation and does not exploit any dependency on any trusted third party. In addition, besides minimizing the communication requirements, we make appropriate use of the recent advances in Synchronous-Transmission (ST)-based protocols in our design to accomplish the goal efficiently. Extensive evaluation based on comprehensive experiments in both simulation platforms and publicly available WSN/IoT testbeds demonstrates that our strategy works up to at least 51.7\% faster and consumes 50.5\% lesser energy compared to the existing state-of-the-art strategies.}
+      \field{month}{7}
+      \field{note}{arXiv:2207.12197 [cs]}
+      \field{shorttitle}{{LiPI}}
+      \field{title}{{LiPI}: {Lightweight} {Privacy}-{Preserving} {Data} {Aggregation} in {IoT}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2207.12197
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2207.12197
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2207.12197
+      \endverb
+      \keyw{Computer Science - Cryptography and Security,Computer Science - Distributed,Parallel,and Cluster Computing}
+    \endentry
+    \entry{ZKPDefinition2023}{misc}{}
+      \list{language}{1}{%
+        {en}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In cryptography, a zero-knowledge proof (also known as a ZK proof or ZKP) is a protocol in which one party (the prover) can convince another party (the verifier) that some given statement is true, without conveying to the verifier any information beyond the mere fact of that statement's truth. The intuition underlying zero-knowledge proofs is that it is trivial to prove possession of the relevant information simply by revealing it; the hard part is to prove this possession without revealing this information (or any aspect of it whatsoever). In light of the fact that one should be able to generate a proof of some statement only when in possession of certain secret information connected to the statement, the verifier, even after having become convinced of the statement's truth, should nonetheless remain unable to prove the statement to further third parties. Zero-knowledge proofs can be interactive, meaning that the prover and verifier exchange messages according to some protocol, or noninteractive, meaning that the verifier is convinced by a single prover message and no other communication is needed. In the standard model, interaction is required, except for trivial proofs of BPP problems. In the common random string and random oracle models, non-interactive zero-knowledge proofs exist. The Fiat–Shamir heuristic can be used to transform certain interactive zero-knowledge proofs into noninteractive ones.}
+      \field{journaltitle}{Wikipedia}
+      \field{month}{7}
+      \field{note}{Page Version ID: 1298731730}
+      \field{title}{Zero-knowledge proof}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://en.wikipedia.org/w/index.php?title=Zero-knowledge_proof&oldid=1298731730
+      \endverb
+      \verb{url}
+      \verb https://en.wikipedia.org/w/index.php?title=Zero-knowledge_proof&oldid=1298731730
+      \endverb
+    \endentry
+    \entry{WikipediaZKPSNARKHistoric}{misc}{}
+      \list{language}{1}{%
+        {en}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Non-interactive zero-knowledge proofs are cryptographic primitives, where information between a prover and a verifier can be authenticated by the prover, without revealing any of the specific information beyond the validity of the statement itself. This makes direct communication between the prover and verifier unnecessary, effectively removing any intermediaries. The key advantage of non-interactive zero-knowledge proofs is that they can be used in situations where there is no possibility of interaction between the prover and verifier, such as in online transactions where the two parties are not able to communicate in real time. This makes non-interactive zero-knowledge proofs particularly useful in decentralized systems like blockchains, where transactions are verified by a network of nodes and there is no central authority to oversee the verification process. Most non-interactive zero-knowledge proofs are based on mathematical constructs like elliptic curve cryptography or pairing-based cryptography, which allow for the creation of short and easily verifiable proofs of the truth of a statement. Unlike interactive zero-knowledge proofs, which require multiple rounds of interaction between the prover and verifier, non-interactive zero-knowledge proofs are designed to be efficient and can be used to verify a large number of statements simultaneously.}
+      \field{journaltitle}{Wikipedia}
+      \field{month}{7}
+      \field{note}{Page Version ID: 1301127830}
+      \field{title}{Non-interactive zero-knowledge proof}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://en.wikipedia.org/w/index.php?title=Non-interactive_zero-knowledge_proof&oldid=1301127830
+      \endverb
+      \verb{url}
+      \verb https://en.wikipedia.org/w/index.php?title=Non-interactive_zero-knowledge_proof&oldid=1301127830
+      \endverb
+    \endentry
+    \entry{ASurveyApplicationsZKP2024}{misc}{}
+      \name{author}{6}{}{%
+        {{hash=017b91984c2765a6887c88f2cddc1713}{%
+           family={Lavin},
+           familyi={L\bibinitperiod},
+           given={Ryan},
+           giveni={R\bibinitperiod}}}%
+        {{hash=9f31c9086de4b7672f6d35e127fc8b51}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Xuekai},
+           giveni={X\bibinitperiod}}}%
+        {{hash=67aa6c6abd280355448cc191a89a17cd}{%
+           family={Mohanty},
+           familyi={M\bibinitperiod},
+           given={Hardhik},
+           giveni={H\bibinitperiod}}}%
+        {{hash=0d64c5c2157a05b26f6380c7e31837b4}{%
+           family={Norman},
+           familyi={N\bibinitperiod},
+           given={Logan},
+           giveni={L\bibinitperiod}}}%
+        {{hash=d1eacf84de9162bfe726e7ccfbe2f0f7}{%
+           family={Zaarour},
+           familyi={Z\bibinitperiod},
+           given={Giovanni},
+           giveni={G\bibinitperiod}}}%
+        {{hash=41fd83732e16fac77ea84ccf60df9207}{%
+           family={Krishnamachari},
+           familyi={K\bibinitperiod},
+           given={Bhaskar},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{da0f8a00507cc36ab2daf93859bbce80}
+      \strng{fullhash}{5438acf9e537a5b338cf2e46ad7ff01c}
+      \strng{bibnamehash}{5438acf9e537a5b338cf2e46ad7ff01c}
+      \strng{authorbibnamehash}{5438acf9e537a5b338cf2e46ad7ff01c}
+      \strng{authornamehash}{da0f8a00507cc36ab2daf93859bbce80}
+      \strng{authorfullhash}{5438acf9e537a5b338cf2e46ad7ff01c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Zero-knowledge proofs (ZKPs) represent a revolutionary advance in computational integrity and privacy technology, enabling the secure and private exchange of information without revealing underlying private data. ZKPs have unique advantages in terms of universality and minimal security assumptions when compared to other privacy-sensitive computational methods for distributed systems, such as homomorphic encryption and secure multiparty computation. Their application spans multiple domains, from enhancing privacy in blockchain to facilitating confidential verification of computational tasks. This survey starts with a high-level overview of the technical workings of ZKPs with a focus on an increasingly relevant subset of ZKPs called zk-SNARKS. While there have been prior surveys on the algorithmic and theoretical aspects of ZKPs, our work is distinguished by providing a broader view of practical aspects and describing many recently-developed use cases of ZKPs across various domains. These application domains span blockchain privacy, scaling, storage, and interoperability, as well as non-blockchain applications like voting, authentication, timelocks, and machine learning. Aimed at both practitioners and researchers, the survey also covers foundational components and infrastructure such as zero-knowledge virtual machines (zkVM), domain-specific languages (DSLs), supporting libraries, frameworks, and protocols. We conclude with a discussion on future directions, positioning ZKPs as pivotal in the advancement of cryptographic practices and digital privacy across many applications.}
+      \field{month}{8}
+      \field{note}{arXiv:2408.00243 [cs] version: 1}
+      \field{title}{A {Survey} on the {Applications} of {Zero}-{Knowledge} {Proofs}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2408.00243
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2408.00243
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2408.00243
+      \endverb
+      \keyw{Computer Science - Computational Complexity,Computer Science - Cryptography and Security}
+    \endentry
+    \entry{NovaFoldingIVC2023}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=877ebc317881368f08ecd683fafdae83}{%
+           family={Bassa},
+           familyi={B\bibinitperiod},
+           given={Alp},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \strng{namehash}{877ebc317881368f08ecd683fafdae83}
+      \strng{fullhash}{877ebc317881368f08ecd683fafdae83}
+      \strng{bibnamehash}{877ebc317881368f08ecd683fafdae83}
+      \strng{authorbibnamehash}{877ebc317881368f08ecd683fafdae83}
+      \strng{authornamehash}{877ebc317881368f08ecd683fafdae83}
+      \strng{authorfullhash}{877ebc317881368f08ecd683fafdae83}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{This is part of an article series on accumulation, ZK folding, and NOVA: 📓 Part I: Recursive SNARKs and Incrementally […]}
+      \field{journaltitle}{Smart contract audits from Veridise}
+      \field{month}{8}
+      \field{shorttitle}{Intro to {Nova} \& {ZK} folding schemes}
+      \field{title}{Intro to {Nova} \& {ZK} folding schemes: {Halo} and accumulation}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://veridise.com/blog/learn-blockchain/intro-to-nova-zk-folding-schemes-halo-and-accumulation/
+      \endverb
+      \verb{url}
+      \verb https://veridise.com/blog/learn-blockchain/intro-to-nova-zk-folding-schemes-halo-and-accumulation/
+      \endverb
+    \endentry
+    \entry{boweRecursiveProofComposition2019}{article}{}
+      \name{author}{3}{}{%
+        {{hash=0274806506056a5f9c69300287f6063a}{%
+           family={Bowe},
+           familyi={B\bibinitperiod},
+           given={Sean},
+           giveni={S\bibinitperiod}}}%
+        {{hash=03957f01b350f39bac8f4c7933a7d5e6}{%
+           family={Grigg},
+           familyi={G\bibinitperiod},
+           given={Jack},
+           giveni={J\bibinitperiod}}}%
+        {{hash=1c1095c9d1e61240ce94aa7bde05c36f}{%
+           family={Hopwood},
+           familyi={H\bibinitperiod},
+           given={Daira},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{0e080473921fc0fb08d20f02e374081c}
+      \strng{fullhash}{0e080473921fc0fb08d20f02e374081c}
+      \strng{bibnamehash}{0e080473921fc0fb08d20f02e374081c}
+      \strng{authorbibnamehash}{0e080473921fc0fb08d20f02e374081c}
+      \strng{authornamehash}{0e080473921fc0fb08d20f02e374081c}
+      \strng{authorfullhash}{0e080473921fc0fb08d20f02e374081c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Non-interactive proofs of knowledge allow us to publicly demonstrate the faithful execution of arbitrary computations. SNARKs have the additional property of succinctness, meaning that the proofs are short and fast to verify even when the computations involved are large. This property raises the prospect of recursive proof composition: proofs that verify other proofs. All previously known realizations of recursive proof composition have required a trusted setup and cycles of expensive pairing-friendly elliptic curves.}
+      \field{title}{Halo: {Recursive} {Proof} {Composition} without a {Trusted} {Setup}}
+    \endentry
+    \entry{PantheonNovaBenchmark}{misc}{}
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Over the past several months, we’ve dedicated a significant amount of time and effort into developing cutting-edge infrastructure that leverages zk-SNARK succinct proofs. As part of our devel…}
+      \field{journaltitle}{Celer Network}
+      \field{month}{8}
+      \field{title}{The {Pantheon} of {Zero} {Knowledge} {Proof} {Development} {Frameworks} ({Updated}!)}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://blog.celer.network/2023/08/04/the-pantheon-of-zero-knowledge-proof-development-frameworks/
+      \endverb
+      \verb{url}
+      \verb https://blog.celer.network/2023/08/04/the-pantheon-of-zero-knowledge-proof-development-frameworks/
+      \endverb
+    \endentry
+    \entry{Plonky2ZKM2025}{misc}{}
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Recursive Zero-Knowledge Proof (Recursive ZKP) is a type of zero-knowledge proof that utilizes the concept of recursion to generate proofs that are more efficiently verifiable. In some cases, it can even combine multiple proofs into a single proof. This is particularly important in blockchain systems, where efficiency and scalability are crucial.}
+      \field{title}{The {Plonky2} {Recursive} {Zero}-{Knowledge} {Proof}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.zkm.io/blog/the-plonky2-recursive-zero-knowledge-proof
+      \endverb
+      \verb{url}
+      \verb https://www.zkm.io/blog/the-plonky2-recursive-zero-knowledge-proof
+      \endverb
+    \endentry
+    \entry{AnalysisPlonky2Protocol}{misc}{}
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Plonky2 is a zkSNARK protocol based on polynomial commitment and the Plonk-based PIOP interactive proof. It focuses on achieving efficient zkSNARK through the FRI technique. The primary goal of Plonky2 is to improve the efficiency of traditional zkSNARKs in recursive zero-knowledge proof scenarios while enhancing post-quantum security. Its core concept is leveraging the FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity) to allow efficient polynomial verification and using random sampling to enhance the integrity and security of the protocol.}
+      \field{title}{Analysis of {The} {Plonky2} {Protocol}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.zkm.io/blog/analysis-of-the-plonky2-protocol
+      \endverb
+      \verb{url}
+      \verb https://www.zkm.io/blog/analysis-of-the-plonky2-protocol
+      \endverb
+    \endentry
+    \entry{IntroducingPlonky2}{misc}{}
+      \list{language}{1}{%
+        {en}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{abstract}{If zero-knowledge proofs have a superpower, it’s recursion. SNARKs can verify arbitrary computations, and, since verifying a SNARK is a computation, SNARKs can verify other SNARKs.}
+      \field{title}{Introducing {Plonky2}}
+      \field{urlday}{20}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://polygon.technology/blog/introducing-plonky2
+      \endverb
+      \verb{url}
+      \verb https://polygon.technology/blog/introducing-plonky2
+      \endverb
+    \endentry
+    \entry{MayaZKBlogAggregationSummary}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Maya {ZK} {Blog}}
+      \field{urlday}{26}
+      \field{urlmonth}{7}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.maya-zk.com/blog/proof-aggregation?utm_source=chatgpt.com
+      \endverb
+      \verb{url}
+      \verb https://www.maya-zk.com/blog/proof-aggregation?utm_source=chatgpt.com
+      \endverb
+    \endentry
+    \entry{innovationBlockchainScalabilityGuide}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=5d8b966752963c65d33a896bb39e1bcf}{%
+           family={Innovation},
+           familyi={I\bibinitperiod},
+           given={Rapid},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en-US}%
+      }
+      \strng{namehash}{5d8b966752963c65d33a896bb39e1bcf}
+      \strng{fullhash}{5d8b966752963c65d33a896bb39e1bcf}
+      \strng{bibnamehash}{5d8b966752963c65d33a896bb39e1bcf}
+      \strng{authorbibnamehash}{5d8b966752963c65d33a896bb39e1bcf}
+      \strng{authornamehash}{5d8b966752963c65d33a896bb39e1bcf}
+      \strng{authorfullhash}{5d8b966752963c65d33a896bb39e1bcf}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Explore cutting-edge blockchain scalability solutions in our comprehensive 2024 guide. Dive deep into Layer 2 technologies, emerging innovations, and the future of high-performance blockchain networks}
+      \field{shorttitle}{Blockchain {Scalability} {Guide} 2024}
+      \field{title}{Blockchain {Scalability} {Guide} 2024: {Layer} 2 {Solutions}}
+      \field{urlday}{5}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.rapidinnovation.io/post/blockchain-scalability-solutions-layer-2-and-beyond
+      \endverb
+      \verb{url}
+      \verb https://www.rapidinnovation.io/post/blockchain-scalability-solutions-layer-2-and-beyond
+      \endverb
+    \endentry
+    \entry{bellachiaVerifBFLLeveragingZkSNARKs2025}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=0c7ef8844b0de38931cb9f60c7be3c1a}{%
+           family={Bellachia},
+           familyi={B\bibinitperiod},
+           given={Ahmed\bibnamedelima Ayoub},
+           giveni={A\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=b66fcad5bc10936c5b7cfd95d9e4d9c9}{%
+           family={Bouchiha},
+           familyi={B\bibinitperiod},
+           given={Mouhamed\bibnamedelima Amine},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=006ebb8eaaf958f8734fa1eeba11d35f}{%
+           family={Ghamri-Doudane},
+           familyi={G\bibinithyphendelim D\bibinitperiod},
+           given={Yacine},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=e4073b93c3b6131c74753dc7bcdbe416}{%
+           family={Rabah},
+           familyi={R\bibinitperiod},
+           given={Mourad},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {arXiv}%
+      }
+      \strng{namehash}{07c4d5671f4745a17c45c84b2ee3ca6a}
+      \strng{fullhash}{37e55ced1065667077f6dfafd5597a82}
+      \strng{bibnamehash}{37e55ced1065667077f6dfafd5597a82}
+      \strng{authorbibnamehash}{37e55ced1065667077f6dfafd5597a82}
+      \strng{authornamehash}{07c4d5671f4745a17c45c84b2ee3ca6a}
+      \strng{authorfullhash}{37e55ced1065667077f6dfafd5597a82}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Blockchain-based Federated Learning (FL) is an emerging decentralized machine learning paradigm that enables model training without relying on a central server. Although some BFL frameworks are considered privacy-preserving, they are still vulnerable to various attacks, including inference and model poisoning. Additionally, most of these solutions employ strong trust assumptions among all participating entities or introduce incentive mechanisms to encourage collaboration, making them susceptible to multiple security flaws. This work presents VerifBFL, a trustless, privacy-preserving, and verifiable federated learning framework that integrates blockchain technology and cryptographic protocols. By employing zero-knowledge Succinct Non-Interactive Argument of Knowledge (zk-SNARKs) and incrementally verifiable computation (IVC), VerifBFL ensures the verifiability of both local training and aggregation processes. The proofs of training and aggregation are verified on-chain, guaranteeing the integrity and auditability of each participant's contributions. To protect training data from inference attacks, VerifBFL leverages differential privacy. Finally, to demonstrate the efficiency of the proposed protocols, we built a proof of concept using emerging tools. The results show that generating proofs for local training and aggregation in VerifBFL takes less than 81s and 2s, respectively, while verifying them on-chain takes less than 0.6s.}
+      \field{month}{1}
+      \field{note}{arXiv:2501.04319 [cs]}
+      \field{shorttitle}{{VerifBFL}}
+      \field{title}{{VerifBFL}: {Leveraging} zk-{SNARKs} for {A} {Verifiable} {Blockchained} {Federated} {Learning}}
+      \field{urlday}{5}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.48550/arXiv.2501.04319
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/2501.04319
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/2501.04319
+      \endverb
+      \keyw{Computer Science - Cryptography and Security,Computer Science - Distributed,Parallel,and Cluster Computing,Computer Science - Emerging Technologies,Computer Science - Machine Learning}
+    \endentry
+    \entry{bojicburgosDecentralizedIoTData2024}{article}{}
+      \name{author}{2}{}{%
+        {{hash=7cbc68e13c295177d4ecc66809f6cfe7}{%
+           family={Bojič\bibnamedelima Burgos},
+           familyi={B\bibinitperiod\bibinitdelim B\bibinitperiod},
+           given={Jay},
+           giveni={J\bibinitperiod}}}%
+        {{hash=8bc1e27ddeff5a615de701f02da45de5}{%
+           family={Pustišek},
+           familyi={P\bibinitperiod},
+           given={Matevž},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \strng{fullhash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \strng{bibnamehash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \strng{authorbibnamehash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \strng{authornamehash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \strng{authorfullhash}{76c5f107b8ad4b31d63f9e07bedfd713}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The rapid expansion of the Internet of Things (IoT) has introduced significant challenges in data authentication, necessitating a balance between scalability and security. Traditional approaches often rely on third parties, while blockchain-based solutions face computational and storage bottlenecks. Our novel framework employs edge aggregating servers and Ethereum Layer 2 rollups, offering a scalable and secure IoT data authentication solution that reduces the need for continuous, direct interaction between IoT devices and the blockchain. We utilize and compare the Nova and Risc0 proving systems for authenticating batches of IoT data by verifying signatures, ensuring data integrity and privacy. Notably, the Nova prover significantly outperforms Risc0 in proving and verification times; for instance, with 10 signatures, Nova takes 3.62 s compared to Risc0’s 369 s, with this performance gap widening as the number of signatures in a batch increases. Our framework further enhances data verifiability and trust by recording essential information on L2 rollups, creating an immutable and transparent record of authentication. The use of Layer 2 rollups atop a permissionless blockchain like Ethereum effectively reduces on-chain storage costs by approximately 48 to 57 times compared to direct Ethereum use, addressing cost bottlenecks efficiently.}
+      \field{issn}{1424-8220}
+      \field{journaltitle}{Sensors}
+      \field{month}{1}
+      \field{note}{Number: 3 Publisher: Multidisciplinary Digital Publishing Institute}
+      \field{number}{3}
+      \field{title}{Decentralized {IoT} {Data} {Authentication} with {Signature} {Aggregation}}
+      \field{urlday}{3}
+      \field{urlmonth}{6}
+      \field{urlyear}{2025}
+      \field{volume}{24}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \field{pages}{1037}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/s24031037
+      \endverb
+      \verb{urlraw}
+      \verb https://www.mdpi.com/1424-8220/24/3/1037
+      \endverb
+      \verb{url}
+      \verb https://www.mdpi.com/1424-8220/24/3/1037
+      \endverb
+      \keyw{IoT,SNARK,blockchain,data authentication,rollup,signature aggregation}
+    \endentry
+    \entry{goldwasserKnowledgeComplexityInteractive1985}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=ef88a01536da33f031c48d0673356829}{%
+           family={Goldwasser},
+           familyi={G\bibinitperiod},
+           given={S},
+           giveni={S\bibinitperiod}}}%
+        {{hash=bb2d6a5e2ae5068927438a9fced13ac2}{%
+           family={Micali},
+           familyi={M\bibinitperiod},
+           given={S},
+           giveni={S\bibinitperiod}}}%
+        {{hash=eb99def90a10f1420e304ae1d992d2f6}{%
+           family={Rackoff},
+           familyi={R\bibinitperiod},
+           given={C},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{location}{1}{%
+        {Providence, Rhode Island, United States}%
+      }
+      \list{publisher}{1}{%
+        {ACM Press}%
+      }
+      \strng{namehash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \strng{fullhash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \strng{bibnamehash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \strng{authorbibnamehash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \strng{authornamehash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \strng{authorfullhash}{c82e25fc2ef18fc0735ea3ca74dd222c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the seventeenth annual {ACM} symposium on {Theory} of computing - {STOC} '85}
+      \field{isbn}{978-0-89791-151-1}
+      \field{title}{The knowledge complexity of interactive proof-systems}
+      \field{urlday}{9}
+      \field{urlmonth}{3}
+      \field{urlyear}{2025}
+      \field{year}{1985}
+      \field{urldateera}{ce}
+      \field{pages}{291\bibrangedash 304}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1145/22145.22178
+      \endverb
+      \verb{urlraw}
+      \verb http://portal.acm.org/citation.cfm?doid=22145.22178
+      \endverb
+      \verb{url}
+      \verb http://portal.acm.org/citation.cfm?doid=22145.22178
+      \endverb
+    \endentry
+    \entry{goldreichFoundationsCryptographyVolume2001}{book}{}
+      \name{author}{1}{}{%
+        {{hash=66aba379c7d3adb8af5b662a65c4c140}{%
+           family={Goldreich},
+           familyi={G\bibinitperiod},
+           given={Oded},
+           giveni={O\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{66aba379c7d3adb8af5b662a65c4c140}
+      \strng{fullhash}{66aba379c7d3adb8af5b662a65c4c140}
+      \strng{bibnamehash}{66aba379c7d3adb8af5b662a65c4c140}
+      \strng{authorbibnamehash}{66aba379c7d3adb8af5b662a65c4c140}
+      \strng{authornamehash}{66aba379c7d3adb8af5b662a65c4c140}
+      \strng{authorfullhash}{66aba379c7d3adb8af5b662a65c4c140}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Cryptography is concerned with the conceptualization, definition, and construction of computing systems that address security concerns. The design of cryptographic systems must be based on firm foundations. Building on the basic tools presented in the first volume, this second volume of Foundations of Cryptography contains a rigorous and systematic treatment of three basic applications: Encryption, Signatures, and General Cryptographic Protocols. It is suitable for use in a graduate course on cryptography and as a reference book for experts. The author assumes basic familiarity with the design and analysis of algorithms; some knowledge of complexity theory and probability is also useful. Also available: Volume I: Basic Tools 0-521-79172-3 Hardback \$75.00 C}
+      \field{isbn}{978-0-521-83084-3}
+      \field{note}{Google-Books-ID: tfzM9d\_jnxwC}
+      \field{shorttitle}{Foundations of {Cryptography}}
+      \field{title}{Foundations of {Cryptography}: {Volume} 2, {Basic} {Applications}}
+      \field{year}{2001}
+      \keyw{Computers / Security / Cryptography \& Encryption,Language Arts \& Disciplines / Communication Studies,Mathematics / Discrete Mathematics}
+    \endentry
+    \entry{katzIntroductionModernCryptography2007}{book}{}
+      \name{author}{2}{}{%
+        {{hash=85053e14c4a72772970b91a572b9b9c1}{%
+           family={Katz},
+           familyi={K\bibinitperiod},
+           given={Jonathan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=e20af851262c583d34b7a667a7039cb4}{%
+           family={Lindell},
+           familyi={L\bibinitperiod},
+           given={Yehuda},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{2}{%
+        {Chapman}%
+        {Hall/CRC}%
+      }
+      \strng{namehash}{071317b1567a0e9750e8234cb19c146d}
+      \strng{fullhash}{071317b1567a0e9750e8234cb19c146d}
+      \strng{bibnamehash}{071317b1567a0e9750e8234cb19c146d}
+      \strng{authorbibnamehash}{071317b1567a0e9750e8234cb19c146d}
+      \strng{authornamehash}{071317b1567a0e9750e8234cb19c146d}
+      \strng{authorfullhash}{071317b1567a0e9750e8234cb19c146d}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{Cryptography plays a key role in ensuring the privacy and integrity of data and the security of computer networks. Introduction to Modern Cryptography provides a rigorous yet accessible treatment of modern cryptography, with a focus on formal definitions, precise assumptions, and rigorous proofs.The authors introduce the core principles of}
+      \field{isbn}{978-0-429-14380-9}
+      \field{month}{8}
+      \field{shorttitle}{Introduction to {Modern} {Cryptography}}
+      \field{title}{Introduction to {Modern} {Cryptography}: {Principles} and {Protocols}}
+      \field{year}{2007}
+      \verb{doi}
+      \verb 10.1201/9781420010756
+      \endverb
+    \endentry
+    \entry{212SolvingRecurrence}{misc}{}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{title}{2.12. {Solving} {Recurrence} {Relations} — {CISC320} - {Introduction} to {Algorithms}}
+      \field{urlday}{10}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://opendsa-server.cs.vt.edu/ODSA/Books/ud/cisc320/spring-2019/S19-CISC320-010/html/Recurrence.html
+      \endverb
+      \verb{url}
+      \verb https://opendsa-server.cs.vt.edu/ODSA/Books/ud/cisc320/spring-2019/S19-CISC320-010/html/Recurrence.html
+      \endverb
+    \endentry
+    \entry{lenznerRekurrenzenUndMasterTheorem}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=c706ee231bbf7770fe4ed2f2db666809}{%
+           family={Lenzner},
+           familyi={L\bibinitperiod},
+           given={Pascal},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{c706ee231bbf7770fe4ed2f2db666809}
+      \strng{fullhash}{c706ee231bbf7770fe4ed2f2db666809}
+      \strng{bibnamehash}{c706ee231bbf7770fe4ed2f2db666809}
+      \strng{authorbibnamehash}{c706ee231bbf7770fe4ed2f2db666809}
+      \strng{authornamehash}{c706ee231bbf7770fe4ed2f2db666809}
+      \strng{authorfullhash}{c706ee231bbf7770fe4ed2f2db666809}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Rekurrenzen und {Master}-{Theorem}}
+      \field{urlday}{10}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://hpi.de/friedrich/teaching/units/rekurrenzen-und-master-theorem.html
+      \endverb
+      \verb{url}
+      \verb https://hpi.de/friedrich/teaching/units/rekurrenzen-und-master-theorem.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

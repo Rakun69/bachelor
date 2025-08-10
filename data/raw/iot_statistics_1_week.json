@@ -1,0 +1,86 @@
+{
+  "total_readings": 34272,
+  "unique_sensors": 18,
+  "sensor_types": [
+    "temperature",
+    "humidity",
+    "motion",
+    "light",
+    "sleep_sensor",
+    "gas",
+    "wind_speed"
+  ],
+  "rooms": [
+    "living_room",
+    "bedroom",
+    "kitchen",
+    "bathroom",
+    "outdoor"
+  ],
+  "time_range": {
+    "start": "2025-08-09T17:39:05.332041",
+    "end": "2025-08-16T17:34:05.332041"
+  },
+  "privacy_levels": {
+    "1": 12096,
+    "3": 12096,
+    "2": 10080
+  },
+  "by_sensor_type": {
+    "temperature": {
+      "count": 9072,
+      "mean": 20.92865299823633,
+      "std": 3.35301178855651,
+      "min": 3.65,
+      "max": 31.4
+    },
+    "humidity": {
+      "count": 9072,
+      "mean": 58.06183311287477,
+      "std": 13.578658018745772,
+      "min": 35.87,
+      "max": 100.0
+    },
+    "motion": {
+      "count": 8064,
+      "mean": 0.07291666666666667,
+      "std": 0.2600157886428141,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "light": {
+      "count": 2016,
+      "mean": 194.25207837301588,
+      "std": 105.87500390651363,
+      "min": 0.0,
+      "max": 458.27
+    },
+    "sleep_sensor": {
+      "count": 2016,
+      "mean": 0.3740079365079365,
+      "std": 0.4839857348107029,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "gas": {
+      "count": 2016,
+      "mean": 0.013283730158730158,
+      "std": 0.09395437810150889,
+      "min": 0.0,
+      "max": 0.99
+    },
+    "wind_speed": {
+      "count": 2016,
+      "mean": 4.9355456349206355,
+      "std": 2.8719626613933396,
+      "min": 0.0,
+      "max": 13.69
+    }
+  },
+  "period": "1_week",
+  "time_config": {
+    "hours": 168,
+    "description": "1 Woche Simulation"
+  },
+  "time_step_seconds": 300
+}

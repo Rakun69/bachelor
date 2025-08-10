@@ -1,0 +1,91 @@
+{
+  "crossover_analysis": {
+    "main_crossover_point": "171",
+    "proving_crossover": 2000,
+    "storage_crossover": 128,
+    "memory_crossover": 1,
+    "confidence_interval": [
+      153,
+      188
+    ],
+    "efficiency_ratio": 1.0243755596555726
+  },
+  "cost_breakdown_at_crossover": {
+    "standard_snark": {
+      "total": 1.918625,
+      "setup": 0.1,
+      "proving": 1.71,
+      "verification": 0.02,
+      "storage": 3.125,
+      "memory": 85.5,
+      "n_proofs": 4.0
+    },
+    "recursive_snark": {
+      "total": 1.8729703007021197,
+      "setup": 0.8,
+      "proving": 0.855,
+      "compression": 0.2,
+      "verification": 0.005,
+      "storage": 2.0,
+      "memory": 10.970300702119737,
+      "n_proofs": 1
+    }
+  },
+  "sensitivity_analysis": {
+    "batch_size": [
+      "156",
+      "161",
+      "161",
+      "166",
+      "166",
+      "166",
+      "171"
+    ],
+    "folding_speedup": [
+      "241",
+      "171",
+      "141",
+      "131",
+      "121",
+      "116"
+    ],
+    "memory_constraint": [
+      "176",
+      "171",
+      "171",
+      "161",
+      "156"
+    ],
+    "setup_cost_ratio": [
+      "56",
+      "76",
+      "111",
+      "151",
+      "206"
+    ]
+  },
+  "theoretical_insights": {
+    "primary_factors": [
+      "Proving efficiency improvement (folding vs. standard proving)",
+      "Constant vs. linear proof size growth",
+      "Sub-linear vs. linear memory scaling",
+      "Setup cost amortization over larger datasets"
+    ],
+    "key_thresholds": {
+      "immediate_storage_advantage": 128,
+      "proving_time_advantage": 2000,
+      "memory_advantage": 1,
+      "overall_advantage": "171"
+    }
+  },
+  "practical_recommendations": {
+    "use_standard_snarks": "Data size < 85 items",
+    "transition_zone": "85 - 171 items",
+    "use_recursive_snarks": "Data size > 171 items",
+    "critical_factors": [
+      "Memory constraints strongly favor recursive SNARKs",
+      "Storage limitations make recursive SNARKs attractive earlier",
+      "Real-time requirements may favor standard SNARKs despite higher costs"
+    ]
+  }
+}

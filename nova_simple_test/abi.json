@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    {
+      "name": "state",
+      "public": true,
+      "type": "struct",
+      "components": {
+        "name": "State",
+        "generics": [],
+        "members": [
+          {
+            "name": "sum",
+            "type": "field"
+          }
+        ]
+      }
+    },
+    {
+      "name": "step_input",
+      "public": false,
+      "type": "struct",
+      "components": {
+        "name": "StepInput",
+        "generics": [],
+        "members": [
+          {
+            "name": "element",
+            "type": "field"
+          }
+        ]
+      }
+    }
+  ],
+  "output": {
+    "type": "struct",
+    "components": {
+      "name": "State",
+      "generics": [],
+      "members": [
+        {
+          "name": "sum",
+          "type": "field"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "project_info": {
+    "name": "IoT ZK-SNARK Evaluation",
+    "version": "1.0.0",
+    "description": "Verifiable Data Transformations in IoT Environments using Recursive zk-SNARKs"
+  },
+  
+  "iot_simulation": {
+    "multi_period_enabled": true,
+    "time_periods": {
+      "1_day": {"duration_hours": 24, "time_step_seconds": 60},
+      "1_week": {"duration_hours": 168, "time_step_seconds": 300},
+      "1_month": {"duration_hours": 720, "time_step_seconds": 900}
+    },
+    "sensors_config": null,
+    "output_format": "json",
+    "include_noise": true,
+    "realistic_patterns": true
+  },
+  
+  "circuit_types": [
+    "filter_range",
+    "min_max", 
+    "median",
+    "aggregation",
+    "batch_processor"
+  ],
+  
+  "evaluation_parameters": {
+    "data_sizes": [10, 25, 50, 100, 250, 500, 1000],
+    "batch_sizes": [5, 10, 20, 50, 100],
+    "temporal_batch_sizes": {
+      "1_day": {
+        "1_hour": 60,
+        "4_hour": 240, 
+        "12_hour": 720,
+        "full_day": 1440
+      },
+      "1_week": {
+        "6_hour": 360,
+        "12_hour": 720,
+        "1_day": 1440,
+        "3_day": 4320,
+        "full_week": 10080
+      },
+      "1_month": {
+        "1_day": 1440,
+        "3_day": 4320,
+        "1_week": 10080,
+        "2_week": 20160,
+        "full_month": 43200
+      }
+    },
+    "privacy_levels": [1, 2, 3],
+    "iterations": 5,
+    "confidence_level": 0.95
+  },
+  
+  "proof_systems": {
+    "standard_snark": {
+      "enabled": true,
+      "backend": "zokrates",
+      "curve": "bn128"
+    },
+    "recursive_snark": {
+      "enabled": true,
+      "max_recursion_depth": 10,
+      "compression_target": 0.8
+    }
+  },
+  
+  "evaluation": {
+    "run_performance_tests": true,
+    "run_privacy_analysis": true,
+    "run_scalability_tests": true,
+    "run_comparison_analysis": true,
+    "run_iot_device_analysis": true,
+    "run_multi_period_analysis": true,
+    "run_nova_comparison": true,
+    "run_temporal_batch_analysis": true,
+    "generate_visualizations": true,
+    "generate_report": true
+  },
+  
+  "nova_config": {
+    "circuit_path": "circuits/nova/iot_recursive.zok",
+    "batch_size": 10,
+    "curve": "pallas",
+    "enable_compression": true,
+    "timeout_seconds": 300
+  },
+  
+  "iot_device_analysis": {
+    "enabled": true,
+    "device_types": [
+      "raspberry_pi_zero",
+      "esp32", 
+      "arduino_nano_33",
+      "raspberry_pi_4"
+    ],
+    "test_scenarios": [
+      {"data_sizes": [10, 50], "batch_sizes": [5, 10]},
+      {"data_sizes": [100], "batch_sizes": [10]}
+    ]
+  },
+  
+  "performance_metrics": {
+    "measure_compile_time": true,
+    "measure_setup_time": true,
+    "measure_proof_time": true,
+    "measure_verification_time": true,
+    "measure_memory_usage": true,
+    "measure_proof_size": true,
+    "measure_throughput": true
+  },
+  
+  "privacy_metrics": {
+    "calculate_information_leakage": true,
+    "estimate_anonymity_set": true,
+    "assess_reidentification_risk": true,
+    "differential_privacy_analysis": true,
+    "auxiliary_attack_simulation": false
+  },
+  
+  "scalability_metrics": {
+    "analyze_linear_scaling": true,
+    "analyze_memory_scaling": true,
+    "analyze_proof_size_scaling": true,
+    "determine_threshold_points": true
+  },
+  
+  "output_settings": {
+    "base_output_dir": "/home/ramon/bachelor/data",
+    "save_intermediate_results": true,
+    "save_raw_data": true,
+    "save_proofs": true,
+    "save_benchmarks": true,
+    "generate_plots": true,
+    "plot_format": "png",
+    "plot_dpi": 300
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file_logging": true,
+    "log_file": "logs/iot_zk_evaluation.log"
+  },
+  
+  "research_questions": {
+    "q1": "Under which conditions is the use of recursive SNARKs worthwhile?",
+    "q2": "What added value do recursive SNARKs provide in terms of privacy?", 
+    "q3": "From what data volume/complexity are recursive SNARKs more efficient?",
+    "q4": "How do different ZKP systems perform for IoT data processing?"
+  },
+  
+  "threshold_analysis": {
+    "performance_thresholds": {
+      "proof_time_improvement": 1.5,
+      "proof_size_compression": 2.0,
+      "memory_efficiency": 1.2
+    },
+    "privacy_thresholds": {
+      "max_information_leakage": 0.1,
+      "min_anonymity_set_size": 10,
+      "max_reidentification_risk": 0.05
+    },
+    "scalability_thresholds": {
+      "linear_scaling_tolerance": 0.2,
+      "memory_growth_limit": 2.0
+    }
+  },
+  
+  "experiment_scenarios": [
+    {
+      "name": "small_scale_realtime",
+      "description": "Small-scale real-time processing scenario",
+      "data_sizes": [5, 10, 20],
+      "batch_sizes": [1, 5],
+      "focus": "latency"
+    },
+    {
+      "name": "medium_scale_batch", 
+      "description": "Medium-scale batch processing scenario",
+      "data_sizes": [50, 100, 200],
+      "batch_sizes": [10, 20, 50],
+      "focus": "throughput"
+    },
+    {
+      "name": "large_scale_archival",
+      "description": "Large-scale archival processing scenario", 
+      "data_sizes": [500, 1000, 2000],
+      "batch_sizes": [50, 100, 200],
+      "focus": "compression"
+    }
+  ],
+  
+  "validation": {
+    "cross_validation_folds": 5,
+    "statistical_significance_test": "t_test",
+    "multiple_comparison_correction": "bonferroni",
+    "outlier_detection": true,
+    "outlier_threshold": 2.0
+  }
+}

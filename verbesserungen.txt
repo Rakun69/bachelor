@@ -1,0 +1,25 @@
+mehr richtung bewertung
+
+perfekte lösung recursive snark? nicht trivial
+eher als ergebnis der arbeit 
+unter folgendensn bedingungen lohnt sicher der einsatz von recursive snark
+nicht nur zk snark sondern auch andere zkp
+muss sinn ergeben dass es privacy preserving ist
+
+ab dieser menge lohnt sich der einsatz von recursive snark
+in evaluation machen
+verschiedene metriken testen
+wann snark wann recursive snark
+
+gesamte logic vom circuit
+ansatz: generalisiertes set von function
+filter von set
+median
+minimum maximum
+
+privacy preserving auch
+einschätzen wie privacy garantiert wird
+was bringt der mehrwert von recursive snark im bereich privacy
+
+system vorstellen an dem ich die funktionalität messe
+use case möglichst sinnvoll formulieren
