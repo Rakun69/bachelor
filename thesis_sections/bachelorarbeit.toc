@@ -56,10 +56,20 @@
 \contentsline {subsection}{\nonumberline Experimental Design}{23}{subsection*.70}%
 \contentsline {subsection}{\nonumberline Dataset Characteristics}{23}{subsection*.72}%
 \contentsline {section}{\numberline {5.2}Crossover Point Analysis Results}{24}{section.5.2}%
-\contentsline {subsection}{\nonumberline Critical Threshold Identification}{24}{subsection*.75}%
-\contentsline {subsubsection}{\nonumberline Mathematical Model Validation}{24}{subsubsection*.78}%
-\contentsline {subsubsection}{\nonumberline Visualization and Interpretation}{25}{subsubsection*.80}%
-\contentsline {chapter}{\numberline {6}Discussion}{26}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Conclusion \& Future Work}{27}{chapter.7}%
-\contentsline {chapter}{\nonumberline Bibliography}{28}{chapter*.82}%
+\contentsline {subsection}{\nonumberline Experimental Setup}{24}{subsection*.75}%
+\contentsline {subsection}{\nonumberline Quantitative Results}{24}{subsection*.77}%
+\contentsline {subsection}{\nonumberline Critical Crossover Point Identification}{24}{subsection*.80}%
+\contentsline {subsection}{\nonumberline Scaling Behavior Analysis}{25}{subsection*.83}%
+\contentsline {subsection}{\nonumberline Visualization and Performance Analysis}{25}{subsection*.85}%
+\contentsline {subsection}{\nonumberline Application Recommendations}{25}{subsection*.88}%
+\contentsline {subsection}{\nonumberline Scientific Interpretation}{27}{subsection*.91}%
+\contentsline {section}{\numberline {5.3}Performance Scaling Analysis}{27}{section.5.3}%
+\contentsline {subsection}{\nonumberline Temporal Batch Analysis Results}{27}{subsection*.93}%
+\contentsline {subsubsection}{\nonumberline Daily Aggregation Patterns}{27}{subsubsection*.95}%
+\contentsline {section}{\numberline {5.4}Conclusion and Key Insights}{28}{section.5.4}%
+\contentsline {subsection}{\nonumberline Critical Findings}{28}{subsection*.98}%
+\contentsline {subsection}{\nonumberline Practical Impact}{28}{subsection*.100}%
+\contentsline {chapter}{\numberline {6}Discussion}{29}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Conclusion \& Future Work}{30}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{31}{chapter*.101}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

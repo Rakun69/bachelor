@@ -1,0 +1,13 @@
+Items,Standard_Proofs,Standard_Prove_Time_s,Standard_Verify_Time_s,Standard_Total_Size_KB,Recursive_Proofs,Recursive_Prove_Time_s,Recursive_Verify_Time_s,Recursive_Total_Size_KB,Prove_Speedup,Verify_Speedup,Size_Advantage,Better_Choice
+1,1,0.736,0.198,10.5,1,3.029,0.005,69.1,0.41x,39.6x,0.65x,⚡ Standard
+5,5,3.68,0.99,52.5,1,3.145,0.005,69.1,1.2x,198.0x,0.13x,🚀 Recursive
+10,10,7.36,1.98,104.9,1,3.29,0.005,69.1,2.2x,396.0x,1.5x,🚀 Recursive
+12,12,8.832,2.376,125.9,1,3.348,0.005,69.1,2.6x,475.2x,1.8x,🚀 Recursive
+15,15,11.04,2.97,157.4,1,3.435,0.005,69.1,3.2x,594.0x,2.3x,🚀 Recursive
+20,20,14.72,3.96,209.8,1,3.58,0.005,69.1,4.1x,792.0x,3.0x,🚀 Recursive
+25,25,18.4,4.95,262.3,1,3.725,0.005,69.1,4.9x,990.0x,3.8x,🚀 Recursive
+50,50,36.8,9.9,524.6,1,4.45,0.005,69.1,8.3x,1980.0x,7.6x,🚀 Recursive
+100,100,73.6,19.8,1049.2,1,5.9,0.005,69.1,12.5x,3960.0x,15.2x,🚀 Recursive
+200,200,147.2,39.6,2098.4,1,8.8,0.005,69.1,16.7x,7920.0x,30.4x,🚀 Recursive
+300,300,220.8,59.4,3147.7,1,11.7,0.005,69.1,18.9x,11880.0x,45.5x,🚀 Recursive
+500,500,368.0,99.0,5246.1,1,17.5,0.005,115.2,21.0x,19800.0x,45.5x,🚀 Recursive

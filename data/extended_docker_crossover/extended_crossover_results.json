@@ -1,0 +1,443 @@
+{
+  "extended_crossover_results": [
+    {
+      "num_items": 130,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 130,
+        "successful_proofs": 130,
+        "total_time": 18.75513098800002,
+        "compile_time": 0.010802659002365544,
+        "setup_time": 0.03367959500246798,
+        "total_proof_size_kb": 108.291015625,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.931436527059027,
+        "max_memory_mb": 68.33984375,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 130,
+        "steps": 44,
+        "total_time": 30.75381159400058,
+        "setup_time": 6.072599717299454e-05,
+        "proof_time": 26.23108595099984,
+        "verify_time": 2.5488014221191406,
+        "proof_size_kb": 69.134765625,
+        "throughput": 4.227118307031583,
+        "max_memory_mb": 67.78515625,
+        "compression_ratio": 1.5607198350142666,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.639754561761131,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 63.97545617611311,
+        "time_difference": 11.998680606000562,
+        "throughput_ratio": 0.6098473657703863,
+        "memory_ratio": 0.9918833952557874
+      }
+    },
+    {
+      "num_items": 140,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 140,
+        "successful_proofs": 140,
+        "total_time": 20.168243389001873,
+        "compile_time": 0.011087481998401927,
+        "setup_time": 0.03403931899811141,
+        "total_proof_size_kb": 116.62109375,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.941606033787983,
+        "max_memory_mb": 67.90625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 140,
+        "steps": 47,
+        "total_time": 31.78750555700026,
+        "setup_time": 6.549699901370332e-05,
+        "proof_time": 26.96392571799879,
+        "verify_time": 2.486164093017578,
+        "proof_size_kb": 69.11328125,
+        "throughput": 4.404246182480624,
+        "max_memory_mb": 68.26171875,
+        "compression_ratio": 1.6812976883513253,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.5761167169538717,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 57.611671695387166,
+        "time_difference": 11.619262167998386,
+        "throughput_ratio": 0.6344707782382256,
+        "memory_ratio": 1.0052346985734009
+      }
+    },
+    {
+      "num_items": 150,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 150,
+        "successful_proofs": 150,
+        "total_time": 21.56891572799941,
+        "compile_time": 0.010851849998289254,
+        "setup_time": 0.03459624300012365,
+        "total_proof_size_kb": 124.951171875,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.9544525043175645,
+        "max_memory_mb": 68.3671875,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 150,
+        "steps": 50,
+        "total_time": 32.901967277997755,
+        "setup_time": 0.00011667100261547603,
+        "proof_time": 27.77687442699971,
+        "verify_time": 2.4866366386413574,
+        "proof_size_kb": 69.1435546875,
+        "throughput": 4.558997908319853,
+        "max_memory_mb": 68.5078125,
+        "compression_ratio": 1.8006016694207874,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.5254344582229735,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 52.54344582229735,
+        "time_difference": 11.333051549998345,
+        "throughput_ratio": 0.6555509445911766,
+        "memory_ratio": 1.0020569077819679
+      }
+    },
+    {
+      "num_items": 160,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 160,
+        "successful_proofs": 160,
+        "total_time": 24.211385774997325,
+        "compile_time": 0.012006373999611242,
+        "setup_time": 0.03897934699853067,
+        "total_proof_size_kb": 133.28125,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.608461055757874,
+        "max_memory_mb": 68.421875,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 160,
+        "steps": 54,
+        "total_time": 34.58112013999926,
+        "setup_time": 8.728199827601202e-05,
+        "proof_time": 28.801281858999573,
+        "verify_time": 2.5276787281036377,
+        "proof_size_kb": 69.0947265625,
+        "throughput": 4.626802120702023,
+        "max_memory_mb": 68.26953125,
+        "compression_ratio": 1.9219990671773632,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.4282999106854337,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 42.82999106854337,
+        "time_difference": 10.369734365001932,
+        "throughput_ratio": 0.7001330690555776,
+        "memory_ratio": 0.9977734642612469
+      }
+    },
+    {
+      "num_items": 170,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 170,
+        "successful_proofs": 170,
+        "total_time": 24.44708553899909,
+        "compile_time": 0.010362412998802029,
+        "setup_time": 0.03416131700214464,
+        "total_proof_size_kb": 141.611328125,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.953794133407369,
+        "max_memory_mb": 68.3515625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 170,
+        "steps": 57,
+        "total_time": 35.494753558999946,
+        "setup_time": 0.00015011400319053791,
+        "proof_time": 29.666877389998263,
+        "verify_time": 2.4721004962921143,
+        "proof_size_kb": 69.0966796875,
+        "throughput": 4.789440211704056,
+        "max_memory_mb": 68.25,
+        "compression_ratio": 2.0420662850681928,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.4519012297959657,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 45.190122979596566,
+        "time_difference": 11.047668020000856,
+        "throughput_ratio": 0.6887520855261822,
+        "memory_ratio": 0.9985141158989599
+      }
+    },
+    {
+      "num_items": 180,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 180,
+        "successful_proofs": 180,
+        "total_time": 25.841940770998917,
+        "compile_time": 0.010968333001073916,
+        "setup_time": 0.03455893199861748,
+        "total_proof_size_kb": 149.94140625,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.965421118912429,
+        "max_memory_mb": 68.390625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 180,
+        "steps": 60,
+        "total_time": 36.501508094999735,
+        "setup_time": 6.920599844306707e-05,
+        "proof_time": 30.373089202999836,
+        "verify_time": 2.4821465015411377,
+        "proof_size_kb": 69.1298828125,
+        "throughput": 4.931303099354896,
+        "max_memory_mb": 68.125,
+        "compression_ratio": 2.161149331110766,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.412490974205912,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 41.2490974205912,
+        "time_difference": 10.659567324000818,
+        "throughput_ratio": 0.70796912565207,
+        "memory_ratio": 0.9961160612291524
+      }
+    },
+    {
+      "num_items": 190,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 190,
+        "successful_proofs": 190,
+        "total_time": 27.332854878000944,
+        "compile_time": 0.010688520000257995,
+        "setup_time": 0.035632494000310544,
+        "total_proof_size_kb": 158.271484375,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.951341191692454,
+        "max_memory_mb": 68.421875,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 190,
+        "steps": 64,
+        "total_time": 38.07091948000016,
+        "setup_time": 9.492900062468834e-05,
+        "proof_time": 31.538802294999186,
+        "verify_time": 2.5126571655273438,
+        "proof_size_kb": 69.1357421875,
+        "throughput": 4.99068587244952,
+        "max_memory_mb": 68.35546875,
+        "compression_ratio": 2.2810198460343245,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.3928628988785883,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 39.28628988785883,
+        "time_difference": 10.738064601999213,
+        "throughput_ratio": 0.7179457510176435,
+        "memory_ratio": 0.9990294587805435
+      }
+    },
+    {
+      "num_items": 200,
+      "standard_result": {
+        "success": true,
+        "type": "standard",
+        "num_items": 200,
+        "successful_proofs": 200,
+        "total_time": 28.761780916000134,
+        "compile_time": 0.011334662998706335,
+        "setup_time": 0.033486685999378096,
+        "total_proof_size_kb": 166.6015625,
+        "avg_proof_size_kb": 0.8330078125,
+        "throughput": 6.953672325928201,
+        "max_memory_mb": 68.12890625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "recursive_result": {
+        "success": true,
+        "type": "recursive",
+        "num_items": 200,
+        "steps": 67,
+        "total_time": 39.2782814179991,
+        "setup_time": 8.354799865628593e-05,
+        "proof_time": 32.44548638000197,
+        "verify_time": 2.487489938735962,
+        "proof_size_kb": 69.1865234375,
+        "throughput": 5.09187247455157,
+        "max_memory_mb": 68.08984375,
+        "compression_ratio": 2.3993111917230086,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Proven IoT orchestrator configuration"
+        }
+      },
+      "comparison": {
+        "ratio": 1.365641492531801,
+        "winner": "Standard",
+        "recursive_wins": false,
+        "advantage_percent": 36.5641492531801,
+        "time_difference": 10.516500501998962,
+        "throughput_ratio": 0.7322566028263187,
+        "memory_ratio": 0.9994266383808268
+      }
+    }
+  ],
+  "crossover_point": null,
+  "test_timestamp": 1756682153.0702796,
+  "iot_configuration": "Smart Home Hub (1GB RAM, 1 CPU)",
+  "test_items": [
+    130,
+    140,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200
+  ],
+  "methodology": "Docker containers with realistic IoT resource constraints - extended range",
+  "previous_results_summary": "50-120 Items: No crossover, estimated at ~168 items"
+}

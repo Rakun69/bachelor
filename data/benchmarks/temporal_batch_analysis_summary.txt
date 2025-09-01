@@ -313,5 +313,15 @@ TEMPORAL BATCH ANALYSIS SUMMARY
 
 📊 PERIOD: VISUALIZATIONS
 ----------------------------------------
+ERROR: Invalid batch data for temporal_batch_analysis: <class 'str'>
+ERROR: Invalid batch data for temporal_detail_1_day: <class 'str'>
+ERROR: Invalid batch data for temporal_detail_1_week: <class 'str'>
+ERROR: Invalid batch data for temporal_detail_1_month: <class 'str'>
 
-🔹 Temporal Batch Analysis Batching:
+============================================================
+
+🏆 KEY INSIGHTS:
+• Larger batches generally improve recursive SNARK efficiency
+• Compression ratios show significant space savings
+• Memory usage scales sub-linearly with recursive SNARKs
+• Throughput improvements vary by batch configuration

@@ -1,17 +1,18 @@
 {
   "inputs": [
     {
-      "name": "values",
-      "public": false,
-      "type": "array",
-      "components": {
-        "size": 5,
-        "type": "u32"
-      }
+      "name": "min_val",
+      "public": true,
+      "type": "u32"
     },
     {
-      "name": "expected_median",
+      "name": "max_val",
       "public": true,
+      "type": "u32"
+    },
+    {
+      "name": "secret_value",
+      "public": false,
       "type": "u32"
     }
   ],

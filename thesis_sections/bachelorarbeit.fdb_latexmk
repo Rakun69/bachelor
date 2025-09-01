@@ -1,14 +1,14 @@
 # Fdb version 4
-["biber bachelorarbeit"] 1754861107.16066 "bachelorarbeit.bcf" "bachelorarbeit.bbl" "bachelorarbeit" 1754865022.93086 0
-  "bachelorarbeit.bcf" 1754865022.7955 112118 951026e748943fe86b41fd9050be6dcd "pdflatex"
-  "bib/references.bib" 1754857496.7446 215352 5069b138d677330f3b23665946139968 ""
+["biber bachelorarbeit"] 1754861107.16066 "bachelorarbeit.bcf" "bachelorarbeit.bbl" "bachelorarbeit" 1756414638.89242 0
+  "bachelorarbeit.bcf" 1756414638.74965 112118 951026e748943fe86b41fd9050be6dcd "pdflatex"
+  "bib/references.bib" 1756395043.8243 215352 5069b138d677330f3b23665946139968 ""
   (generated)
   "bachelorarbeit.bbl"
   "bachelorarbeit.blg"
   (rewritten before read)
-["pdflatex"] 1754865019.75774 "/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex" "bachelorarbeit.pdf" "bachelorarbeit" 1754865022.93113 0
+["pdflatex"] 1756414635.9147 "/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex" "bachelorarbeit.pdf" "bachelorarbeit" 1756414638.8927 2
   "/etc/texmf/web2c/texmf.cnf" 1754330260.85979 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex" 1754865015.69022 98157 7bd23a16b2f6e5d268778600157a078b ""
+  "/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex" 1756414631.65653 103453 519051cfe37d3e78a1c1ffa7fec47f53 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1095.tfm" 1136768653 3584 929cdff2b7a8c11bd4d49fd68cb0ae70 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -336,6 +336,7 @@
   "/usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb" 1255129361 116427 4a5b1ccaa7cce719091920a86b58608d ""
   "/usr/share/texmf/fonts/type1/public/lm/lmex10.pfb" 1254269338 23055 2e5b42921de910eaa97b85df04ca4891 ""
   "/usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb" 1254269338 30388 702fae6a5f0e6e9c48a1d872b442ffcf ""
+  "/usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb" 1254269338 30635 833ec815d446ec453a4913fc26d24cbc ""
   "/usr/share/texmf/fonts/type1/public/lm/lmr10.pfb" 1255129361 119235 f35b44530a1d90eb90fe15d9cba67ea0 ""
   "/usr/share/texmf/fonts/type1/public/lm/lmr12.pfb" 1255129361 113634 f99c44d58bae0863375faf0e1d74d612 ""
   "/usr/share/texmf/fonts/type1/public/lm/lmr17.pfb" 1255129361 119752 1bd8d06e4079df624bf59ce3ad7c9aa6 ""
@@ -361,15 +362,14 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1754832601.92618 165012 f177baa1c39a3ebd62c3096a43521a0d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1754832623 7307219 3a7925afd7107b4ae388d3cf9c49b987 ""
-  "bachelorarbeit.aux" 1754865022.7823 34290 0901d3c5eeae737220096ff60c1c6233 "pdflatex"
-  "bachelorarbeit.bbl" 1754861108.03347 64370 27fd14ac0c469a33de142020f4506eaa "biber bachelorarbeit"
-  "bachelorarbeit.lof" 1754865022.79989 756 f0daf63d17c3c3712416b9e3426d5278 "pdflatex"
-  "bachelorarbeit.lot" 1754865022.79989 472 64156d59484cdb8bab7b23287d299e33 "pdflatex"
-  "bachelorarbeit.out" 1754865020.91675 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "bachelorarbeit.run.xml" 1754865022.79989 2476 d7fb7042f2bdcd368e34c827bab4fd5d "pdflatex"
-  "bachelorarbeit.tex" 1754865015.69022 98157 7bd23a16b2f6e5d268778600157a078b ""
-  "bachelorarbeit.toc" 1754865022.79989 5738 65ab64a12a9901d8bef645583c1eb77a "pdflatex"
-  "img/crossover_point_overview.png" 1754754099.24456 355210 4ad51ccc1199ede7cf9fa85f69de4d0e ""
+  "bachelorarbeit.aux" 1756414638.73205 37361 d86f6a371ffe9f135a0679ecd2f46f2b "pdflatex"
+  "bachelorarbeit.bbl" 1756395043.81156 64370 27fd14ac0c469a33de142020f4506eaa "biber bachelorarbeit"
+  "bachelorarbeit.lof" 1756414638.74965 699 a565802e60faa9b935f0c9c6b7561231 "pdflatex"
+  "bachelorarbeit.lot" 1756414638.74965 858 0797de91d378e6ab60d4e3a8ed996e64 "pdflatex"
+  "bachelorarbeit.out" 1756414637.23605 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "bachelorarbeit.tex" 1756414631.65653 103453 519051cfe37d3e78a1c1ffa7fec47f53 ""
+  "bachelorarbeit.toc" 1756414638.74965 6611 0e2e20b0b0eadefed6a8fb722e812717 "pdflatex"
+  "data/visualizations/crossover_analysis_plots.png" 0 -1 0 ""
   "img/diagramm2.png" 1754848687.63879 398062 84402bad64d6ccf71a5f54f94b26500e ""
   "img/tu_logo.png" 1754831183.18903 39317 cd748082098bd4a7fe246952cb8d55ca ""
   "misc/self-assertion.tex" 1754831233.43685 337 783fe34006071a2d35da7f3016b0cc90 ""

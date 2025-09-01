@@ -1,0 +1,10 @@
+{
+  "timestamp": "20250830_135723",
+  "docker_execution_time": 0,
+  "docker_constraints": {
+    "cpus": "0.5",
+    "memory": "1g", 
+    "memory_swap": "1g"
+  },
+  "comparison_note": "This comparison shows performance under IoT resource constraints vs unlimited resources"
+}

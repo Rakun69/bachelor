@@ -1,0 +1,120 @@
+{
+  "crossover_point": 95,
+  "clean_results": [
+    {
+      "num_items": 60,
+      "standard_time": 7.133995771408081,
+      "recursive_time": 9.993072986602783,
+      "ratio": 1.4007679997026952,
+      "winner": "Standard",
+      "recursive_wins": false,
+      "standard_proof_size_kb": 2998.828125,
+      "recursive_proof_size_kb": 69.16015625,
+      "standard_throughput": 8.410433917058157,
+      "recursive_throughput": 6.004159089044884
+    },
+    {
+      "num_items": 70,
+      "standard_time": 8.226085901260376,
+      "recursive_time": 10.304515838623047,
+      "ratio": 1.252663291182532,
+      "winner": "Standard",
+      "recursive_wins": false,
+      "standard_proof_size_kb": 4081.73828125,
+      "recursive_proof_size_kb": 69.125,
+      "standard_throughput": 8.509514833692025,
+      "recursive_throughput": 6.793138182934157
+    },
+    {
+      "num_items": 80,
+      "standard_time": 9.340050458908081,
+      "recursive_time": 10.45190978050232,
+      "ratio": 1.1190421107986415,
+      "winner": "Standard",
+      "recursive_wins": false,
+      "standard_proof_size_kb": 5331.25,
+      "recursive_proof_size_kb": 69.1259765625,
+      "standard_throughput": 8.565264219070672,
+      "recursive_throughput": 7.654103573419402
+    },
+    {
+      "num_items": 85,
+      "standard_time": 9.946490287780762,
+      "recursive_time": 10.66499137878418,
+      "ratio": 1.072236645310567,
+      "winner": "Standard",
+      "recursive_wins": false,
+      "standard_proof_size_kb": 6018.4814453125,
+      "recursive_proof_size_kb": 69.1337890625,
+      "standard_throughput": 8.545727944300342,
+      "recursive_throughput": 7.970001754440245
+    },
+    {
+      "num_items": 90,
+      "standard_time": 10.536457777023315,
+      "recursive_time": 10.685563802719116,
+      "ratio": 1.01415143768914,
+      "winner": "Standard",
+      "recursive_wins": false,
+      "standard_proof_size_kb": 6747.36328125,
+      "recursive_proof_size_kb": 69.10546875,
+      "standard_throughput": 8.541770100029401,
+      "recursive_throughput": 8.422578505132133
+    },
+    {
+      "num_items": 95,
+      "standard_time": 11.060426712036133,
+      "recursive_time": 10.904349327087402,
+      "ratio": 0.9858886651471698,
+      "winner": "Recursive",
+      "recursive_wins": true,
+      "standard_proof_size_kb": 7517.8955078125,
+      "recursive_proof_size_kb": 69.0986328125,
+      "standard_throughput": 8.589180370104481,
+      "recursive_throughput": 8.712120012884336
+    },
+    {
+      "num_items": 100,
+      "standard_time": 11.717036008834839,
+      "recursive_time": 10.953016519546509,
+      "ratio": 0.9347941331995355,
+      "winner": "Recursive",
+      "recursive_wins": true,
+      "standard_proof_size_kb": 8330.078125,
+      "recursive_proof_size_kb": 69.1767578125,
+      "standard_throughput": 8.534581606184222,
+      "recursive_throughput": 9.129904973807191
+    },
+    {
+      "num_items": 110,
+      "standard_time": 12.875849723815918,
+      "recursive_time": 11.13741421699524,
+      "ratio": 0.8649847936944178,
+      "winner": "Recursive",
+      "recursive_wins": true,
+      "standard_proof_size_kb": 10079.39453125,
+      "recursive_proof_size_kb": 69.1259765625,
+      "standard_throughput": 8.543125491480195,
+      "recursive_throughput": 9.876619281353879
+    },
+    {
+      "num_items": 120,
+      "standard_time": 14.087765455245972,
+      "recursive_time": 11.356000661849976,
+      "ratio": 0.8060895603298998,
+      "winner": "Recursive",
+      "recursive_wins": true,
+      "standard_proof_size_kb": 11995.3125,
+      "recursive_proof_size_kb": 69.103515625,
+      "standard_throughput": 8.518029376711029,
+      "recursive_throughput": 10.567100476062418
+    }
+  ],
+  "data_quality": {
+    "total_tests": 9,
+    "negative_times": 0,
+    "zero_proof_sizes": 0,
+    "all_data_valid": true
+  },
+  "analysis_timestamp": 1756676099.1700392
+}

@@ -1,0 +1,22 @@
+{
+  "total_time": 12.450792074203491,
+  "total_tests": 8,
+  "successful_tests": 8,
+  "failed_tests": 0,
+  "success_rate": 1.0,
+  "config": {
+    "circuit_types": [
+      "filter_range",
+      "min_max"
+    ],
+    "data_sizes": [
+      50,
+      100
+    ],
+    "batch_sizes": [
+      10,
+      20
+    ],
+    "iterations": 2
+  }
+}

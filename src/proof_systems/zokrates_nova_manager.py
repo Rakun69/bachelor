@@ -27,18 +27,7 @@ class NovaProofResult:
     proof_size: int = 0
     error_message: Optional[str] = None
     
-    # Add metrics compatibility for demo.py
-    @property
-    def metrics(self):
-        """Compatibility property for legacy code"""
-        return type('obj', (object,), {
-            'step_count': self.step_count,
-            'total_readings_processed': self.step_count * 3,  # 3 readings per step
-            'prove_step_time': self.total_time,
-            'compressed_proof_size': self.proof_size,
-            'throughput': (self.step_count * 3) / self.total_time if self.total_time > 0 else 0,
-            'readings_per_second': (self.step_count * 3) / self.total_time if self.total_time > 0 else 0
-        })
+    # Metrics compatibility removed - demo.py deleted
 
 @dataclass
 class NovaMetrics:
@@ -175,196 +164,198 @@ class ZoKratesNovaManager:
             "batch_id": str(int(time.time()))
         }
     
-    def prove_recursive_batch(self, iot_batches: List[List[Dict[str, Any]]]) -> NovaProofResult:
+    def _execute_nova_proof(self, initial_state: str, steps: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Generate recursive Nova proof for multiple IoT data batches
-        With fallback simulation for experimental ZoKrates Nova issues
+        Execute real Nova proof using ZoKrates CLI commands
         """
-        if not self.setup_done:
-            if not self.setup():
-                return NovaProofResult(
-                    success=False,
-                    error_message="Nova setup failed"
-                )
-        
-        original_cwd = os.getcwd()
-        start_time = time.time()
-        
         try:
+            original_cwd = os.getcwd()
             os.chdir(self.working_dir)
             
-            # Prepare initial state
-            init_state = self.prepare_initial_state()
-            init_state_file = Path("init.json")  # ZoKrates Nova expects this name
-            with open(init_state_file, 'w') as f:
-                f.write(init_state)
+            # Write initial state
+            with open("init.json", "w") as f:
+                f.write(initial_state)
             
-            # Prepare all steps - Nova expects array of arrays format
-            steps = []
-            total_readings = 0
-            
-            for batch in iot_batches:
-                step_input = self.prepare_step_input(batch)
-                # Nova expects array format: [[value1, value2, value3, batch_id], ...]
-                step_array = step_input['values'] + [step_input['batch_id']]
-                steps.append(step_array)
-                total_readings += len([r for r in batch if r])
-            
-            steps_file = Path("steps.json")  # Relative to working directory
-            with open(steps_file, 'w') as f:
+            # Write steps
+            with open("steps.json", "w") as f:
                 json.dump(steps, f)
             
-            logger.info(f"Starting Nova recursive proof for {len(steps)} steps...")
-            
-            # Generate recursive proof
+            # Run Nova prove
             prove_start = time.time()
             prove_result = subprocess.run(
                 ["zokrates", "nova", "prove"],
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300
             )
             prove_time = time.time() - prove_start
             
             if prove_result.returncode != 0:
-                # ZoKrates Nova is experimental, provide simulation fallback
-                logger.warning("Nova proof failed, using simulation mode for thesis demonstration")
-                
-                # Simulate successful Nova proof for demonstration
-                total_time = time.time() - start_time
-                simulated_proof_size = 2048  # Typical Nova proof size (~2KB)
-                
-                return NovaProofResult(
-                    success=True,
-                    proof_data="simulated_nova_proof",
-                    compressed_proof="simulated_compressed_proof",
-                    step_count=len(iot_batches),
-                    total_time=total_time,
-                    verify_time=0.01,  # Fast verification
-                    proof_size=simulated_proof_size,
-                    error_message=None
-                )
+                return {
+                    "success": False,
+                    "error": f"Nova prove failed: {prove_result.stderr}"
+                }
             
-            # Compress proof
-            compress_start = time.time()
+            # Compress to SNARK
             compress_result = subprocess.run(
                 ["zokrates", "nova", "compress"],
                 capture_output=True,
                 text=True,
                 timeout=60
             )
-            compress_time = time.time() - compress_start
             
             if compress_result.returncode != 0:
-                logger.warning(f"Proof compression failed: {compress_result.stderr}")
-                compress_time = 0
+                return {
+                    "success": False,
+                    "error": f"Nova compress failed: {compress_result.stderr}"
+                }
             
-            # Verify proof
+            # Verify
             verify_start = time.time()
             verify_result = subprocess.run(
                 ["zokrates", "nova", "verify"],
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=60
             )
             verify_time = time.time() - verify_start
             
-            verification_success = verify_result.returncode == 0
+            if verify_result.returncode != 0:
+                return {
+                    "success": False,
+                    "error": f"Nova verify failed: {verify_result.stderr}"
+                }
             
-            # Read proof data
-            proof_data = None
-            compressed_proof = None
+            # Get proof size
             proof_size = 0
-            compressed_size = 0
+            if Path("proof.json").exists():
+                proof_size = Path("proof.json").stat().st_size
             
-            proof_file = Path("proof.json")
-            compressed_proof_file = Path("compressed_proof.json")
-            
-            if proof_file.exists():
-                with open(proof_file, 'r') as f:
-                    proof_data = f.read()
-                proof_size = len(proof_data.encode())
-                
-            if compressed_proof_file.exists():
-                with open(compressed_proof_file, 'r') as f:
+            # Read compressed proof
+            compressed_proof = None
+            if Path("proof.json").exists():
+                with open("proof.json", "r") as f:
                     compressed_proof = f.read()
-                compressed_size = len(compressed_proof.encode())
             
-            total_time = time.time() - start_time
-            throughput = total_readings / total_time if total_time > 0 else 0
-            
-            return NovaProofResult(
-                success=verification_success,
-                proof_data=proof_data,
-                compressed_proof=compressed_proof,
-                step_count=len(steps),
-                total_time=total_time,
-                verify_time=verify_time,
-                proof_size=compressed_size if compressed_size > 0 else proof_size,
-                error_message=None if verification_success else f"Verification failed: {verify_result.stderr}"
-            )
+            return {
+                "success": True,
+                "proof": compressed_proof,
+                "compressed_proof": compressed_proof,
+                "verify_time": verify_time,
+                "proof_size": proof_size,
+                "prove_time": prove_time
+            }
             
         except subprocess.TimeoutExpired:
-            return NovaProofResult(
-                success=False,
-                error_message="Nova proof generation timed out"
-            )
+            return {
+                "success": False,
+                "error": "Nova proof generation timeout"
+            }
         except Exception as e:
-            return NovaProofResult(
-                success=False,
-                error_message=f"Nova proof generation failed: {e}"
-            )
+            return {
+                "success": False,
+                "error": f"Nova execution error: {str(e)}"
+            }
         finally:
             os.chdir(original_cwd)
+    
+    def prove_recursive_batch(self, iot_batches: List[List[Dict[str, Any]]]) -> NovaProofResult:
+        """
+        Generate Nova recursive proof for IoT batches using real ZoKrates Nova
+        """
+        if not self.setup_done:
+            if not self.setup_nova():
+                return NovaProofResult(
+                    success=False,
+                    error_message="recursive_proof_failed: Nova setup failed"
+                )
+        
+        try:
+            start_time = time.time()
+            
+            # Prepare initial state and steps
+            initial_state = self.prepare_initial_state()
+            steps = []
+            
+            for batch in iot_batches:
+                step_input = self.prepare_step_input(batch)
+                steps.append(step_input)
+            
+            # Execute Nova proof generation
+            result = self._execute_nova_proof(initial_state, steps)
+            total_time = time.time() - start_time
+            
+            if result["success"]:
+                return NovaProofResult(
+                    success=True,
+                    proof_data=result["proof"],
+                    compressed_proof=result["compressed_proof"],
+                    step_count=len(steps),
+                    total_time=total_time,
+                    verify_time=result["verify_time"],
+                    proof_size=result["proof_size"]
+                )
+            else:
+                return NovaProofResult(
+                    success=False,
+                    error_message=f"recursive_proof_failed: {result['error']}"
+                )
+                
+        except Exception as e:
+            logger.error(f"Nova proof generation failed: {e}")
+            return NovaProofResult(
+                success=False,
+                error_message=f"recursive_proof_failed: {str(e)}"
+            )
     
     def benchmark_vs_traditional(self, iot_data: List[Dict[str, Any]], 
                                 traditional_proof_time: float) -> Dict[str, Any]:
         """
-        Benchmark Nova recursive SNARKs against traditional approach
+        Real Nova vs Traditional ZoKrates benchmarking
         """
-        # Split data into batches
-        batches = []
-        for i in range(0, len(iot_data), self.batch_size):
-            batch = iot_data[i:i + self.batch_size]
-            batches.append(batch)
-        
-        # Generate Nova proof
-        nova_result = self.prove_recursive_batch(batches)
-        
-        if not nova_result.success:
+        try:
+            # Split data into batches for Nova
+            batch_size = self.batch_size
+            batches = [iot_data[i:i+batch_size] for i in range(0, len(iot_data), batch_size)]
+            
+            # Run Nova proof
+            nova_result = self.prove_recursive_batch(batches)
+            
+            if nova_result.success:
+                return {
+                    "nova_available": True,
+                    "nova_metrics": {
+                        "proof_time": nova_result.total_time,
+                        "verify_time": nova_result.verify_time,
+                        "proof_size": nova_result.proof_size,
+                        "step_count": nova_result.step_count,
+                        "data_size": len(iot_data)
+                    },
+                    "traditional_metrics": {
+                        "proof_time": traditional_proof_time,
+                        "data_size": len(iot_data)
+                    },
+                    "improvements": {
+                        "time_speedup": traditional_proof_time / max(nova_result.total_time, 0.001),
+                        "compression_factor": len(batches)  # Multiple proofs compressed to one
+                    }
+                }
+            else:
+                return {
+                    "nova_available": False,
+                    "error": nova_result.error_message
+                }
+        except Exception as e:
             return {
                 "nova_available": False,
-                "error": nova_result.error_message
+                "error": f"Nova benchmarking failed: {str(e)}"
             }
-        
-        # Calculate improvements
-        time_improvement = traditional_proof_time / nova_result.total_time if nova_result.total_time > 0 else 1
-        throughput = len(iot_data) / nova_result.total_time if nova_result.total_time > 0 else 0
-        
-        return {
-            "nova_available": True,
-            "nova_metrics": {
-                "total_time": nova_result.total_time,
-                "verify_time": nova_result.verify_time,
-                "proof_size": nova_result.proof_size,
-                "step_count": nova_result.step_count,
-                "throughput": throughput
-            },
-            "traditional_time": traditional_proof_time,
-            "improvements": {
-                "time_speedup": time_improvement,
-                "constant_proof_size": True,
-                "recursive_composition": True
-            }
-        }
     
     def get_nova_advantages_analysis(self) -> Dict[str, Any]:
-        """Get analysis of Nova advantages for compatibility"""
+        """DISABLED: Nova analysis disabled - focusing on standard ZoKrates SNARKs"""
         return {
-            "constant_proof_size": "~2KB regardless of data size",
-            "true_recursion": "Each step verifies previous + adds new data", 
-            "memory_efficient": "Sub-linear memory growth",
-            "iot_optimized": "Perfect for continuous data streams"
+            "disabled": "Nova recursive SNARKs disabled for thesis",
+            "reason": "Focusing on proven standard ZoKrates SNARKs for reliable results"
         }
     
     def cleanup(self):

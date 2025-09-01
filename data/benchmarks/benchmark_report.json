@@ -1,48 +1,43 @@
 {
   "summary": {
-    "total_benchmark_runs": 60,
-    "standard_snark_runs": 30,
-    "recursive_snark_runs": 30,
+    "total_benchmark_runs": 4,
+    "standard_snark_runs": 2,
+    "recursive_snark_runs": 2,
     "circuit_types_tested": [
-      "aggregation",
-      "min_max",
-      "median",
-      "batch_processor",
       "filter_range"
     ],
     "average_success_rate": 1.0
   },
   "performance_comparison": {
     "average_proof_time": {
-      "standard_snark": 0.695997420946757,
-      "recursive_snark": 0.0002686659495035807,
-      "improvement_factor": 695.997420946757
+      "standard_snark": 0.21642577648162842,
+      "recursive_snark": 39.36197102069855,
+      "improvement_factor": 0.005498347030635753
     },
     "average_proof_size": {
-      "standard_snark": 8168,
-      "recursive_snark": 303.43333333333334,
-      "compression_ratio": 26.918598264308468
+      "standard_snark": 2559,
+      "recursive_snark": 1343,
+      "compression_ratio": 1.9054355919583024
     }
   },
   "privacy_analysis": {
     "average_information_leakage": 1.0,
-    "average_anonymity_set_size": 26.666666666666668,
-    "average_reidentification_risk": 0.09533333333333334,
+    "average_anonymity_set_size": 7.5,
+    "average_reidentification_risk": 0.16500000000000004,
     "privacy_level_distribution": {
-      "2": 60
+      "2": 4
     }
   },
   "scalability_analysis": {
     "scaling_analysis": {
-      "scaling_factor": 0.6073549343563055,
+      "scaling_factor": -4.061098659225166,
       "scaling_type": "sub-linear"
     },
     "recommended_batch_sizes": [
-      5,
-      10
+      5
     ]
   },
   "recommendations": {
-    "recursive_snark_threshold": "Use recursive SNARKs for data sizes >= 50"
+    "recursive_snark_threshold": "Use recursive SNARKs for data sizes >= 20"
   }
 }

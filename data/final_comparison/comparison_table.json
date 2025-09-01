@@ -1,0 +1,139 @@
+{
+  "results": [
+    {
+      "type": "Standard",
+      "num_items": 6,
+      "successful_proofs": 6,
+      "compile_time": 0.0263521671295166,
+      "setup_time": 0.05385899543762207,
+      "total_proof_time": 0.7144880294799805,
+      "total_verify_time": 0.1421043872833252,
+      "total_proof_size": 5118,
+      "total_time": 0.9368035793304443,
+      "throughput": 6.404757766071242,
+      "success": true
+    },
+    {
+      "type": "Recursive",
+      "num_items": 6,
+      "setup_time": 4.4345855712890625e-05,
+      "total_proof_time": 8.764548301696777,
+      "total_verify_time": 2.3455891609191895,
+      "total_proof_size": 70827,
+      "total_time": 11.11018180847168,
+      "throughput": 0.5400451678859935,
+      "steps": 2,
+      "success": true
+    },
+    {
+      "type": "Standard",
+      "num_items": 12,
+      "successful_proofs": 12,
+      "compile_time": 0.025394439697265625,
+      "setup_time": 0.04294013977050781,
+      "total_proof_time": 1.4375011920928955,
+      "total_verify_time": 0.2796304225921631,
+      "total_proof_size": 10236,
+      "total_time": 1.785466194152832,
+      "throughput": 6.720933747890847,
+      "success": true
+    },
+    {
+      "type": "Recursive",
+      "num_items": 12,
+      "setup_time": 4.506111145019531e-05,
+      "total_proof_time": 8.882695436477661,
+      "total_verify_time": 2.300672769546509,
+      "total_proof_size": 70803,
+      "total_time": 11.18341326713562,
+      "throughput": 1.0730176658376795,
+      "steps": 4,
+      "success": true
+    },
+    {
+      "type": "Standard",
+      "num_items": 20,
+      "successful_proofs": 20,
+      "compile_time": 0.024730920791625977,
+      "setup_time": 0.04805731773376465,
+      "total_proof_time": 2.3352949619293213,
+      "total_verify_time": 0.4549293518066406,
+      "total_proof_size": 17060,
+      "total_time": 2.8630125522613525,
+      "throughput": 6.985648730112268,
+      "success": true
+    },
+    {
+      "type": "Recursive",
+      "num_items": 20,
+      "setup_time": 5.7220458984375e-05,
+      "total_proof_time": 9.034565687179565,
+      "total_verify_time": 2.3164901733398438,
+      "total_proof_size": 70801,
+      "total_time": 11.351113080978394,
+      "throughput": 1.7619417459169675,
+      "steps": 7,
+      "success": true
+    },
+    {
+      "type": "Standard",
+      "num_items": 30,
+      "successful_proofs": 30,
+      "compile_time": 0.0249788761138916,
+      "setup_time": 0.04994702339172363,
+      "total_proof_time": 3.4555232524871826,
+      "total_verify_time": 0.6923716068267822,
+      "total_proof_size": 25590,
+      "total_time": 4.22282075881958,
+      "throughput": 7.104256068018858,
+      "success": true
+    },
+    {
+      "type": "Recursive",
+      "num_items": 30,
+      "setup_time": 4.172325134277344e-05,
+      "total_proof_time": 9.294806003570557,
+      "total_verify_time": 2.3321995735168457,
+      "total_proof_size": 70797,
+      "total_time": 11.627047300338745,
+      "throughput": 2.580190759104074,
+      "steps": 10,
+      "success": true
+    },
+    {
+      "type": "Standard",
+      "num_items": 50,
+      "successful_proofs": 50,
+      "compile_time": 0.02449941635131836,
+      "setup_time": 0.05229520797729492,
+      "total_proof_time": 5.792147397994995,
+      "total_verify_time": 1.1583714485168457,
+      "total_proof_size": 42650,
+      "total_time": 7.027313470840454,
+      "throughput": 7.115094581659538,
+      "success": true
+    },
+    {
+      "type": "Recursive",
+      "num_items": 50,
+      "setup_time": 4.1961669921875e-05,
+      "total_proof_time": 9.909985065460205,
+      "total_verify_time": 2.346083402633667,
+      "total_proof_size": 70803,
+      "total_time": 12.256110429763794,
+      "throughput": 4.0795977065101905,
+      "steps": 17,
+      "success": true
+    }
+  ],
+  "test_sizes": [
+    6,
+    12,
+    20,
+    30,
+    50
+  ],
+  "successful_comparisons": 5,
+  "crossover_found": false,
+  "timestamp": 1756671374.2379699
+}

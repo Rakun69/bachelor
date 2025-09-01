@@ -1,0 +1,87 @@
+sequenceDiagram
+    participant User
+    participant RunEval as run_evaluation.sh
+    participant Orchestrator as orchestrator.py
+    participant IoTSim as iot_simulation/smart_home.py
+    participant SNARKMgr as proof_systems/snark_manager.py
+    participant ZoKrates as ZoKrates Binary
+    participant BenchFW as evaluation/benchmark_framework.py
+    participant VizEngine as evaluation/visualization_engine.py
+    participant DataFiles as data/ Directory
+
+    Note over User,DataFiles: IoT ZK-SNARK Evaluation Workflow
+
+    User->>RunEval: ./run_evaluation.sh
+    RunEval->>RunEval: Setup Python Environment
+    RunEval->>RunEval: Check ZoKrates Installation
+    RunEval->>Orchestrator: python orchestrator.py --phase all
+
+    Note over Orchestrator: Phase 1: Data Generation
+    Orchestrator->>IoTSim: generate_multi_period_data()
+    IoTSim->>IoTSim: Create Smart Home Sensors
+    IoTSim->>IoTSim: Generate 1 Day Data (24,480 readings)
+    IoTSim->>DataFiles: Save iot_readings_1_day.json
+    IoTSim->>IoTSim: Generate 1 Week Data (171,360 readings)
+    IoTSim->>DataFiles: Save iot_readings_1_week.json
+    IoTSim->>IoTSim: Generate 1 Month Data (732,960 readings)
+    IoTSim->>DataFiles: Save iot_readings_1_month.json
+    IoTSim->>Orchestrator: Return multi_period_results
+
+    Note over Orchestrator: Phase 2: Circuit Compilation
+    Orchestrator->>SNARKMgr: compile_circuit("filter_range.zok")
+    SNARKMgr->>ZoKrates: zokrates compile -i filter_range.zok
+    ZoKrates->>DataFiles: Save filter_range.out (174 constraints)
+    ZoKrates->>SNARKMgr: Compilation Success
+    
+    SNARKMgr->>ZoKrates: zokrates setup
+    ZoKrates->>DataFiles: Save proving.key & verification.key
+    ZoKrates->>SNARKMgr: Setup Complete
+
+    Orchestrator->>SNARKMgr: compile_circuit("min_max.zok")
+    SNARKMgr->>ZoKrates: zokrates compile -i min_max.zok
+    ZoKrates->>DataFiles: Save min_max.out (174 constraints)
+
+    Note over Orchestrator: Phase 3: Benchmarking
+    Orchestrator->>BenchFW: run_comprehensive_benchmark()
+    BenchFW->>SNARKMgr: generate_proof("filter_range", inputs)
+    SNARKMgr->>ZoKrates: zokrates compute-witness -a 0 100 50
+    ZoKrates->>DataFiles: Save witness file
+    
+    SNARKMgr->>ZoKrates: zokrates generate-proof
+    ZoKrates->>DataFiles: Save proof.json (853 bytes)
+    Note over ZoKrates: Real Proof Generation: 0.076s
+    
+    SNARKMgr->>ZoKrates: zokrates verify
+    ZoKrates->>SNARKMgr: Verification: PASSED (0.025s)
+    SNARKMgr->>BenchFW: Return ProofMetrics(0.076s, 853 bytes)
+
+    BenchFW->>SNARKMgr: generate_proof("min_max", inputs)
+    SNARKMgr->>ZoKrates: Complete Proof Workflow
+    ZoKrates->>SNARKMgr: Return ProofMetrics(0.080s, 923 bytes)
+    
+    BenchFW->>DataFiles: Save real_zokrates_benchmarks.json
+    BenchFW->>DataFiles: Save REAL_THESIS_CONCLUSIONS.md
+
+    Note over Orchestrator: Phase 4: Analysis
+    Orchestrator->>BenchFW: analyze_performance_results()
+    BenchFW->>DataFiles: Load benchmark results
+    BenchFW->>BenchFW: Calculate linear scaling metrics
+    BenchFW->>BenchFW: Privacy analysis (174 constraints)
+    BenchFW->>DataFiles: Save analysis_results.json
+
+    Note over Orchestrator: Phase 5: Visualization
+    Orchestrator->>VizEngine: generate_comprehensive_visualizations()
+    VizEngine->>DataFiles: Load IoT data + benchmark results
+    VizEngine->>VizEngine: Create Performance Charts
+    VizEngine->>DataFiles: Save snark_comparison_detailed.png
+    VizEngine->>DataFiles: Save iot_device_performance_analysis.png
+    VizEngine->>DataFiles: Save scalability_analysis_detailed.png
+    VizEngine->>DataFiles: Save comprehensive_dashboard.png
+    
+    VizEngine->>DataFiles: Save final_report.json
+    VizEngine->>Orchestrator: Visualization Complete
+
+    Orchestrator->>RunEval: All Phases Complete
+    RunEval->>User: ✅ Evaluation Finished Successfully!
+
+    Note over User,DataFiles: Results Available in data/ Directory

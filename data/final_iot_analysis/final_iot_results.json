@@ -1,0 +1,79 @@
+{
+  "final_iot_results": [
+    {
+      "scenario": "Small IoT Batch",
+      "num_items": 50,
+      "standard_time": 5.907403295997938,
+      "recursive_time": 9.761264192999079,
+      "time_ratio": 1.6523781607414545,
+      "time_winner": "Standard",
+      "time_advantage": 65.23781607414546,
+      "standard_memory": 70.10546875,
+      "recursive_memory": 70.10546875,
+      "memory_ratio": 1.0,
+      "memory_winner": "Standard",
+      "standard_success_rate": 100.0,
+      "recursive_steps": 17,
+      "both_successful": true
+    },
+    {
+      "scenario": "Medium IoT Batch",
+      "num_items": 85,
+      "standard_time": 10.13581926400002,
+      "recursive_time": 10.557511273000273,
+      "time_ratio": 1.0416041365790727,
+      "time_winner": "Standard",
+      "time_advantage": 4.160413657907269,
+      "standard_memory": 70.23046875,
+      "recursive_memory": 70.10546875,
+      "memory_ratio": 0.9982201457255687,
+      "memory_winner": "Recursive",
+      "standard_success_rate": 100.0,
+      "recursive_steps": 29,
+      "both_successful": true
+    },
+    {
+      "scenario": "Large IoT Batch",
+      "num_items": 100,
+      "standard_time": 11.671658783001476,
+      "recursive_time": 10.869267665002553,
+      "time_ratio": 0.9312530349869789,
+      "time_winner": "Recursive",
+      "time_advantage": 6.874696501302113,
+      "standard_memory": 70.23046875,
+      "recursive_memory": 70.10546875,
+      "memory_ratio": 0.9982201457255687,
+      "memory_winner": "Recursive",
+      "standard_success_rate": 100.0,
+      "recursive_steps": 34,
+      "both_successful": true
+    },
+    {
+      "scenario": "Crossover Point",
+      "num_items": 89,
+      "standard_time": 10.421363890000066,
+      "recursive_time": 10.614209219998884,
+      "time_ratio": 1.0185048072434995,
+      "time_winner": "Standard",
+      "time_advantage": 1.8504807243499455,
+      "standard_memory": 70.23046875,
+      "recursive_memory": 70.23046875,
+      "memory_ratio": 1.0,
+      "memory_winner": "Standard",
+      "standard_success_rate": 100.0,
+      "recursive_steps": 30,
+      "both_successful": true
+    }
+  ],
+  "test_timestamp": 1756678020.0462425,
+  "scenarios_tested": [
+    "50 items",
+    "85 items",
+    "100 items",
+    "89 items (crossover)"
+  ],
+  "analysis_summary": {
+    "successful_comparisons": 4,
+    "failed_tests": 0
+  }
+}

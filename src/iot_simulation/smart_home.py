@@ -85,7 +85,14 @@ class SmartHomeSensors:
             SensorConfig("BT_MOTION_01", "motion", "bathroom", 0.0, 0.0, 3, 5),
             
             # Outdoor
-            SensorConfig("OD_TEMP_01", "temperature", "outdoor", 15.0, 2.0, 1, 120),
+            SensorConfig("OD_TEMP_01", "temperature", "outdoor", 15.0, 2.0, 1, 60),  # Fixed: 60s statt 120s
+            
+            # Additional temperature sensors for more data
+            SensorConfig("LR_TEMP_02", "temperature", "living_room", 22.5, 0.4, 2, 60),
+            SensorConfig("BR_TEMP_02", "temperature", "bedroom", 19.5, 0.4, 2, 60),
+            SensorConfig("KT_TEMP_02", "temperature", "kitchen", 23.5, 0.8, 2, 60),
+            SensorConfig("BT_TEMP_02", "temperature", "bathroom", 20.5, 0.9, 2, 60),
+            SensorConfig("OD_TEMP_02", "temperature", "outdoor", 14.5, 1.8, 1, 60),
             SensorConfig("OD_HUM_01", "humidity", "outdoor", 80.0, 5.0, 1, 120),
             SensorConfig("OD_WIND_01", "wind_speed", "outdoor", 5.0, 3.0, 1, 60),
         ]

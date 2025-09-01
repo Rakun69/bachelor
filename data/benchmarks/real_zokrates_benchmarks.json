@@ -1,0 +1,28 @@
+[
+  {
+    "circuit_type": "filter_range",
+    "proof_system": "standard_zokrates_snark_REAL",
+    "performance": {
+      "proof_generation_time": 0.07594585418701172,
+      "verification_time": 0.025233030319213867,
+      "proof_size": 853,
+      "memory_usage": 16.125,
+      "circuit_constraints": 174
+    },
+    "timestamp": "2025-08-28 20:00:34",
+    "note": "REAL ZoKrates measurements - NO SIMULATION"
+  },
+  {
+    "circuit_type": "min_max",
+    "proof_system": "standard_zokrates_snark_REAL",
+    "performance": {
+      "proof_generation_time": 0.07955312728881836,
+      "verification_time": 0.025043487548828125,
+      "proof_size": 923,
+      "memory_usage": 16.125,
+      "circuit_constraints": 174
+    },
+    "timestamp": "2025-08-28 20:00:35",
+    "note": "REAL ZoKrates measurements - NO SIMULATION"
+  }
+]

@@ -97,6 +97,43 @@ check_zokrates() {
     fi
 }
 
+# Function to setup Nova recursive SNARKs
+setup_nova() {
+    print_status "Setting up Nova recursive SNARKs..."
+    
+    cd "$PROJECT_ROOT"
+    source "$VENV_NAME/bin/activate"
+    
+    # Check if Nova commands are available
+    if ! zokrates nova --help >/dev/null 2>&1; then
+        print_warning "Nova commands not available in this ZoKrates version"
+        return 0
+    fi
+    
+    # Setup Nova parameters if needed
+    NOVA_DIR="circuits/nova"
+    if [ -d "$NOVA_DIR" ]; then
+        cd "$NOVA_DIR"
+        
+        if [ ! -f "nova.params" ]; then
+            print_status "Generating Nova parameters (this may take a moment)..."
+            zokrates nova setup
+            
+            if [ -f "nova.params" ]; then
+                print_success "Nova setup completed successfully"
+            else
+                print_warning "Nova setup failed, but continuing with standard SNARKs"
+            fi
+        else
+            print_success "Nova already set up"
+        fi
+        
+        cd "$PROJECT_ROOT"
+    else
+        print_warning "Nova circuit directory not found, skipping Nova setup"
+    fi
+}
+
 # Function to setup project directories
 setup_directories() {
     print_status "Setting up project directories..."
@@ -302,7 +339,7 @@ show_help() {
     echo "  benchmark          Run performance benchmarks"
     echo "  analyze            Analyze results"
     echo "  visualize          Generate household activity visualizations"
-    echo "  all                Run complete evaluation (default)"
+    echo "  all                Run complete evaluation (includes Nova setup) (default)"
     echo ""
     echo "Examples:"
     echo "  $0                 Run complete evaluation"
@@ -326,6 +363,117 @@ clean_files() {
     print_success "Cleaned generated files"
 }
 
+# Docker comparison function
+run_docker_comparison_if_available() {
+    print_status "Checking Docker availability for IoT simulation..."
+    
+    # Check if Docker is installed and running
+    if ! command -v docker &> /dev/null; then
+        print_warning "Docker not found. Skipping IoT resource-limited comparison."
+        return 0
+    fi
+    
+    if ! docker info &> /dev/null; then
+        print_warning "Docker daemon not running. Skipping IoT resource-limited comparison."
+        return 0
+    fi
+    
+    print_status "Docker available! Running IoT resource-limited comparison..."
+    
+    # Create Docker comparison results directory
+    DOCKER_RESULTS_DIR="./data/docker_comparison"
+    mkdir -p ${DOCKER_RESULTS_DIR}
+    TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+    
+    # Build Docker image if it doesn't exist
+    IMAGE_NAME="iot-zk-snark-eval"
+    print_status "Building Docker image for IoT simulation..."
+    
+    if docker build -t ${IMAGE_NAME} . > ${DOCKER_RESULTS_DIR}/build_${TIMESTAMP}.log 2>&1; then
+        print_success "Docker image built successfully"
+    else
+        print_error "Failed to build Docker image. Check ${DOCKER_RESULTS_DIR}/build_${TIMESTAMP}.log"
+        return 1
+    fi
+    
+    print_status "Running IoT resource-limited evaluation (CPU: 0.5 cores, Memory: 1GB)..."
+    
+    # Start time measurement
+    docker_start_time=$(date +%s)
+    
+    # Run Docker container with IoT resource constraints
+    docker run --rm \
+        --name "iot-zk-snark-limited" \
+        --cpus=0.5 \
+        --memory=1g \
+        --memory-swap=1g \
+        -v "$(pwd)/data:/app/data" \
+        ${IMAGE_NAME} \
+        -c "source iot_zk_env/bin/activate && ./run_evaluation.sh --phase all --skip-docker" \
+        2>&1 | tee ${DOCKER_RESULTS_DIR}/limited_run_${TIMESTAMP}.log
+    
+    # End time measurement
+    docker_end_time=$(date +%s)
+    docker_execution_time=$((docker_end_time - docker_start_time))
+    
+    print_status "Docker comparison analysis..."
+    
+    # Extract key performance metrics from both runs
+    extract_performance_metrics() {
+        local log_file=$1
+        local scenario=$2
+        
+        if [ ! -f "${log_file}" ]; then
+            echo "    Log file not found: ${log_file}"
+            echo "    Nova Performance: Prove=N/A, Compress=N/A, Verify=N/A"
+            echo "    Batch 100: Standard=N/A, Nova=N/A, Speedup=N/A"
+            return 0
+        fi
+        
+        # Extract Nova performance metrics
+        nova_prove=$(grep "Nova prove completed" ${log_file} | tail -1 | grep -o '[0-9]\+\.[0-9]\+s' | sed 's/s//' || echo "N/A")
+        nova_compress=$(grep "Nova compress completed" ${log_file} | tail -1 | grep -o '[0-9]\+\.[0-9]\+s' | sed 's/s//' || echo "N/A")
+        nova_verify=$(grep "Nova verify completed" ${log_file} | tail -1 | grep -o '[0-9]\+\.[0-9]\+s' | sed 's/s//' || echo "N/A")
+        
+        # Extract Fair Comparison results
+        batch_100_standard=$(grep -A2 "BATCH 100 RESULTS" ${log_file} | grep "Standard:" | grep -o '[0-9]\+\.[0-9]\+s' | sed 's/s//' || echo "N/A")
+        batch_100_nova=$(grep -A2 "BATCH 100 RESULTS" ${log_file} | grep "Nova:" | grep -o '[0-9]\+\.[0-9]\+s' | sed 's/s//' || echo "N/A")
+        batch_100_speedup=$(grep -A2 "BATCH 100 RESULTS" ${log_file} | grep "Advantage:" | grep -o '[0-9]\+\.[0-9]\+x' | sed 's/x//' || echo "N/A")
+        
+        echo "    Nova Performance: Prove=${nova_prove}s, Compress=${nova_compress}s, Verify=${nova_verify}s"
+        echo "    Batch 100: Standard=${batch_100_standard}s, Nova=${batch_100_nova}s, Speedup=${batch_100_speedup}x"
+    }
+    
+    print_status "Performance Analysis Results:"
+    echo "  📊 UNLIMITED RESOURCES (Normal Run):"
+    extract_performance_metrics "./logs/evaluation_$(date +%Y%m%d).log" "unlimited" || echo "    No log file found for normal run"
+    
+    echo "  📱 IoT-LIMITED RESOURCES (Docker Run):"
+    extract_performance_metrics "${DOCKER_RESULTS_DIR}/limited_run_${TIMESTAMP}.log" "limited"
+    echo "    Total Docker Execution Time: ${docker_execution_time}s"
+    
+    # Create comparison summary
+    cat > ${DOCKER_RESULTS_DIR}/comparison_summary_${TIMESTAMP}.json << EOF
+{
+  "timestamp": "${TIMESTAMP}",
+  "docker_execution_time": ${docker_execution_time},
+  "docker_constraints": {
+    "cpus": "0.5",
+    "memory": "1g", 
+    "memory_swap": "1g"
+  },
+  "comparison_note": "This comparison shows performance under IoT resource constraints vs unlimited resources"
+}
+EOF
+    
+    print_success "Docker IoT comparison completed!"
+    print_status "Results saved in: ${DOCKER_RESULTS_DIR}/"
+    echo "  📄 Log: ${DOCKER_RESULTS_DIR}/limited_run_${TIMESTAMP}.log"
+    echo "  📊 Summary: ${DOCKER_RESULTS_DIR}/comparison_summary_${TIMESTAMP}.json"
+    echo ""
+    echo "🎯 Key Insight: Compare how Recursive SNARKs perform under IoT resource constraints!"
+}
+
 # Main execution
 main() {
     cd "$PROJECT_ROOT"
@@ -335,6 +483,7 @@ main() {
     SETUP_ONLY=false
     TEST_ONLY=false
     DOCS_ONLY=false
+    SKIP_DOCKER=false
     CLEAN_ONLY=false
     
     while [[ $# -gt 0 ]]; do
@@ -357,6 +506,10 @@ main() {
                 ;;
             --docs)
                 DOCS_ONLY=true
+                shift
+                ;;
+            --skip-docker)
+                SKIP_DOCKER=true
                 shift
                 ;;
             --clean)
@@ -398,6 +551,7 @@ main() {
     if [ "$SETUP_ONLY" = true ] || [ "$PHASE" = "all" ]; then
         setup_python_env
         check_zokrates
+        setup_nova
         setup_directories
         
         if [ "$SETUP_ONLY" = true ]; then
@@ -423,10 +577,13 @@ main() {
             ;;
         "visualize")
             print_status "Running visualization phase..."
-            python demo.py
+            python src/evaluation/visualization_engine.py
             ;;
         "all")
             run_complete_evaluation
+            if [ "$SKIP_DOCKER" = false ]; then
+                run_docker_comparison_if_available
+            fi
             ;;
         *)
             print_error "Unknown phase: $PHASE"

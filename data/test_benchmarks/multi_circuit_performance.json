@@ -1,0 +1,19 @@
+{
+  "filter_range": {
+    "avg_time": 0.06997623443603515,
+    "avg_size": 853.0,
+    "min_time": 0.05852508544921875,
+    "max_time": 0.07768034934997559,
+    "success_rate": 1.0
+  },
+  "min_max": {
+    "success_rate": 0
+  },
+  "median": {
+    "avg_time": 0.08378405570983886,
+    "avg_size": 783.0,
+    "min_time": 0.07791519165039062,
+    "max_time": 0.09453773498535156,
+    "success_rate": 1.0
+  }
+}

@@ -1,0 +1,112 @@
+graph LR
+    subgraph "Configuration Layer"
+        A[configs/default_config.json] --> B[orchestrator.py]
+        C[requirements.txt] --> D[Python Environment]
+    end
+
+    subgraph "Entry Points"
+        E[run_evaluation.sh] --> B
+        F[User Commands] --> E
+    end
+
+    subgraph "Core IoT Simulation"
+        B --> G[src/iot_simulation/smart_home.py]
+        G --> H1[data/raw/iot_readings_1_day.json]
+        G --> H2[data/raw/iot_readings_1_week.json]
+        G --> H3[data/raw/iot_readings_1_month.json]
+        G --> H4[data/raw/iot_statistics_*.json]
+    end
+
+    subgraph "ZK Circuit Processing"
+        I1[circuits/basic/filter_range.zok] --> J[src/proof_systems/snark_manager.py]
+        I2[circuits/basic/min_max.zok] --> J
+        I3[circuits/basic/median.zok] --> J
+        I4[circuits/advanced/aggregation.zok] --> J
+        
+        J --> K1[data/proofs/filter_range.out]
+        J --> K2[data/proofs/min_max.out]
+        J --> K3[data/proofs/proving.key]
+        J --> K4[data/proofs/verification.key]
+        J --> K5[data/proofs/proof.json]
+        J --> K6[data/proofs/witness]
+    end
+
+    subgraph "Benchmark & Evaluation"
+        B --> L[src/evaluation/benchmark_framework.py]
+        H1 --> L
+        H2 --> L
+        H3 --> L
+        K5 --> L
+        
+        L --> M1[data/benchmarks/real_zokrates_benchmarks.json]
+        L --> M2[data/benchmarks/real_snark_sample.json]
+        L --> M3[data/benchmarks/REAL_THESIS_CONCLUSIONS.md]
+        
+        B --> N[src/evaluation/iot_device_metrics.py]
+        N --> O[data/iot_analysis/device_performance.json]
+    end
+
+    subgraph "Privacy Analysis"
+        B --> P[src/evaluation/privacy_analyzer.py]
+        P --> L
+        P --> Q[Privacy Metrics Integration]
+    end
+
+    subgraph "Analysis & Crossover"
+        B --> R[src/analysis/crossover_point_analyzer.py]
+        M1 --> R
+        M2 --> R
+        R --> S[data/visualizations/theoretical_crossover_analysis.png]
+    end
+
+    subgraph "Visualization Generation"
+        B --> T[src/evaluation/visualization_engine.py]
+        M1 --> T
+        M2 --> T
+        M3 --> T
+        O --> T
+        
+        T --> U1[data/visualizations/snark_comparison_detailed.png]
+        T --> U2[data/visualizations/iot_device_performance_analysis.png]
+        T --> U3[data/visualizations/performance_heatmaps.png]
+        T --> U4[data/visualizations/scalability_analysis_detailed.png]
+        T --> U5[data/visualizations/comprehensive_dashboard.png]
+    end
+
+    subgraph "Final Results"
+        T --> V[data/final_report.json]
+        U1 --> V
+        U2 --> V
+        U3 --> V
+        U4 --> V
+        U5 --> V
+        S --> V
+        
+        V --> W[REAL_PROJECT_SUMMARY.md]
+        V --> X[README.md]
+    end
+
+    subgraph "External Dependencies"
+        Y[ZoKrates Binary] -.-> J
+        Z[Python Libraries] -.-> D
+        AA[Git Repository] -.-> W
+    end
+
+    %% Styling
+    classDef config fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    classDef entry fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef iot fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef circuit fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef bench fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef viz fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef results fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef external fill:#fafafa,stroke:#424242,stroke-width:1px,stroke-dasharray: 5 5
+
+    class A,C config
+    class E,F entry
+    class G,H1,H2,H3,H4 iot
+    class I1,I2,I3,I4,J,K1,K2,K3,K4,K5,K6 circuit
+    class L,M1,M2,M3,N,O,P,Q,R bench
+    class T,U1,U2,U3,U4,U5,S viz
+    class V,W,X results
+    class Y,Z,AA external

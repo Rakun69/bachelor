@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.10)  11 AUG 2025 00:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.10)  28 AUG 2025 22:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1429,7 +1429,6 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 Package hyperref Info: Link coloring OFF on input line 86.
- (./bachelorarbeit.out) (./bachelorarbeit.out)
 \@outlinefile=\write6
 \openout6 = `bachelorarbeit.out'.
 
@@ -1534,36 +1533,33 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ]
 Package tocbasic Info: character protrusion at toc deactivated on input line 116.
- (./bachelorarbeit.toc
-Package cleveref Info: loaded `english' language definitions on input line 1.
-)
+
+No file bachelorarbeit.toc.
 \tf@toc=\write7
 \openout7 = `bachelorarbeit.toc'.
 
- [4
+[4
 
 
 ]
 Package tocbasic Info: character protrusion at lof deactivated on input line 119.
- (./bachelorarbeit.lof
-Package cleveref Info: loaded `english' language definitions on input line 1.
-)
+
+No file bachelorarbeit.lof.
 \tf@lof=\write8
 \openout8 = `bachelorarbeit.lof'.
 
- [5
+[5
 
 
 
 ]
 Package tocbasic Info: character protrusion at lot deactivated on input line 121.
- (./bachelorarbeit.lot
-Package cleveref Info: loaded `english' language definitions on input line 1.
-)
+
+No file bachelorarbeit.lot.
 \tf@lot=\write9
 \openout9 = `bachelorarbeit.lot'.
 
- [6
+[6
 
 
 ] [7
@@ -1588,7 +1584,29 @@ Class scrbook Warning: \float@addtolists detected!
 [8
 
 
-] [9] [10]
+] [9]
+
+LaTeX Warning: Reference `sec:intro' on page 1 undefined on input line 181.
+
+
+LaTeX Warning: Reference `sec:background' on page 1 undefined on input line 182.
+
+
+LaTeX Warning: Reference `chap:related-work' on page 1 undefined on input line 183.
+
+
+LaTeX Warning: Reference `chap:system-architecture' on page 1 undefined on input line 184.
+
+
+LaTeX Warning: Reference `chap:empirical-results' on page 1 undefined on input line 185.
+
+
+LaTeX Warning: Reference `chap:discussion' on page 1 undefined on input line 186.
+
+
+LaTeX Warning: Reference `chap:conclusion' on page 1 undefined on input line 187.
+
+[10]
 chapter 2.
 [11
 
@@ -1596,9 +1614,13 @@ chapter 2.
 chapter 3.
 [13
 
-] [14{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}] [15]
+] [14{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
+
+LaTeX Warning: Reference `chap:system-architecture' on page 1 undefined on input line 290.
+
+[15]
 chapter 4.
-<img/diagramm2.png, id=323, 3854.4pt x 2376.88pt>
+<img/diagramm2.png, id=263, 3854.4pt x 2376.88pt>
 File: img/diagramm2.png Graphic file (type png)
 <use img/diagramm2.png>
 Package pdftex.def Info: img/diagramm2.png  used on input line 300.
@@ -1607,6 +1629,9 @@ Package pdftex.def Info: img/diagramm2.png  used on input line 300.
 Overfull \hbox (23.83194pt too wide) in paragraph at lines 300--301
  []| [] 
  []
+
+
+LaTeX Warning: Reference `fig:system-overview' on page 1 undefined on input line 307.
 
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 309.
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
@@ -1642,33 +1667,86 @@ chapter 5.
 [23
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 691--692
-[]|\T1/lmr/bx/n/10.95 (+20) Combined op-ti-miza-tion
- []
 
-
-Underfull \hbox (badness 6792) in paragraph at lines 691--692
-\T1/lmr/bx/n/10.95 (+20) thresh-old for prac-ti-cal
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 707--708
-
- []
+LaTeX Warning: Reference `tab:crossover-comparison' on page 24 undefined on input line 690.
 
 [24]
-<img/crossover_point_overview.png, id=511, 859.7721pt x 499.6266pt>
-File: img/crossover_point_overview.png Graphic file (type png)
-<use img/crossover_point_overview.png>
-Package pdftex.def Info: img/crossover_point_overview.png  used on input line 748.
-(pdftex.def)             Requested size: 437.46118pt x 254.21916pt.
- [25 <./img/crossover_point_overview.png>]
+
+LaTeX Warning: Reference `fig:crossover-plots' on page 25 undefined on input line 750.
+
+
+LaTeX Warning: File `data/visualizations/crossover_analysis_plots.png' not found on input line 754.
+
+
+/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex:754: Package pdftex.def Error: File `data/visualizations/crossover_analysis_plots.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.754 ...ualizations/crossover_analysis_plots.png}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 780--780
+[]|\T1/lmr/m/n/10.95 (+20) Real-time pro-cess-ing
+ []
+
+
+/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex:782: LaTeX Error: Unicode character ≥ (U+2265)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.782 Batch processing (≥
+                            25 items) & Nova Recursive & Exponential speed a...
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (15.73224pt too wide) in paragraph at lines 776--791
+ [][] 
+ []
+
+[25] [26] [27]
+/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex:859: Bad space factor (0).
+<recently read> \@savsf 
+                        
+l.859 \end{comment}
+                   
+I allow only values in the range 1..32767 here.
+
+
+/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex:859: LaTeX Error: \begin{document} ended by \end{comment}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.859 \end{comment}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/home/ramon/bachelor/thesis_sections/bachelorarbeit.tex:859: Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.859 \end{comment}
+                   
+Things are pretty mixed up, but I think the worst is over.
+
+[28]
 chapter 6.
-[26
+[29
 
 ]
 chapter 7.
-[27
+[30
 
 ]
 chapter without number
@@ -1676,39 +1754,57 @@ Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/10.95'.
 (microtype)             Ignoring protrusion settings for this character.
 
-Overfull \hbox (14.70132pt too wide) in paragraph at lines 1667--1667
+Overfull \hbox (14.70132pt too wide) in paragraph at lines 1682--1682
 \T1/lmtt/m/n/10.95 research / data -[] generated -[] per -[] day ? utm _ source = chatgpt . com$[] \T1/lmr/m/n/10.95 (-20) (vis-ited on 07/25/2025). 
  []
 
-[28
+[31
 
 
-] [29] [30] (./bachelorarbeit.aux
+] [32] [33] (./bachelorarbeit.aux
 Package cleveref Info: loaded `english' language definitions on input line 10.
 )
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
-Package rerunfilecheck Info: File `bachelorarbeit.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `bachelorarbeit.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `bachelorarbeit.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                bachelorarbeit
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'bachelorarbeit.run.xml'.
 \openout1 = `bachelorarbeit.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 61689 strings out of 476056
- 1430810 string characters out of 5791604
- 2756006 words of memory out of 5000000
- 82309 multiletter control sequences out of 15000+600000
- 635645 words of font info for 186 fonts, out of 8000000 for 9000
+ 61748 strings out of 476056
+ 1432466 string characters out of 5791604
+ 2750684 words of memory out of 5000000
+ 82331 multiletter control sequences out of 15000+600000
+ 636346 words of font info for 194 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 108i,20n,107p,10961b,2380s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on bachelorarbeit.pdf (32 pages, 1245382 bytes).
+ 108i,20n,107p,10961b,2176s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb>
+Output written on bachelorarbeit.pdf (35 pages, 946599 bytes).
 PDF statistics:
- 847 PDF objects out of 1000 (max. 8388607)
- 736 compressed objects within 8 object streams
- 273 named destinations out of 1000 (max. 500000)
- 45452 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 857 PDF objects out of 1000 (max. 8388607)
+ 743 compressed objects within 8 object streams
+ 304 named destinations out of 1000 (max. 500000)
+ 45463 words of extra memory for PDF output out of 51595 (max. 10000000)
 

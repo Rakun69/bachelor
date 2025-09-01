@@ -1,0 +1,125 @@
+{
+  "comparison_type": "fair_systematic",
+  "data_source": "identical_iot_sensor_data",
+  "total_data_available": 24480,
+  "batch_sizes_tested": [
+    10,
+    25,
+    50,
+    100,
+    200,
+    500
+  ],
+  "successful_tests": 6,
+  "results": [
+    {
+      "batch_size": 10,
+      "data_items": 10,
+      "standard_total_time": 5.974276810884476,
+      "standard_total_size": 70145,
+      "standard_verify_count": 10,
+      "nova_prove_time": 2.784351110458374,
+      "nova_compress_time": 4.082880973815918,
+      "nova_verify_time": 2.562598705291748,
+      "nova_total_time": 9.42983078956604,
+      "nova_proof_size": 70802,
+      "time_advantage_factor": 0.6335507968493899,
+      "verification_advantage": 10,
+      "storage_efficiency": 10
+    },
+    {
+      "batch_size": 25,
+      "data_items": 25,
+      "standard_total_time": 14.93569202721119,
+      "standard_total_size": 175362,
+      "standard_verify_count": 25,
+      "nova_prove_time": 2.559816837310791,
+      "nova_compress_time": 4.093441009521484,
+      "nova_verify_time": 2.576495885848999,
+      "nova_total_time": 9.229753732681274,
+      "nova_proof_size": 70822,
+      "time_advantage_factor": 1.6182113260861968,
+      "verification_advantage": 25,
+      "storage_efficiency": 25
+    },
+    {
+      "batch_size": 50,
+      "data_items": 50,
+      "standard_total_time": 29.87138405442238,
+      "standard_total_size": 350725,
+      "standard_verify_count": 50,
+      "nova_prove_time": 3.187718391418457,
+      "nova_compress_time": 4.093016624450684,
+      "nova_verify_time": 2.5658771991729736,
+      "nova_total_time": 9.846612215042114,
+      "nova_proof_size": 70813,
+      "time_advantage_factor": 3.0336712162574604,
+      "verification_advantage": 50,
+      "storage_efficiency": 50
+    },
+    {
+      "batch_size": 100,
+      "data_items": 100,
+      "standard_total_time": 59.74276810884476,
+      "standard_total_size": 701450,
+      "standard_verify_count": 100,
+      "nova_prove_time": 4.72650933265686,
+      "nova_compress_time": 4.116300821304321,
+      "nova_verify_time": 2.581198215484619,
+      "nova_total_time": 11.4240083694458,
+      "nova_proof_size": 70832,
+      "time_advantage_factor": 5.229580211848443,
+      "verification_advantage": 100,
+      "storage_efficiency": 100
+    },
+    {
+      "batch_size": 200,
+      "data_items": 200,
+      "standard_total_time": 119.48553621768951,
+      "standard_total_size": 1402900,
+      "standard_verify_count": 200,
+      "nova_prove_time": 6.595696210861206,
+      "nova_compress_time": 4.043820858001709,
+      "nova_verify_time": 2.5649120807647705,
+      "nova_total_time": 13.204429149627686,
+      "nova_proof_size": 70777,
+      "time_advantage_factor": 9.048898279791107,
+      "verification_advantage": 200,
+      "storage_efficiency": 200
+    },
+    {
+      "batch_size": 500,
+      "data_items": 500,
+      "standard_total_time": 298.7138405442238,
+      "standard_total_size": 3507250,
+      "standard_verify_count": 500,
+      "nova_prove_time": 13.71734619140625,
+      "nova_compress_time": 4.100588798522949,
+      "nova_verify_time": 2.5607476234436035,
+      "nova_total_time": 20.378682613372803,
+      "nova_proof_size": 70811,
+      "time_advantage_factor": 14.658152649583108,
+      "verification_advantage": 500,
+      "storage_efficiency": 500
+    }
+  ],
+  "crossover_analysis": {
+    "time_crossover": 25,
+    "verification_crossover": 2,
+    "storage_crossover": 25
+  },
+  "summary": {
+    "total_batch_sizes_tested": 6,
+    "batch_size_range": "10-500",
+    "best_nova_advantage": {
+      "batch_size": 500,
+      "time_factor": 14.658152649583108,
+      "verification_reduction": 500
+    },
+    "recommendations": {
+      "use_standard_snarks": "For small individual transactions (< optimal crossover)",
+      "use_nova_recursive": "For batch processing and data aggregation",
+      "crossover_guidance": "Based on measured performance with identical data"
+    }
+  }
+}

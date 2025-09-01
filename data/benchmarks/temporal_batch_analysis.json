@@ -5,7 +5,7 @@
       "num_batches": 408,
       "total_readings": 24480,
       "standard_snark": {
-        "total_time": 6.4849853515625e-05,
+        "total_time": 6.389617919921875e-05,
         "proof_generation_time": 65.27999999999932,
         "total_proof_size": 319464,
         "peak_memory_mb": 31.2,
@@ -14,7 +14,7 @@
         "avg_proof_time": 0.15999999999999834
       },
       "recursive_snark": {
-        "total_time": 3.1948089599609375e-05,
+        "total_time": 4.291534423828125e-05,
         "proof_generation_time": 65.58056335871953,
         "individual_proof_time": 65.27999999999932,
         "recursive_composition_time": 0.3005633587202081,
@@ -38,7 +38,7 @@
       "num_batches": 102,
       "total_readings": 24480,
       "standard_snark": {
-        "total_time": 1.7404556274414062e-05,
+        "total_time": 1.71661376953125e-05,
         "proof_generation_time": 34.680000000000014,
         "total_proof_size": 79866,
         "peak_memory_mb": 34.8,
@@ -71,7 +71,7 @@
       "num_batches": 34,
       "total_readings": 24480,
       "standard_snark": {
-        "total_time": 7.152557373046875e-06,
+        "total_time": 6.9141387939453125e-06,
         "proof_generation_time": 27.880000000000006,
         "total_proof_size": 26622,
         "peak_memory_mb": 44.4,
@@ -80,7 +80,7 @@
         "avg_proof_time": 0.8200000000000002
       },
       "recursive_snark": {
-        "total_time": 7.152557373046875e-06,
+        "total_time": 6.9141387939453125e-06,
         "proof_generation_time": 28.056318026230816,
         "individual_proof_time": 27.880000000000006,
         "recursive_composition_time": 0.17631802623080808,
@@ -104,7 +104,7 @@
       "num_batches": 17,
       "total_readings": 24480,
       "standard_snark": {
-        "total_time": 4.5299530029296875e-06,
+        "total_time": 4.0531158447265625e-06,
         "proof_generation_time": 26.179999999999993,
         "total_proof_size": 13311,
         "peak_memory_mb": 58.8,
@@ -113,7 +113,7 @@
         "avg_proof_time": 1.5399999999999996
       },
       "recursive_snark": {
-        "total_time": 6.198883056640625e-06,
+        "total_time": 5.9604644775390625e-06,
         "proof_generation_time": 26.321660667202803,
         "individual_proof_time": 26.179999999999993,
         "recursive_composition_time": 0.1416606672028108,
@@ -139,7 +139,7 @@
       "num_batches": 95,
       "total_readings": 34272,
       "standard_snark": {
-        "total_time": 1.5974044799804688e-05,
+        "total_time": 1.7404556274414062e-05,
         "proof_generation_time": 43.70000000000006,
         "total_proof_size": 74385,
         "peak_memory_mb": 37.2,
@@ -148,7 +148,7 @@
         "avg_proof_time": 0.46000000000000063
       },
       "recursive_snark": {
-        "total_time": 9.298324584960938e-06,
+        "total_time": 1.0013580322265625e-05,
         "proof_generation_time": 43.927693844580084,
         "individual_proof_time": 43.70000000000006,
         "recursive_composition_time": 0.22769384458002706,
@@ -181,7 +181,7 @@
         "avg_proof_time": 0.8200000000000002
       },
       "recursive_snark": {
-        "total_time": 7.3909759521484375e-06,
+        "total_time": 7.62939453125e-06,
         "proof_generation_time": 38.73250738008551,
         "individual_proof_time": 38.540000000000006,
         "recursive_composition_time": 0.19250738008550294,
@@ -205,7 +205,7 @@
       "num_batches": 23,
       "total_readings": 34272,
       "standard_snark": {
-        "total_time": 4.291534423828125e-06,
+        "total_time": 5.4836273193359375e-06,
         "proof_generation_time": 35.41999999999999,
         "total_proof_size": 18009,
         "peak_memory_mb": 58.8,
@@ -214,7 +214,7 @@
         "avg_proof_time": 1.5399999999999994
       },
       "recursive_snark": {
-        "total_time": 3.0994415283203125e-06,
+        "total_time": 6.4373016357421875e-06,
         "proof_generation_time": 35.57677471079644,
         "individual_proof_time": 35.41999999999999,
         "recursive_composition_time": 0.1567747107964575,
@@ -238,7 +238,7 @@
       "num_batches": 7,
       "total_readings": 34272,
       "standard_snark": {
-        "total_time": 2.6226043701171875e-06,
+        "total_time": 2.86102294921875e-06,
         "proof_generation_time": 30.940000000000005,
         "total_proof_size": 5481,
         "peak_memory_mb": 116.4,
@@ -247,7 +247,7 @@
         "avg_proof_time": 4.420000000000001
       },
       "recursive_snark": {
-        "total_time": 5.4836273193359375e-06,
+        "total_time": 5.9604644775390625e-06,
         "proof_generation_time": 31.03729550745277,
         "individual_proof_time": 30.940000000000005,
         "recursive_composition_time": 0.09729550745276566,
@@ -271,7 +271,7 @@
       "num_batches": 3,
       "total_readings": 34272,
       "standard_snark": {
-        "total_time": 2.384185791015625e-06,
+        "total_time": 2.1457672119140625e-06,
         "proof_generation_time": 30.54,
         "total_proof_size": 2349,
         "peak_memory_mb": 231.6,
@@ -306,7 +306,7 @@
       "num_batches": 34,
       "total_readings": 48960,
       "standard_snark": {
-        "total_time": 7.152557373046875e-06,
+        "total_time": 7.3909759521484375e-06,
         "proof_generation_time": 52.35999999999998,
         "total_proof_size": 26622,
         "peak_memory_mb": 58.8,
@@ -339,7 +339,7 @@
       "num_batches": 11,
       "total_readings": 48960,
       "standard_snark": {
-        "total_time": 5.0067901611328125e-06,
+        "total_time": 4.76837158203125e-06,
         "proof_generation_time": 48.62000000000001,
         "total_proof_size": 8613,
         "peak_memory_mb": 116.4,
@@ -348,7 +348,7 @@
         "avg_proof_time": 4.420000000000001
       },
       "recursive_snark": {
-        "total_time": 6.198883056640625e-06,
+        "total_time": 7.867813110351562e-06,
         "proof_generation_time": 48.73989476363993,
         "individual_proof_time": 48.62000000000001,
         "recursive_composition_time": 0.11989476363991854,
@@ -372,7 +372,7 @@
       "num_batches": 4,
       "total_readings": 48960,
       "standard_snark": {
-        "total_time": 2.384185791015625e-06,
+        "total_time": 3.0994415283203125e-06,
         "proof_generation_time": 40.72,
         "total_proof_size": 3132,
         "peak_memory_mb": 231.6,
@@ -381,7 +381,7 @@
         "avg_proof_time": 10.18
       },
       "recursive_snark": {
-        "total_time": 5.9604644775390625e-06,
+        "total_time": 9.775161743164062e-06,
         "proof_generation_time": 40.78931471805599,
         "individual_proof_time": 40.72,
         "recursive_composition_time": 0.06931471805599453,
@@ -405,7 +405,7 @@
       "num_batches": 2,
       "total_readings": 48960,
       "standard_snark": {
-        "total_time": 2.1457672119140625e-06,
+        "total_time": 1.9073486328125e-06,
         "proof_generation_time": 40.52,
         "total_proof_size": 1566,
         "peak_memory_mb": 433.2,
@@ -414,7 +414,7 @@
         "avg_proof_time": 20.26
       },
       "recursive_snark": {
-        "total_time": 5.7220458984375e-06,
+        "total_time": 5.9604644775390625e-06,
         "proof_generation_time": 40.554657359028,
         "individual_proof_time": 40.52,
         "recursive_composition_time": 0.03465735902799726,
@@ -438,7 +438,7 @@
       "num_batches": 1,
       "total_readings": 48960,
       "standard_snark": {
-        "total_time": 1.6689300537109375e-06,
+        "total_time": 1.1920928955078125e-06,
         "proof_generation_time": 43.300000000000004,
         "total_proof_size": 783,
         "peak_memory_mb": 894.0,
@@ -447,7 +447,7 @@
         "avg_proof_time": 43.300000000000004
       },
       "recursive_snark": {
-        "total_time": 5.9604644775390625e-06,
+        "total_time": 5.7220458984375e-06,
         "proof_generation_time": 43.300000000000004,
         "individual_proof_time": 43.300000000000004,
         "recursive_composition_time": 0.0,

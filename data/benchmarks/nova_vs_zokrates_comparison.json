@@ -1,16 +1,4 @@
 {
-  "nova_available": true,
-  "nova_metrics": {
-    "total_time": 0.02664661407470703,
-    "verify_time": 0.01,
-    "proof_size": 2048,
-    "step_count": 100,
-    "throughput": 37528.2201782327
-  },
-  "traditional_time": 0.11205244064331055,
-  "improvements": {
-    "time_speedup": 4.205128663970509,
-    "constant_proof_size": true,
-    "recursive_composition": true
-  }
+  "nova_available": false,
+  "error": "Nova recursive SNARKs disabled for thesis - using standard ZoKrates SNARKs"
 }

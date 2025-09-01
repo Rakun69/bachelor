@@ -1,0 +1,119 @@
+{
+  "docker_iot_results": {
+    "Smart Home Hub": [
+      {
+        "success": true,
+        "type": "standard",
+        "num_items": 20,
+        "successful_proofs": 20,
+        "total_time": 3.0505127420001372,
+        "total_proof_size_kb": 16.66015625,
+        "throughput": 6.556274859840956,
+        "max_memory_mb": 68.23828125,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Typical smart home hub (Raspberry Pi 4 class)"
+        }
+      },
+      {
+        "success": true,
+        "type": "recursive",
+        "num_items": 20,
+        "steps": 7,
+        "total_time": 16.581879003999347,
+        "proof_size_kb": 69.1318359375,
+        "throughput": 1.206135926765371,
+        "max_memory_mb": 68.11328125,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Smart Home Hub",
+          "memory": "1g",
+          "cpu": "1.0",
+          "description": "Typical smart home hub (Raspberry Pi 4 class)"
+        }
+      }
+    ],
+    "IoT Gateway": [
+      {
+        "success": true,
+        "type": "standard",
+        "num_items": 20,
+        "successful_proofs": 20,
+        "total_time": 3.0829437489992415,
+        "total_proof_size_kb": 16.66015625,
+        "throughput": 6.487306168493093,
+        "max_memory_mb": 68.12890625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "IoT Gateway",
+          "memory": "512m",
+          "cpu": "0.5",
+          "description": "Mid-range IoT gateway device"
+        }
+      },
+      {
+        "success": true,
+        "type": "recursive",
+        "num_items": 20,
+        "steps": 7,
+        "total_time": 32.29687552099858,
+        "proof_size_kb": 69.111328125,
+        "throughput": 0.6192549488880595,
+        "max_memory_mb": 67.69921875,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "IoT Gateway",
+          "memory": "512m",
+          "cpu": "0.5",
+          "description": "Mid-range IoT gateway device"
+        }
+      }
+    ],
+    "Edge Device": [
+      {
+        "success": true,
+        "type": "standard",
+        "num_items": 20,
+        "successful_proofs": 20,
+        "total_time": 4.6159728029997495,
+        "total_proof_size_kb": 16.66015625,
+        "throughput": 4.3327811608861175,
+        "max_memory_mb": 68.28515625,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Edge Device",
+          "memory": "256m",
+          "cpu": "0.25",
+          "description": "Low-power edge computing device"
+        }
+      },
+      {
+        "success": true,
+        "type": "recursive",
+        "num_items": 20,
+        "steps": 7,
+        "total_time": 63.49282698100069,
+        "proof_size_kb": 69.1376953125,
+        "throughput": 0.3149962121860586,
+        "max_memory_mb": 68.29296875,
+        "container_constrained": true,
+        "iot_config": {
+          "name": "Edge Device",
+          "memory": "256m",
+          "cpu": "0.25",
+          "description": "Low-power edge computing device"
+        }
+      }
+    ]
+  },
+  "test_timestamp": 1756679841.3116744,
+  "iot_configurations": [
+    "Smart Home Hub: 1GB RAM, 1 CPU",
+    "IoT Gateway: 512MB RAM, 0.5 CPU",
+    "Edge Device: 256MB RAM, 0.25 CPU"
+  ],
+  "test_items": 20
+}

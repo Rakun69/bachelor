@@ -1,0 +1,28 @@
+{
+  "iot_simulation": {
+    "multi_period_enabled": false,
+    "duration_hours": 2,
+    "time_step_seconds": 300
+  },
+  "circuit_types": [
+    "filter_range"
+  ],
+  "data_sizes": [
+    10,
+    20
+  ],
+  "batch_sizes": [
+    5
+  ],
+  "privacy_levels": [
+    2
+  ],
+  "iterations": 1,
+  "evaluation": {
+    "run_performance_tests": true,
+    "run_privacy_analysis": true,
+    "run_scalability_tests": true,
+    "generate_visualizations": false,
+    "run_nova_comparison": false
+  }
+}

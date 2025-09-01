@@ -1,0 +1,55 @@
+{
+  "debug_results": [
+    {
+      "success": true,
+      "type": "standard",
+      "num_items": 270,
+      "successful_proofs": 270,
+      "failed_proofs": 0,
+      "total_time": 10.038107840999146,
+      "compile_time": 0.011745160998543724,
+      "setup_time": 0.024922456999775022,
+      "total_proof_size_kb": 224.912109375,
+      "avg_proof_size_kb": 0.8330078125,
+      "throughput": 26.89749943681871,
+      "debug_mode": true,
+      "completion_rate": 1.0,
+      "estimated_full_time": 10.038107840999146,
+      "estimated_full_size_kb": 224.912109375
+    },
+    {
+      "success": true,
+      "type": "standard",
+      "num_items": 450,
+      "successful_proofs": 270,
+      "failed_proofs": 0,
+      "total_time": 10.06042441700265,
+      "compile_time": 0.012416143999871565,
+      "setup_time": 0.024427958000160288,
+      "total_proof_size_kb": 224.912109375,
+      "avg_proof_size_kb": 0.8330078125,
+      "throughput": 26.83783395297774,
+      "debug_mode": true,
+      "completion_rate": 0.6,
+      "estimated_full_time": 16.76737402833775,
+      "estimated_full_size_kb": 374.853515625
+    },
+    {
+      "success": true,
+      "type": "recursive",
+      "num_items": 450,
+      "steps": 90,
+      "total_time": 23.53002231699793,
+      "setup_time": 5.30359975527972e-05,
+      "proof_time": 23.524586019997514,
+      "verify_time": 2.3866641521453857,
+      "proof_size_kb": 69.1796875,
+      "throughput": 19.124503748342093,
+      "debug_mode": true
+    }
+  ],
+  "test_timestamp": 1756683689.0276449,
+  "purpose": "Debug why Standard SNARKs stop at 270 items",
+  "increased_resources": "2GB RAM, 2.0 CPU for debugging",
+  "findings": "Investigate memory limits and container constraints"
+}

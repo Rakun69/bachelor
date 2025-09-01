@@ -1,0 +1,126 @@
+graph TB
+    subgraph "IoT Data Generation"
+        A[Smart Home Sensors] --> B[iot_simulation/smart_home.py]
+        B --> C[Multi-Period Data Generator]
+        C --> D1[data/raw/iot_readings_1_day.json]
+        C --> D2[data/raw/iot_readings_1_week.json] 
+        C --> D3[data/raw/iot_readings_1_month.json]
+        C --> D4[data/raw/iot_statistics_*.json]
+    end
+
+    subgraph "ZK Circuit Layer"
+        E1[circuits/basic/filter_range.zok]
+        E2[circuits/basic/min_max.zok]
+        E3[circuits/basic/median.zok]
+        E4[circuits/advanced/aggregation.zok]
+    end
+
+    subgraph "Proof Generation System"
+        F[proof_systems/snark_manager.py] --> G[ZoKrates Compiler]
+        G --> H1[data/proofs/*.out - Compiled Circuits]
+        G --> H2[data/proofs/proving.key]
+        G --> H3[data/proofs/verification.key]
+        F --> I[ZoKrates Proof Generator]
+        I --> J1[data/proofs/proof.json]
+        I --> J2[data/proofs/witness]
+    end
+
+    subgraph "Orchestration & Control"
+        K[src/orchestrator.py] --> L[Phase Controller]
+        L --> L1[Data Generation Phase]
+        L --> L2[Circuit Compilation Phase]
+        L --> L3[Benchmark Phase]
+        L --> L4[Analysis Phase]
+        L --> L5[Visualization Phase]
+        
+        M[run_evaluation.sh] --> K
+        N[configs/default_config.json] --> K
+    end
+
+    subgraph "Performance Evaluation"
+        O[evaluation/benchmark_framework.py] --> P[Circuit Performance Tester]
+        P --> Q1[data/benchmarks/real_zokrates_benchmarks.json]
+        P --> Q2[data/benchmarks/real_snark_sample.json]
+        P --> Q3[data/benchmarks/REAL_THESIS_CONCLUSIONS.md]
+        
+        R[evaluation/iot_device_metrics.py] --> S[Device-Specific Analysis]
+        S --> T[data/iot_analysis/device_performance.json]
+    end
+
+    subgraph "Privacy Analysis"
+        U[evaluation/privacy_analyzer.py] --> V[Information Leakage Calculator]
+        V --> W[Privacy Metrics Results]
+        U --> X[Re-identification Risk Assessment]
+        X --> Y[Anonymity Set Analysis]
+    end
+
+    subgraph "Visualization & Reporting"
+        Z[evaluation/visualization_engine.py] --> AA[Chart Generator]
+        AA --> BB1[data/visualizations/snark_comparison_detailed.png]
+        AA --> BB2[data/visualizations/iot_device_performance_analysis.png]
+        AA --> BB3[data/visualizations/performance_heatmaps.png]
+        AA --> BB4[data/visualizations/scalability_analysis_detailed.png]
+        AA --> BB5[data/visualizations/comprehensive_dashboard.png]
+        
+        CC[analysis/crossover_point_analyzer.py] --> DD[Threshold Analysis]
+        DD --> EE[data/visualizations/theoretical_crossover_analysis.png]
+    end
+
+    subgraph "Results & Documentation"
+        FF[data/final_report.json] --> GG[Comprehensive Results]
+        HH[REAL_PROJECT_SUMMARY.md] --> II[Project Documentation]
+        JJ[README.md] --> KK[Usage Instructions]
+    end
+
+    %% Data Flow Connections
+    D1 --> K
+    D2 --> K
+    D3 --> K
+    D4 --> K
+    
+    E1 --> F
+    E2 --> F
+    E3 --> F
+    E4 --> F
+    
+    K --> F
+    K --> O
+    K --> U
+    K --> Z
+    
+    J1 --> O
+    J2 --> O
+    Q1 --> Z
+    Q2 --> Z
+    Q3 --> Z
+    
+    W --> Z
+    Y --> Z
+    T --> Z
+    
+    BB1 --> FF
+    BB2 --> FF
+    BB3 --> FF
+    BB4 --> FF
+    BB5 --> FF
+    EE --> FF
+    
+    FF --> HH
+    FF --> JJ
+
+    %% Styling
+    classDef iotData fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef zkCircuit fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef proofSystem fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef orchestration fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef evaluation fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef visualization fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef results fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+
+    class A,B,C,D1,D2,D3,D4 iotData
+    class E1,E2,E3,E4 zkCircuit
+    class F,G,H1,H2,H3,I,J1,J2 proofSystem
+    class K,L,L1,L2,L3,L4,L5,M,N orchestration
+    class O,P,Q1,Q2,Q3,R,S,T,U,V,W,X,Y evaluation
+    class Z,AA,BB1,BB2,BB3,BB4,BB5,CC,DD,EE visualization
+    class FF,GG,HH,II,JJ,KK results

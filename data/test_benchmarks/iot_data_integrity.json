@@ -1,0 +1,50 @@
+{
+  "1_day_hourly": {
+    "readings_count": 432,
+    "generation_time": 0.0020651817321777344,
+    "sensor_types": 7,
+    "rooms": 5,
+    "privacy_levels": [
+      1,
+      2,
+      3
+    ],
+    "temp_range": [
+      8.05,
+      28.38
+    ],
+    "data_integrity": "OK"
+  },
+  "1_week_hourly": {
+    "readings_count": 3024,
+    "generation_time": 0.019162416458129883,
+    "sensor_types": 7,
+    "rooms": 5,
+    "privacy_levels": [
+      1,
+      2,
+      3
+    ],
+    "temp_range": [
+      6.07,
+      30.16
+    ],
+    "data_integrity": "OK"
+  },
+  "1_week_30min": {
+    "readings_count": 6048,
+    "generation_time": 0.024405479431152344,
+    "sensor_types": 7,
+    "rooms": 5,
+    "privacy_levels": [
+      1,
+      2,
+      3
+    ],
+    "temp_range": [
+      5.66,
+      30.57
+    ],
+    "data_integrity": "OK"
+  }
+}
