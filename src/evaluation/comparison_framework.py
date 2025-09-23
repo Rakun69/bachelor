@@ -228,7 +228,7 @@ class ComparisonFramework:
         try:
             logger.info(f"Testing Recursive SNARK (Nova): batch_size={batch_size}")
             
-            # Split into Nova batches (3 items per step for Nova circuit)
+            # Split into Nova batches (10 items per step for Nova circuit)
             nova_batches = []
             for i in range(0, len(test_data), 3):
                 batch = test_data[i:i+3]

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+READING_COUNTS=${1:-"50,60,70,80,90,100"}
+IMAGE_NAME=iot-zk-snark-eval
+HOST_PROJECT_DIR="/home/ramon/bachelor"
+CONTAINER_PROJECT_DIR="/app"
+
+echo "[INFO] Building Docker image ${IMAGE_NAME}..."
+docker build --no-cache -t ${IMAGE_NAME} .
+
+echo "[INFO] Running container..."
+docker run --rm \
+  --cpus=0.5 \
+  --memory=1g \
+  --memory-swap=1g \
+  -v "${HOST_PROJECT_DIR}:${CONTAINER_PROJECT_DIR}" \
+  -w "${CONTAINER_PROJECT_DIR}" \
+  ${IMAGE_NAME} \
+  bash -c " \
+    python3 -c \"import numpy; print('NumPy version:', numpy.__version__)\" && \
+    python3 scripts/measure_crossover_real.py \
+      --reading-counts ${READING_COUNTS} \
+      --warmup-runs 1 \
+      --repetitions 1 \
+      --mode cold \
+  "
+
+echo "[INFO] Done."

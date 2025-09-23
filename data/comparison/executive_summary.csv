@@ -1,7 +1,0 @@
-Metric,Value,Significance
-Time Crossover Point,25 items,Nova becomes faster than Standard
-Verification Crossover,2 items,Nova always better (1 vs N verifications)
-Storage Crossover,10 items,Nova needs less storage space
-Best Speedup (200 items),9.7x faster,Maximum observed performance gain
-Best Verification Reduction,200:1 reduction,Dramatic verification complexity reduction
-Recommendation Threshold,≥25 items → Nova,Decision boundary for IoT applications

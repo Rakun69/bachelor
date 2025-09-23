@@ -391,12 +391,12 @@ class IoTZKOrchestrator:
             os.chdir(str(nova_dir))
             
             try:
-                # Load real IoT data instead of hardcoded test data
-                iot_data_file = self.project_root / "data" / "raw" / "iot_readings.json"
+                # Load real IoT data from 1_month.json
+                iot_data_file = self.project_root / "data" / "raw" / "iot_readings_1_month.json"
                 if not iot_data_file.exists():
                     return {
                         "status": "failed",
-                        "error": "Real IoT data not found - run data generation first"
+                        "error": "Real IoT data not found - ensure iot_readings_1_month.json exists"
                     }
                 
                 # Load and parse real IoT readings

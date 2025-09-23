@@ -1,0 +1,119 @@
+IoT Readings,Standard Total (s),Standard Size (KB),Nova Total (s),Nova Size (KB),Time Advantage (Std/Nova),Winner
+1,0.15,0.8,9.39,69.1,0.02x,Standard
+2,0.29,1.7,9.33,69.1,0.03x,Standard
+3,0.43,2.5,9.29,69.1,0.05x,Standard
+4,0.58,3.3,9.40,69.1,0.06x,Standard
+5,0.72,4.2,9.38,69.2,0.08x,Standard
+6,0.86,5.0,9.36,69.1,0.09x,Standard
+7,1.00,5.8,9.47,69.2,0.11x,Standard
+8,1.14,6.7,9.46,69.2,0.12x,Standard
+9,1.29,7.5,9.44,69.2,0.14x,Standard
+10,1.44,8.3,9.51,69.1,0.15x,Standard
+11,1.58,9.2,9.53,69.1,0.17x,Standard
+12,1.71,10.0,9.54,69.1,0.18x,Standard
+13,1.84,10.8,9.59,69.1,0.19x,Standard
+14,2.00,11.7,9.58,69.2,0.21x,Standard
+15,2.16,12.5,9.58,69.2,0.23x,Standard
+16,2.30,13.3,9.67,69.1,0.24x,Standard
+17,2.41,14.2,9.69,69.1,0.25x,Standard
+18,2.55,15.0,9.69,69.2,0.26x,Standard
+19,2.73,15.8,9.74,69.1,0.28x,Standard
+20,2.85,16.7,9.77,69.1,0.29x,Standard
+21,2.99,17.5,9.76,69.2,0.31x,Standard
+22,3.12,18.3,9.81,69.1,0.32x,Standard
+23,3.30,19.2,9.83,69.1,0.34x,Standard
+24,3.43,20.0,9.82,69.1,0.35x,Standard
+25,3.53,20.8,9.87,69.1,0.36x,Standard
+26,3.58,21.7,9.77,69.1,0.37x,Standard
+27,3.72,22.5,9.79,69.2,0.38x,Standard
+28,3.86,23.3,9.81,69.1,0.39x,Standard
+29,4.02,24.2,9.83,69.1,0.41x,Standard
+30,4.16,25.0,9.86,69.1,0.42x,Standard
+31,4.28,25.8,9.89,69.2,0.43x,Standard
+32,4.41,26.7,9.89,69.1,0.45x,Standard
+33,4.50,27.5,9.92,69.2,0.45x,Standard
+34,4.70,28.3,9.98,69.1,0.47x,Standard
+35,4.82,29.2,9.99,69.1,0.48x,Standard
+36,5.18,30.0,10.06,69.1,0.51x,Standard
+37,5.15,30.8,10.09,69.2,0.51x,Standard
+38,5.32,31.7,10.10,69.2,0.53x,Standard
+39,5.50,32.5,10.10,69.1,0.54x,Standard
+40,5.66,33.3,10.15,69.2,0.56x,Standard
+41,5.79,34.2,10.16,69.1,0.57x,Standard
+42,5.90,35.0,10.14,69.1,0.58x,Standard
+43,6.08,35.8,10.24,69.1,0.59x,Standard
+44,6.22,36.7,10.20,69.1,0.61x,Standard
+45,6.55,37.5,10.25,69.1,0.64x,Standard
+46,6.63,38.3,10.35,69.1,0.64x,Standard
+47,6.75,39.2,10.32,69.2,0.65x,Standard
+48,6.85,40.0,10.33,69.2,0.66x,Standard
+49,7.11,40.8,10.62,69.1,0.67x,Standard
+50,7.49,41.7,10.73,69.2,0.70x,Standard
+51,7.62,42.5,10.72,69.1,0.71x,Standard
+52,7.67,43.3,10.80,69.1,0.71x,Standard
+53,7.82,44.1,10.71,69.1,0.73x,Standard
+54,7.92,45.0,10.72,69.1,0.74x,Standard
+55,8.15,45.8,10.75,69.2,0.76x,Standard
+56,8.33,46.6,10.71,69.2,0.78x,Standard
+57,8.36,47.5,10.74,69.2,0.78x,Standard
+58,8.53,48.3,10.87,69.1,0.78x,Standard
+59,8.76,49.1,10.94,69.1,0.80x,Standard
+60,8.89,50.0,10.96,69.1,0.81x,Standard
+61,9.12,50.8,10.97,69.1,0.83x,Standard
+62,9.17,51.6,10.92,69.1,0.84x,Standard
+63,9.32,52.5,10.88,69.1,0.86x,Standard
+64,9.38,53.3,11.05,69.1,0.85x,Standard
+65,9.60,54.1,11.09,69.1,0.87x,Standard
+66,9.74,55.0,11.12,69.1,0.88x,Standard
+67,9.94,55.8,11.08,69.1,0.90x,Standard
+68,10.06,56.6,11.09,69.2,0.91x,Standard
+69,10.21,57.5,11.00,69.1,0.93x,Standard
+70,10.31,58.3,11.14,69.2,0.92x,Standard
+71,10.48,59.1,11.05,69.2,0.95x,Standard
+72,10.67,60.0,11.08,69.1,0.96x,Standard
+73,10.71,60.8,11.13,69.2,0.96x,Standard
+74,11.15,61.6,11.27,69.1,0.99x,Standard
+75,11.15,62.5,11.33,69.1,0.98x,Standard
+76,11.29,63.3,11.32,69.2,1.00x,Standard
+77,11.41,64.1,11.23,69.1,1.02x,Nova
+78,11.55,65.0,11.31,69.2,1.02x,Nova
+79,11.60,65.8,11.33,69.1,1.02x,Nova
+80,11.88,66.6,11.53,69.1,1.03x,Nova
+81,12.08,67.5,11.35,69.1,1.06x,Nova
+82,11.90,68.3,11.32,69.1,1.05x,Nova
+83,12.11,69.1,11.36,69.1,1.07x,Nova
+84,11.80,70.0,11.12,69.1,1.06x,Nova
+85,11.93,70.8,11.19,69.1,1.07x,Nova
+86,12.01,71.6,11.19,69.2,1.07x,Nova
+87,12.18,72.5,11.16,69.1,1.09x,Nova
+88,12.30,73.3,11.20,69.1,1.10x,Nova
+89,12.44,74.1,11.26,69.1,1.10x,Nova
+90,12.63,75.0,11.25,69.2,1.12x,Nova
+91,13.01,75.8,11.40,69.1,1.14x,Nova
+92,13.09,76.6,11.39,69.1,1.15x,Nova
+93,13.22,77.5,11.44,69.1,1.16x,Nova
+94,13.52,78.3,11.46,69.1,1.18x,Nova
+95,13.67,79.1,11.61,69.2,1.18x,Nova
+96,13.68,80.0,11.47,69.1,1.19x,Nova
+97,13.74,80.8,11.55,69.1,1.19x,Nova
+98,14.07,81.6,11.60,69.1,1.21x,Nova
+99,14.25,82.5,11.67,69.1,1.22x,Nova
+100,14.01,83.3,11.54,69.2,1.21x,Nova
+
+setup,hardware,CPU,,,,,,"0.25–0.5 logical cores (cgroups)",
+setup,hardware,RAM,,,,,,"512MB–1GB",
+setup,hardware,Swap,,,,,,"1GB",
+setup,hardware,Storage,,,,,,"SSD (same FS for fair I/O caching)",
+setup,software,OS,,,,,,"Ubuntu (WSL2) kernel 6.6.87.2",
+setup,software,Python,,,,,,"3.12",
+setup,software,ZoKrates,,,,,,"0.8.8 (Nova experimental backend)",
+setup,software,NovaBackend,,,,,,"ZoKrates Nova (experimental)",
+setup,method,mode,,,,,,"warm (steady-state)",
+setup,method,warmup_runs,,,,,,2,
+setup,method,repetitions,,,,,,5,
+setup,method,workspaces,,,,,,"isolated nova workspaces; prewarming enabled",
+observation,jitter,overview,,,,,,"Small undulations near crossover due to OS scheduling & page cache",
+observation,steps,nova_steps,,,,,,"Discrete increases (batch-of-3 folding) cause minor step changes",
+observation,bottleneck,io,,,,,,"Nova compress/verify I/O sensitive to page cache warm/cold state",
+observation,limitations,scope,,,,,,"Single circuit; ZoKrates/Nova experimental; WSL2 overhead",
+observation,recommendation,practice,,,,,,"Use warm mode with medians; report cold as worst-case appendix"}

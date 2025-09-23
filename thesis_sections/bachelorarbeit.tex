@@ -14,6 +14,8 @@
 \usepackage{hyperref}
 \usepackage[nameinlink]{cleveref}
 \usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{siunitx}
 \pgfplotsset{compat=1.18}
 \usepackage{listings, color}
 \usepackage{subcaption}
@@ -105,13 +107,20 @@ I hereby declare that I have written this thesis independently and have not used
 \clearpage
 
 \section*{Abstract}
-\noindent
 
 \clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Acknowledgements}
 
 \clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \tableofcontents
 \clearpage
@@ -119,10 +128,6 @@ I hereby declare that I have written this thesis independently and have not used
 \listoffigures
 \clearpage
 \listoftables
-\clearpage
-
-\section*{List of Abbreviations}
-
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -148,7 +153,7 @@ The central problem of this thesis has two main aspects. First, existing aggrega
 
 Recursive zkSNARKs present a promising alternative. They support proof chaining across batches, so that verification cost is amortized rather than repeated. Recent systems such as GENES demonstrate substantial improvements in proving time and verification latency through recursive proof composition. However, these improvements sometimes come with the trade off of larger overall proof sizes \cite{Genes2025EfficientRecursiveSnark}. Likewise, Zecale demonstrates how recursive aggregation can substantially reduce verification overhead while preserving privacy in blockchain contexts \cite{Rondelet2020Zecale}. Despite these theoretical advantages, the deployment of recursive zkSNARKs in constrained, privacy critical IoT environments has not yet been evaluated.
 
-This research therefore targets a gap in current understanding by identifying the conditions under which recursive zkSNARKs offer a measurable advantage compared to classical zkSNARKs. Such conditions include threshold batch sizes, hardware limitations of devices, privacy expectations, and communication constraints. To our knowledge, no prior work has conducted a systematic empirical evaluation of these trade offs in the context of streaming IoT workloads. By benchmarking recursive zkSnark systems against non recursive zkSNARK implementations, this thesis aims to define threshold points in latency, memory consumption, proof size, and privacy exposure. The outcome should support actionable guidance for real world system designers.
+This research therefore targets a gap in current understanding by empirically establishing when recursive zkSNARKs offer a measurable advantage compared to classical zkSNARKs under realistic IoT conditions (hardware limits, privacy objectives, communication constraints). Our benchmarks compare recursive systems to non‑recursive implementations using identical data and report only measured latency, memory, and proof‑size results to produce actionable guidance for real‑world system designers.
 
 \section{Research Questions}
 
@@ -158,7 +163,7 @@ Our research is guided by the following primary questions:
     \item Under which conditions is the use of recursive SNARKs beneficial?
     \item What added value do recursive SNARKs provide in the context of privacy?
     \item From which data volume or computational complexity onwards are recursive SNARKs more efficient?
-    \item Can these theoretical predictions be validated through practical IoT implementations?
+    \item Can empirical measurements on realistic IoT setups determine when recursion becomes advantageous?
     \item What are the privacy-performance trade-offs in recursive vs. standard SNARK systems?
 \end{enumerate}
 
@@ -167,27 +172,27 @@ Our research is guided by the following primary questions:
 This thesis makes the following key contributions:
 
 \begin{enumerate}
-    \item \textbf{Theoretical Framework}: Mathematical analysis of SNARK vs. recursive SNARK performance crossover points
     \item \textbf{Nova Implementation}: Complete implementation of Nova recursive SNARKs optimized for IoT data processing
-    \item \textbf{Empirical Validation}: Comprehensive smart home simulation
-    \item \textbf{Performance Analysis}: Detailed benchmarking and threshold analysis across multiple scenarios
+    \item \textbf{Empirical Validation}: Comprehensive resource-constrained IoT evaluation
+    \item \textbf{Performance Analysis}: Detailed benchmarking across multiple scenarios using real measurements only
     \item \textbf{Practical Guidelines}: Decision frameworks for choosing appropriate proof systems
 \end{enumerate}
 
 \section{Thesis Structure}
 
-\noindent The thesis is organized into seven chapters that map directly to the research questions and the evaluation pipeline:
+\noindent The thesis is organized into eight chapters that map directly to the research questions and the evaluation pipeline:
 \begin{enumerate}
     \item \textbf{Introduction} (\cref{sec:intro}): Motivation, problem statement, research questions, contributions, and chapter roadmap.
     \item \textbf{Background} (\cref{sec:background}): Task-relevant overview of IoT aggregation privacy risks and zero-knowledge systems; emphasis on concepts required to interpret the later crossover analysis.
-    \item \textbf{Related Work \& Theoretical Foundation} (\cref{chap:related-work}): Positioning within IoT privacy aggregation and zero-knowledge literature; highlights the gap this thesis addresses; core concepts and trade-offs of recursive vs. non-recursive zk-SNARKs; thresholds and implications for constrained devices.
-    \item \textbf{System Architecture} (\cref{chap:system-architecture}): End-to-end architecture and components; what each module/file does; data flow and threat model; how the project is structured and executed.
+    \item \textbf{Related Work} (\cref{chap:related-work}): Positioning within IoT privacy aggregation and zero-knowledge literature; highlights the gap this thesis addresses; core concepts and trade-offs of recursive vs. non-recursive zk-SNARKs relevant to this study.
+    \item \textbf{System Architecture} (\cref{chap:system-architecture}): End-to-end architecture and components; actors; data flow and threat model; how the project is structured and executed.
+    \item \textbf{Implementation} (\cref{chap:implementation}): Pipelines, tooling, measurement harness, reproducibility, and limitations.
     \item \textbf{Empirical Results and Analysis} (\cref{chap:empirical-results}): Integrated results covering crossover validation, temporal batching, sensitivity analysis, device-level performance, and practical selection guidelines.
     \item \textbf{Discussion} (\cref{chap:discussion}): Interpretation of findings, decision framework for practitioners, and threats to validity.
     \item \textbf{Conclusion \& Future Work} (\cref{chap:conclusion}): Summary of contributions and directions for future research.
 \end{enumerate}
 
-\noindent This structure keeps the narrative focused on the central objective: determining and justifying the data-scale threshold at which recursive SNARKs provide practical advantages in IoT settings. Each part either introduces a necessary concept, contributes a component of the methodology, or reports results that directly answer the research questions.
+\noindent This structure keeps the narrative focused on the central objective: reporting strictly empirical advantages of recursive SNARKs in IoT settings. Each part either introduces a necessary concept, contributes a component of the methodology, or reports measured results that directly answer the research questions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,21 +201,27 @@ This thesis makes the following key contributions:
 \chapter{Background}
 \label{sec:background}
 \section{Privacy \& Data Aggregation in IoT}
-Resource constrained devices in Internet of Things environments collect and transmit sensor data such as temperature, power usage or motion events. Aggregating this data can reduce communication load and storage overhead, but doing so without cryptographic guarantees can compromise data integrity or privacy. A review by Ali et al shows that traditional data aggregation techniques may expose raw readings and remain vulnerable to inference or tampering, especially in constrained sensor networks \cite{InayatAliPrivacyPreservingDataAggregation2018}. Solutions such as LiPI propose lightweight obfuscation mechanisms, but they often trade off integrity verification or depend on trusted components \cite{GoyalLiPI2022}. There is limited research on cryptographically verifiable aggregation tailored for resource limited IoT nodes, especially when continuous privacy preservation is required.
+Resource constrained devices in Internet of Things environments collect and transmit sensor data such as temperature, power usage or motion events. Aggregating this data can reduce communication load and storage overhead, but doing so without cryptographic guarantees can compromise data integrity or privacy. A review by Ali et al \cite{InayatAliPrivacyPreservingDataAggregation2018} shows that traditional data aggregation techniques may expose raw readings and remain vulnerable to inference or tampering, especially in constrained sensor networks. Solutions such as LiPI \cite{GoyalLiPI2022} propose lightweight data masking mechanisms, but they often trade off integrity verification or depend on trusted components. There is limited research on cryptographically verifiable aggregation tailored for resource limited IoT nodes, especially when continuous privacy preservation is required.
 
-\section{Overview of Zero Knowledge Proofs}
-A zero knowledge proof is a cryptographic protocol by which a prover can convince a verifier that a statement is true without revealing any additional information \cite{ZKPDefinition2023}. There exist both interactive and non interactive variants of zero knowledge proofs. zk-SNARKs are one class of non interactive proofs that produce succinct results and enable constant time verification regardless of the complexity of the statement. They became well known through applications such as Zcash and Ethereum privacy enhancements \cite{WikipediaZKPSNARKHistoric, ASurveyApplicationsZKP2024}. Transparent alternatives such as zk-STARKs eliminate the need for a trusted setup but typically yield larger proof sizes and higher computational cost \cite{WikipediaZKPSNARKHistoric}. Bulletproofs are another variant that support range proofs without trusted setup but verification time scales logarithmically with circuit size.
+\section{Overview of Zero-Knowledge Proofs}
+A zero-knowledge proof (ZKP) lets a prover convince a verifier that a statement is true without revealing any additional information beyond its truth \cite{goldwasserKnowledgeComplexityInteractive1985}. ZKPs exist in interactive and non-interactive forms.
+zk-SNARKs are non-interactive arguments of knowledge with succinct proofs; in many constructions, proof size and verifier work are sublinear—often effectively constant—in the size of the computation, though they may depend on public input size and typically require a setup \cite{nitulescuZkSnarksAGentleIntroduction2021}. zk-SNARKs have seen prominent deployments, e.g., in Zerocash/Zcash \cite{bensassonZerocashDecentralizedAnonymous2014,hopwoodZcashProtocolSpecification}.
+zk-STARKs are transparent (no trusted setup) and hash-based; they scale well and are plausibly post-quantum, but usually incur larger proofs and higher prover costs \cite{ben-sassonScalableZeroKnowledge2019}.
+Bulletproofs provide short non-interactive proofs without trusted setup with logarithmic proof size for certain statements (e.g., range proofs); however, verification is generally more expensive than in SNARK systems for large circuits \cite{BulletproofsStanfordApplied}.
+Other families (e.g., Sonic, Plonk/Halo variants) explore different trade-offs in universality, transparency, setup, and efficiency \cite{mallerSonicZeroKnowledgeSNARKs2019}.
+A recent survey overviews applications and practical frameworks across domains \cite{ASurveyApplicationsZKP2024}.
 
-Other ZKP families such as Bulletproofs, zk-STARKs or newer systems like Hyrax or Sonic offer different trade offs in proof size, transparency, post quantum security or setup requirements \cite{WikipediaZKPSNARKHistoric}. A comprehensive recent survey examines over twenty five practical ZKP frameworks and compares them based on usability, performance in cryptographic benchmarks and applicability across domains \cite{ASurveyApplicationsZKP2024}.
+\subsection*{Alternatives and PETs}
+Beyond zk-SNARKs, other families and PETs exist: zk-STARKs are transparent and plausibly post-quantum, but typically have larger proof sizes and higher prover costs. Differential Privacy adds calibrated noise to protect individuals but trades utility for privacy \cite{dworkCalibratingNoiseSensitivity2006,dworkAlgorithmicFoundationsDifferential2013}. Secure Multi-Party Computation offers strong privacy without a trusted party, yet incurs substantial communication/latency overhead and does not inherently provide public verifiability \cite{yaoHowGenerateExchange1986,goldreichHowPlayANY1987,damgardMultipartyComputationSomewhat2012}. Given our goal (verifiable aggregation under device and bandwidth constraints), we focus on zk-SNARKs, specifically standard vs.\ recursive designs.
 
-\subsection{zk‑SNARKs}
-zk-SNARK stands for Zero Knowledge Succinct Non‑Interactive Argument of Knowledge. These proofs emerged in early blockchain protocols and became popular in systems like Zcash where succinctness and privacy are primary requirements \cite{WikipediaZKPSNARKHistoric}. While zk-SNARKs demand a trusted setup in many instantiations such as Groth16 or PlonK, they yield small constant size proofs and fast verification regardless of computation size. They are widely supported in ecosystems such as Zokrates, which allows developers to generate proofs for specific circuits.
-
-\subsection{Other ZKP Families}
-zk-STARKs remove the need for a trusted setup and achieve transparency by relying on publicly verifiable randomness. However, proof size and prover time are typically larger when compared to zk-SNARKs. Bulletproofs enable proofs of range or arithmetic constraints with no trusted setup and shorter proofs than zk-STARKs, but verification time scales with circuit size. Other alternatives include zk-SNARKs optimized for post quantum settings or efficient delegation, each aiming to balance trade offs in size, speed or trust assumptions \cite{WikipediaZKPSNARKHistoric}.
+\subsection*{Why we do not include a non-ZK baseline}
+Non-cryptographic pipelines can be faster, but they reveal raw inputs or rely on trust in the computing entity, violating our privacy and integrity requirements. Without zero-knowledge proofs, a verifier cannot simultaneously ensure input confidentiality and computational correctness \cite{goldwasserKnowledgeComplexityInteractive1985,katzIntroductionModernCryptography2007}. Therefore, we compare proof systems (standard vs. recursive zk-SNARKs) rather than including a non-ZK baseline as a candidate solution.
 
 \section{Recursive ZKPs and Aggregation}
 Recursive zero knowledge proofs stack or fold multiple proofs into a single succinct result. This enables efficient and scalable verification especially in streaming or multi step computation settings where multiple sub proofs are generated.
+
+\subsection*{Definition of aggregation in this thesis}
+We use the term \emph{aggregation} narrowly to denote computations over sets or windows of readings that reduce raw data to concise statistics or validity results (e.g. range validation, sum/mean/median, min/max). In our scope, privacy-preserving aggregation must (i) reveal nothing about individual readings beyond what is logically implied by the output, and (ii) enable verifiers to check correctness without access to raw inputs. These requirements motivate zero-knowledge approaches \cite{goldwasserKnowledgeComplexityInteractive1985,katzIntroductionModernCryptography2007} and connect directly to our circuits and pipeline in \cref{chap:implementation}.
 
 \subsection{Principles and Benefits}
 The core idea of recursive ZKPs is to verify a proof inside another proof, thus composing multiple statements into an incrementally verifiable chain. This approach is formalized in theories such as incrementally verifiable computation and proof folding schemes. Nova introduced an efficient folding scheme that absorbs complexity into a relaxed R1CS representation, dramatically reducing per proof cost while maintaining succinct final proofs \cite{NovaFoldingIVC2023}. This makes recursion especially powerful when many steps must be verified sequentially.
@@ -222,28 +233,30 @@ Halo, introduced by Bowe et al in 2019, pioneered recursive SNARK designs that d
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Related Work \& Theoretical Foundation}
+\chapter{Related Work}
 \label{chap:related-work}
 
 \section{IoT Privacy and Data Aggregation}
 
-The intersection of IoT privacy preservation and data aggregation has been extensively studied. Traditional approaches to IoT data aggregation often sacrifice privacy for efficiency, creating vulnerabilities in smart home and industrial deployments \cite{SmartMeterPrivacySurvey2023, AStudyOnPrivacyPreserving2021}.
+The overlap between IoT privacy preservation and data aggregation has been extensively studied. Traditional approaches to IoT data aggregation often sacrifice privacy for efficiency, creating vulnerabilities in smart home and industrial deployments \cite{SmartMeterPrivacySurvey2023, AStudyOnPrivacyPreserving2021}.
 
 \subsection{Privacy-Preserving IoT Aggregation}
 
 Early work by Ali et al. demonstrated that conventional aggregation techniques expose raw sensor readings to inference attacks \cite{InayatAliPrivacyPreservingDataAggregation2018}. Solutions such as LiPI propose lightweight obfuscation mechanisms but often trade off integrity verification or depend on trusted components \cite{GoyalLiPI2022}.
 
-Recent advances in differential privacy for IoT have shown promise but struggle with the continuous, high-frequency nature of sensor data. The challenge lies in balancing privacy preservation with the computational and energy constraints of IoT devices.
+Recent advances in differential privacy for IoT have shown promise but struggle with the continuous, high-frequency nature of sensor data. The challenge lies in balancing privacy preservation with the computational and energy constraints of IoT devices. Prior work rarely offers end-to-end, verifiable aggregation with measured crossover points under resource constraints; our study fills this empirical gap by reporting only measured results and explicit crossover regimes.
 
-\section{Zero-Knowledge Proofs in IoT}
+\subsection*{Critical positioning}
+Compared to prior surveys and systems, our contribution is explicitly empirical and hardware-aware: (i) we benchmark standard vs. recursive zk-SNARKs on identical logic and data under matched resource limits enforced via Docker (CPU/RAM constraints), and (ii) we report time/size crossovers under steady-state operation. Many prior works emphasize protocol design or transparency properties (e.g., STARKs) without quantifying when recursion is advantageous under constrained compute and memory. Our results provide that missing, practical boundary.
 
-\subsection{Traditional ZK-SNARK Applications}
 
-Zero-knowledge proofs have been successfully applied to various domains, with zk-SNARKs gaining prominence through blockchain applications like Zcash and Ethereum \cite{WikipediaZKPSNARKHistoric}. However, their application to IoT environments presents unique challenges related to resource constraints and continuous data streams.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Recursive Zero-Knowledge Systems}
+\section{Alternatives and PETs: positioning.}
+Complementary privacy-enhancing approaches offer different trade-offs for IoT aggregation. Differential Privacy protects individuals by adding calibrated noise but trades utility for privacy and does not provide integrity of computation \cite{dworkCalibratingNoiseSensitivity2006,dworkAlgorithmicFoundationsDifferential2013}. Secure Multiparty Computation can compute over distributed inputs without a trusted party but typically incurs higher latency and communication overhead that challenge constrained devices \cite{yaoHowGenerateExchange1986,goldreichHowPlayANY1987,damgardMultipartyComputationSomewhat2012}. Trusted Execution Environments provide hardware-backed isolation but introduce additional trust assumptions and potential side-channel risks. Our evaluation therefore focuses on zk-SNARKs (Standard vs. Nova) to obtain end-to-end verifiability with confidentiality and constant-size verification.
 
-The development of recursive zk-SNARKs represents a significant advancement for scalable privacy-preserving computation. Halo introduced the first practical recursive SNARK construction without trusted setup \cite{boweRecursiveProofComposition2019}, while Nova advanced the field with efficient folding schemes \cite{NovaFoldingIVC2023}. These works collectively show the practical viability of recursive SNARKs for aggregating large numbers of proofs while maintaining constant verification time and compact final proof size.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -266,13 +279,12 @@ On the proving side, recursive SNARKs introduce some overhead, since each new pr
 
 Proof size is another major advantage. While a typical Groth16 proof is constant in size, producing many individual proofs results in linear growth in storage or transmission. Recursive SNARKs produce one final compact proof whose size is largely independent of the number of inputs \cite{innovationBlockchainScalabilityGuide}.
 
-\subsection{Scalability and Thresholds}
-
+\subsection{Scalability}
 Recursive zk-SNARKs are most beneficial when dealing with large-scale computations or proof aggregation. For small or one-time computations, a single non-recursive proof is often more efficient, as the recursive overhead may not be justified.
 
 Empirical studies indicate that even at modest batch sizes (a few dozen proofs), recursion can become advantageous. For example, in a decentralized IoT setting, Nova required only \textasciitilde3.6 seconds to aggregate and verify 10 digital signatures, whereas a non-recursive method using Risc0 took \textasciitilde369 seconds—over 100$\times$ slower \cite{bojicburgosDecentralizedIoTData2024}. The gap grows with more inputs. Another study showed that Nova could verify 100 signatures in 7.1 seconds, whereas a previous method based on homomorphic encryption and ECDSA took over 50 seconds to verify just 64 signatures \cite{bojicburgosDecentralizedIoTData2024}. These results suggest that at batch sizes of a few dozen, recursive approaches can already be significantly more efficient.
 
-Moreover, recursion reduces distributed verification overhead. Without recursion, each verifier must check all proofs. With recursion, only a single final proof needs to be verified. This makes the per-claim verification time negligible, since a constant cost is amortized over many claims \cite{bojicburgosDecentralizedIoTData2024}. The load is shifted from weak verifiers (e.g., IoT devices or smart contracts) to a single strong prover, such as a cloud node.
+Moreover, recursion reduces distributed verification overhead. Without recursion, each verifier must check all proofs. With recursion, only a single final proof needs to be verified. This makes the per-claim verification time negligible, since a constant cost is amortized over many claims \cite{bojicburgosDecentralizedIoTData2024}. The load is shifted from weak verifiers (e.g., IoT devices or smart contracts) to a single strong prover.
 
 \subsection{Use in IoT and Smart-Home Scenarios}
 
@@ -287,1519 +299,228 @@ Beyond signature verification, recursive SNARKs can prove compliance with rules 
 Studies have even demonstrated recursive zk-SNARKs in advanced tasks like federated learning: each local training round and the global aggregation step are provably verified using Nova. In one setup, the global model proof took \textasciitilde81 seconds to generate and \textasciitilde0.6 seconds to verify \cite{bellachiaVerifBFLLeveragingZkSNARKs2025}. This shows that the cost is mostly on the proving side, which can be offloaded to strong devices.
 
 \subsection{Summary and Implications for Architecture}
-Recursive zk-SNARKs offer compelling benefits for scaling zero-knowledge applications in IoT and smart-home scenarios. They enable aggregation of multiple computations or data streams into a single compact proof, which reduces memory, bandwidth, and verification cost, key concerns in resource-constrained environments. Once a complexity threshold is crossed, recursive SNARKs can significantly outperform traditional approaches \cite{innovationBlockchainScalabilityGuide, bojicburgosDecentralizedIoTData2024, ElHajj2024BenchmarkStudy, bellachiaVerifBFLLeveragingZkSNARKs2025}. These properties directly inform the system architecture in the next chapter (\cref{chap:system-architecture}): we place proving at an edge aggregator, define batching policies that reach the crossover regime efficiently, and adopt metrics (proof time, verification time, proof size, and device load) that operationalize the theoretical trade-offs. The following chapter translates these implications into a concrete architecture and methodology and specifies the evaluation setup used to validate them in practice.
+Recursive zk-SNARKs offer compelling benefits for scaling zero-knowledge applications in IoT scenarios. They enable aggregation of multiple computations or data streams into a single compact proof, which reduces memory, bandwidth, and verification cost—key concerns in resource‑constrained environments. Our system architecture (\cref{chap:system-architecture}) therefore places proving at an edge aggregator, defines batching policies that drive into empirically observed crossover regimes, and adopts metrics (proof time, verification time, proof size, and device load) that operationalize these trade‑offs. The following chapter translates these implications into a concrete architecture and methodology and specifies the evaluation setup used to validate them in practice.
 
 \chapter{System Architecture}
 \label{chap:system-architecture}
-This chapter establishes the comprehensive evaluation framework used to compare standard and recursive zk-SNARKs in IoT environments, defines the circuit logic implementations, and presents the analytical models for threshold determination.
-
-Before diving into specific evaluation metrics, we present an overview of our evaluation system architecture:
 
 \begin{figure}[H]
 \centering
-\hspace*{-0.7cm}\includegraphics[width=1.1\textwidth]{img/diagramm2.png}%
-\caption{System architecture and data flow}
+\resizebox{0.95\linewidth}{!}{%
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners=2pt, align=center, minimum width=3.8cm, minimum height=1.1cm, fill=blue!3},
+  group/.style={draw, dashed, rounded corners=3pt, inner sep=6pt},
+  arrow/.style={-Latex, thick}
+]
+% IoT devices (left)
+\node[box] (dev1) at (0,0.9) {IoT device};
+\node[box, below=2mm of dev1] (dev2) {IoT device};
+\node[box, below=2mm of dev2] (dev3) {IoT device};
+\node[group, fit=(dev1)(dev3), label=above:{Device domain}] (devdom) {};
+
+
+% Edge aggregator (middle)
+\node[box, right=3.2cm of dev2] (ingest) {Data collection \& batching};
+\node[box, below=4mm of ingest] (prover) {Proof generator \\ (Standard or Recursive)};
+\node[group, fit=(ingest)(prover), label=above:{Edge domain}] (edgedom) {};
+
+% Verifier / consumer (right)
+\node[box, right=3.6cm of prover] (verifier) {Verifier / Consumer};
+\node[group, fit=(verifier), label=above:{Consumer domain}] (condom) {};
+
+% Connections
+\draw[arrow] (devdom.east) -- node[above]{signed readings} (ingest.west);
+\draw[arrow] (prover.east) -- node[above]{aggregate + proof} (verifier.west);
+% no storage/contract in minimal architecture
+\end{tikzpicture}%
+}
+\caption{System Architecture and logic}
 \label{fig:system-overview}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%
-\noindent
-\cref{fig:system-overview} presents the evaluation workflow as a directed data-flow graph. Two parallel proof branches join in a shared analysis stage. The steps are:
-\begin{enumerate}
-    \item Orchestration and simulation: \texttt{orchestrator.py} loads the configuration and runs \texttt{smart\_home.py}, which produces raw time series written to \texttt{iot\_readings.json}.
-    \item Preprocessing: \texttt{benchmark\_framework.py} filters, validates and batches the readings to obtain circuit inputs.
-    \item Circuit selection and start: the orchestrator starts both proof branches on the same batched inputs — the standard path with one selected circuit (e.g., \texttt{filter\_range.zok}, \texttt{min\_max.zok} or \texttt{median.zok}) and the recursive path with \texttt{iot\_recursive.zok}.
-    \item Standard proof path: \texttt{snark\_manager.py} compiles the selected standard circuit and creates one proof per batch, producing the set \texttt{proofs}.
-    \item Recursive proof path: \texttt{zokrates\_nova\_manager.py} compiles the recursive circuit and folds proofs step by step into a single \texttt{folded\_proof}.
-    \item Benchmarking and analysis: both results are benchmarked and feed the analysis block (crossover, privacy, scaling).
-    \item Visualization and reporting: \texttt{visualization\_engine.py} renders figures and attaches charts to \texttt{final\_report.json}.
-\end{enumerate}
+\paragraph{Component terminology (Figure~\ref{fig:system-overview}).}
+\begin{itemize}
+  \item \textbf{Domain}: \emph{Device domain} groups IoT devices, \emph{Edge domain} hosts data collection/batching and proving, \emph{Consumer domain} contains verifiers and consuming services.
+  \item \textbf{Signed readings}: Sensor measurements signed by the originating device (with timestamp/ID); ensures authenticity and integrity of inputs to aggregation.
+  \item \textbf{Data collection \& batching}: Edge component that verifies signatures, deduplicates/orders events, buffers them, and forms fixed windows/batches as circuit inputs.
+  \item \textbf{Proof generator (Standard or Recursive)}: Cryptographic stage creating a zk‑proof that the published aggregate(s) were computed correctly from the private inputs; implemented once with non‑recursive SNARKs and once with recursion.
+  \item \textbf{Aggregate + proof}: Public outputs (aggregates) together with the corresponding zero‑knowledge proof delivered to consumers.
+  \item \textbf{Verifier / Consumer}: Validates proofs and uses the aggregates (dashboards, analytics, policy, billing, etc.).
+  % Minimal architecture omits dedicated storage/contract components.
+\end{itemize}
 
-The figure highlights the two proof paths (standard and recursive) and their integration in a single evaluation framework.
+This chapter establishes the evaluation framework used to compare standard and recursive zk-SNARKs in IoT environments and defines the system components at a technology-agnostic level. The architecture follows an edge-centric pattern \cite{shiEdgeComputingVision2016}.
 
-\section{Assumptions and Threat Model}
+\section{Threat Model and Security Assumptions}
 \label{sec:threat-model}
-\noindent
-We formalize the security and privacy scope of our study by stating assumptions and defining the attacker model.
-The threat model answers three questions: who the attacker is, what they can observe or do, and which
-properties the system must provide under these conditions.
 
-\paragraph{System assumptions}
-We assume an honest but curious aggregator, standard cryptographic hardness assumptions, and
-authenticated transport for metadata. Edge devices follow the protocol and provide well-formed inputs.
+The security analysis of our IoT aggregation system requires a comprehensive threat model that considers the capabilities and motivations of potential adversaries. Our threat model distinguishes between passive and active adversaries operating within the IoT aggregation environment, each presenting distinct security challenges and requiring appropriate countermeasures.
 
-\paragraph{Attacker capabilities}
-The attacker can observe public inputs and metadata (e.g., batch sizes and timestamps) and attempt temporal
-linking. They cannot break the underlying cryptography or fabricate valid zero-knowledge proofs.
+Passive adversaries possess the capability to observe all public communications between system components but lack the ability to modify or inject messages into the system. These adversaries attempt to infer private information from publicly available aggregates and proof transcripts. Examples include network eavesdroppers monitoring communication channels, curious verifiers attempting to extract additional information beyond what is explicitly revealed, and malicious consumers seeking to reverse-engineer individual sensor readings from aggregated data. The primary threat from passive adversaries lies in their ability to perform inference attacks on aggregated data, potentially revealing sensitive information about individual IoT devices or their usage patterns.
 
-\paragraph{Privacy and leakage surface}
-The system never reveals raw sensor readings or intermediate states. Remaining leakage originates from metadata such as
-batch size and timing. We mitigate this by using fixed batch sizes and time grouping when applicable.
+Active adversaries represent a more severe threat category, as they can modify, inject, or replay messages within the system. These adversaries may attempt to tamper with sensor data during transmission, compromise edge aggregators to manipulate aggregation processes, or forge proof results to create false verification outcomes. However, our architecture assumes that IoT devices themselves remain secure and maintain the integrity of their cryptographic keys for signing sensor readings. This assumption is reasonable given that IoT devices typically operate in controlled environments and can implement hardware-based security measures.
 
-\paragraph{Integrity guarantees}
-Under these assumptions, completeness and soundness of the proof systems ensure that tampering or omission
-of readings would be detected with overwhelming probability.
+The system architecture provides comprehensive security guarantees across multiple dimensions. Data integrity is ensured through cryptographic verification of all published aggregates, guaranteeing that they represent correct computations over authentic sensor readings. Privacy preservation is maintained through zero-knowledge proofs that keep individual sensor readings confidential while revealing only aggregated results and proof validity. Authenticity is achieved through cryptographic signatures on all sensor readings by their originating devices, preventing unauthorized data injection. Finally, non-repudiation is provided through proof generation, which creates an immutable record of computation correctness that cannot be denied by any party.
 
-\section{Privacy Definition}
-\label{sec:privacy-definition}
-We define privacy in this work as the non-disclosure of individual sensor readings and intermediate computation states. A verifier learns only: (i) declared aggregates, and (ii) that these aggregates are consistent with some private inputs satisfying the circuit constraints. By zero-knowledge, the proof transcript is simulatable without access to raw inputs and reveals no information beyond statement validity \cite{goldwasserKnowledgeComplexityInteractive1985,goldreichFoundationsCryptographyVolume2001,katzIntroductionModernCryptography2007}.
+\section{Data Flow and Processing Pipeline}
+\label{sec:data-flow}
 
-\section{Research Objectives and Evaluation Scope}
-\label{sec:rq-mapping}
-% (Removed RQ-to-Metric mapping table for concision)
+The data processing pipeline differs significantly between standard and recursive zk-SNARK approaches, reflecting their fundamental architectural differences and performance characteristics.
 
-% (Removed redundant architecture and collection subsections; details already covered earlier)
+\subsection{Standard SNARK Pipeline}
+The standard zk-SNARK approach processes IoT readings individually, following a sequential workflow that emphasizes granular verification capabilities. The process begins when the edge aggregator receives signed readings from IoT devices, each containing sensor data authenticated through cryptographic signatures. Each reading's authenticity is subsequently verified using the corresponding device's public key, ensuring that only legitimate sensor data enters the aggregation pipeline. For each verified reading, a zk-SNARK proof is generated that demonstrates correct range validation or aggregation according to predefined circuit constraints. These individual proofs are then collected and transmitted to consumers, who must verify each proof separately to validate the entire dataset. This approach ensures that each sensor reading is individually verifiable, providing fine-grained integrity guarantees. However, the verification process requires linear time proportional to the number of readings, creating scalability challenges as batch sizes increase.
 
-\subsection{Data Processing and Batching}
+\subsection{Recursive SNARK Pipeline}
+The Nova recursive approach processes readings in batches, employing a fundamentally different strategy that optimizes for large-scale aggregation scenarios. The initial data collection and signature verification phases remain identical to the standard approach, maintaining the same security guarantees for input authentication. However, the processing diverges significantly during step preparation, where readings are systematically grouped into steps of three values each, with zero-padding applied as necessary to ensure consistent step sizes. This batching strategy enables Nova to fold multiple steps into a single ongoing proof through its efficient folding mechanism, dramatically reducing the computational overhead associated with individual proof generation. The recursive proof generation process accumulates computational claims across multiple steps, creating an incrementally verifiable computation chain. A final zk-SNARK compression stage transforms this accumulated proof into a single succinct proof that encapsulates the correctness of all processing steps. The verification process requires consumers to verify only one final proof regardless of input size.
 
-Before cryptographic processing, raw data undergoes systematic preparation:
+\section{Component Interactions and Interfaces}
+\label{sec:component-interactions}
 
-\begin{verbatim}
-Raw Data -> Processed Data -> Circuit Inputs
-\end{verbatim}
+The system architecture relies on well-defined interfaces and communication protocols between its major components, ensuring secure and efficient data flow while maintaining the integrity and privacy guarantees of the aggregation process.
 
-The data processing pipeline in \texttt{benchmark\_framework.py} performs:
+\subsection{Device-to-Edge Communication}
+IoT devices communicate with edge aggregators through a standardized protocol designed to ensure data authenticity and prevent replay attacks. Each sensor reading transmitted to the edge aggregator contains a comprehensive message format that includes the device identifier and timestamp for temporal ordering, the sensor value converted to an integer representation suitable for zero-knowledge circuit processing, a cryptographic signature generated using the device's private key for authentication, and a sequence number that provides replay protection against malicious message repetition. The communication protocol employs ECDSA signatures for authentication, ensuring that only devices with valid cryptographic credentials can submit readings to the aggregation system. The edge aggregator maintains a whitelist of authorized device public keys, enabling efficient verification of incoming messages while preventing unauthorized data sources from polluting the aggregation pipeline. Error handling mechanisms are implemented to reject messages that fail signature verification, while network timeouts trigger automatic retransmission with exponential backoff to handle temporary communication failures gracefully.
 
-\begin{lstlisting}[language=Python, caption=Data Batching Process]
-def _prepare_circuit_inputs(self, data, batch_size):
-    """
-    Group sensor readings into batches for zk-SNARK processing
-    """
-    # Filter data by range and validity
-    filtered_data = self._filter_sensor_data(data)
-    
-    # Group into batches of specified size
-    batched_data = []
-    for i in range(0, len(filtered_data), batch_size):
-        batch = filtered_data[i:i+batch_size]
-        batched_data.append(batch)
-    
-    # Convert to circuit-compatible format
-    circuit_inputs = self._format_for_circuits(batched_data)
-    return circuit_inputs
-\end{lstlisting}
+\subsection{Edge-to-Consumer Communication}
+The edge aggregator transmits processed results to consumers through a protocol that varies according to the proof system employed. For standard SNARK implementations, the transmission includes an array of individual proofs accompanied by their corresponding aggregated results, enabling consumers to verify each reading independently. For recursive SNARK implementations, the transmission contains a single compressed proof along with the final aggregated result, significantly reducing the communication overhead while maintaining equivalent verification capabilities. The verification interface provides consumers with public inputs in the form of aggregates and their associated proofs, enabling complete verification of computation correctness without requiring access to private sensor readings. Each transmission includes comprehensive timing metadata that captures proof generation and processing durations, facilitating performance analysis and system optimization across different batch sizes and hardware configurations.
 
-\subsubsection{ZK-SNARK Application (Cryptographic Phase)}
+\section{Scalability and Performance Considerations}
+\label{sec:scalability}
 
-This is where privacy-preserving computation begins:
+The scalability characteristics of our IoT aggregation system determine its applicability to large-scale deployments and influence the architectural decisions necessary to support growing data volumes and processing requirements.
 
-\begin{verbatim}
-Circuit Inputs -> ZK Circuits -> Proof Generation
-\end{verbatim}
+\subsection{Horizontal Scaling}
+The architecture supports multiple edge aggregators to achieve increased throughput and improved fault tolerance in large-scale deployments. Load balancing strategies enable IoT devices to be distributed across multiple edge aggregators based on geographic proximity, computational capacity, or current system load conditions. This distribution approach reduces the computational burden on individual aggregators while providing redundancy against single points of failure. Distributed verification capabilities allow consumers to verify proofs from multiple aggregators independently, enabling parallel processing that can significantly improve overall system throughput. Each aggregator maintains its own independent proof chain, ensuring that verification results remain consistent across the entire system while preventing cross-contamination between different aggregation processes. This horizontal scaling approach is particularly beneficial for recursive SNARK implementations, where the constant-size proof characteristics enable efficient parallel verification of proofs from multiple sources.
 
-\paragraph{Standard SNARKs Implementation}
+\subsection{Vertical Scaling}
+Individual system components can be scaled vertically through increased computational resources, though our empirical evaluation reveals important limitations to this approach. Edge aggregators equipped with more powerful hardware can process larger batches and generate proofs faster, potentially reducing latency and improving throughput. However, our experiments demonstrate diminishing returns beyond certain resource thresholds, particularly when memory bandwidth becomes the limiting factor rather than computational capacity. Consumer verification processes can be accelerated through specialized hardware implementations or optimized software algorithms, though our evaluation focuses primarily on resource-constrained scenarios that reflect typical edge computing environments. The relationship between resource allocation and performance improvement is not linear, creating optimization challenges that require careful analysis of specific deployment requirements and constraints.
 
-Individual proofs are generated for each data item:
+\section{Measurement Framework}
+Our benchmarking framework provides comprehensive evaluation capabilities that enable rigorous empirical analysis of proof system performance characteristics. All measurements are conducted under identical conditions using Docker containers and deterministic input data, ensuring that performance comparisons reflect genuine differences between proof systems rather than experimental artifacts. The framework measures proof generation time, verification time, proof size, and memory usage across different number of data sizes, providing comprehensive performance profiles that inform practical deployment decisions. Automated crossover analysis capabilities detect performance crossover points between standard and recursive approaches, enabling systematic identification of the conditions under which each approach provides optimal performance. This measurement framework forms the foundation for the empirical evaluation presented in subsequent chapters, providing the quantitative basis for practical guidance on proof system selection in IoT aggregation scenarios.
 
-\begin{lstlisting}[caption=Standard Circuit Example (filter\_range.zok)]
-def main(private field sensor_value, field min_range, field max_range) -> field {
-    // Private: actual sensor reading
-    // Public: range bounds and validity result
-    
-    field is_valid = if sensor_value >= min_range then 1 else 0 fi;
-    is_valid = if sensor_value <= max_range then is_valid else 0 fi;
-    
-    return is_valid; // Public output: 1 if valid, 0 if invalid
-}
-\end{lstlisting}
+\chapter{Implementation}
+\label{chap:implementation}
+\section{Environment and Hardware Profile}
+\label{sec:env-hw}
+
+We executed all experiments under a resource-constrained profile intended to simulate realistic IoT edge environments. 
+Specifically, we used Docker containers with enforced limits on CPU, memory, and swap space to approximate the hardware characteristics of IoT-devices, such as Raspberry Pi's.
 
 \begin{itemize}
-    \item \textbf{Privacy}: Sensor values remain hidden
-    \item \textbf{Proof Size}: Constant proof size for each item
-    \item \textbf{Scaling}: Linear growth with data volume
+  \item \textbf{CPU}: fixed 0.5 logical core
+  \item \textbf{RAM}: fixed 1\,GB
+  \item \textbf{Swap}: 1\,GB (additional virtual memory)
+  \item \textbf{Storage}: SSD, same filesystem for fair I/O caching behavior
 \end{itemize}
 
-\paragraph{Recursive SNARKs Implementation}
+These settings are chosen based on typical Raspberry Pi-class device specifications, which often provide ~1-4 GB RAM and single-to-quad-core CPUs in edge deployments. For example, Gupta \& Nahrstedt \cite{guptaPerformanceCharacterizationContainers2025} empirically evaluate similar IoT devices and show that Docker containers on hardware with ~1 GB RAM suffer measurable overheads in latency and I/O under constrained CPU/RAM settings.\\
 
-Batch processing with constant proof size:
-
-\begin{lstlisting}[caption=Recursive Circuit Example (iot\_recursive.zok)]
-def main(private field[N] sensor_batch, field expected_sum) -> field {
-    // Private: entire batch of sensor readings
-    // Public: aggregated result verification
-    
-    field computed_sum = 0;
-    for u32 i in 0..N {
-        computed_sum = computed_sum + sensor_batch[i];
-    }
-    
-    // Verify computed sum matches expected
-    field is_correct = if computed_sum == expected_sum then 1 else 0 fi;
-    return is_correct;
-}
-\end{lstlisting}
-
-\begin{itemize}
-    \item \textbf{Privacy}: Individual readings hidden, only aggregate revealed
-    \item \textbf{Proof Size}: Constant proof size regardless of batch size
-    \item \textbf{Scaling}: Folding technique maintains constant storage
-\end{itemize}
-
-\subsubsection{Proof Folding Mechanism}
-
-The Nova folding scheme enables recursive composition:
-
-\begin{verbatim}
-Proof_1 + Proof_2 -> Folded_Proof
-Folded_Proof + Proof_3 -> New_Folded_Proof
-Folded_Proof + Proof_n -> Final_Constant_Proof
-\end{verbatim}
-
-This mechanism is implemented in the \texttt{zokrates\_nova\_manager.py}:
-
-\begin{lstlisting}[language=Python, caption=Recursive Proof Generation]
-def generate_recursive_proof(self, batch_data):
-    """
-    Generate recursive proof using Nova folding
-    """
-    # Initialize with first proof
-    current_proof = self._generate_base_proof(batch_data[0])
-    
-    # Fold subsequent proofs
-    for i in range(1, len(batch_data)):
-        new_proof = self._generate_base_proof(batch_data[i])
-        current_proof = self._fold_proofs(current_proof, new_proof)
-    
-    # Compress final proof to constant size
-    final_proof = self._compress_proof(current_proof)
-    return final_proof 
-\end{lstlisting}
-
-% (Moved all quantitative crossover examples and back-of-the-envelope numbers to Results)
-
-\subsubsection{Privacy and Security Guarantees}
-
-The zk-SNARK integration provides multiple privacy layers:
-
-% (Moved privacy guarantees table to Results to keep Architecture descriptive; retain properties list below)
-
-\paragraph{Zero-Knowledge Properties:}
-\begin{itemize}
-    \item \textbf{Completeness}: Valid computations always produce accepting proofs
-    \item \textbf{Soundness}: Invalid computations cannot produce accepting proofs
-    \item \textbf{Zero-Knowledge}: Verifiers learn nothing beyond computation validity
-\end{itemize}
-
-\subsubsection{Implementation Summary}
-
-The cryptographic integration occurs at the following specific points:
-
-\begin{enumerate}
-    \item \textbf{Circuit Compilation}: ZoKrates compiles \texttt{.zok} files to arithmetic circuits
-    \item \textbf{Witness Generation}: Private inputs converted to circuit-compatible format
-    \item \textbf{Proof Generation}: Either standard (individual) or recursive (batched) proofs
-    \item \textbf{Verification}: Public verification without access to private inputs
-    \item \textbf{Aggregation}: Statistical analysis on verified results only
-\end{enumerate}
-
-This architecture ensures that \textbf{privacy-preserving computation occurs exclusively during the proof generation phase}, while maintaining computational integrity throughout the evaluation pipeline.
-
-
-
-% (Moved Evaluation Metrics to Results to keep Architecture descriptive)
-
-\subsection{Privacy \& Metadata Exposure}
-\label{subsec:privacy-metadata}
-
-Privacy preservation metrics quantifying information leakage risks:
-
-\begin{itemize}
-    \item \textbf{Information leakage}: Mutual information between inputs and proof metadata
-    \item \textbf{Anonymity set size}: Number of indistinguishable data items in batches
-    \item \textbf{Re-identification risk}: Probability of linking proofs to specific users
-    \item \textbf{Temporal correlation}: Risk of pattern recognition across time periods
-\end{itemize}
-
-  \section{Threshold Modeling}
-  \label{sec:threshold-modeling}
-
-    \subsection{Analytical Cost Model}
-\label{subsec:analytical-cost-model}
-
-We develop mathematical models to predict crossover points where recursive SNARKs become superior to standard SNARKs. The cost function incorporates:
-
-\begin{align}
-C_{\text{standard}}(n) &= n \cdot (C_{\text{proof}} + C_{\text{storage}} + C_{\text{verify}}) \\
-C_{\text{recursive}}(n) &= C_{\text{setup}} + C_{\text{fold}} \cdot \log(n) + C_{\text{const}}
-\end{align}
-
-Where $n$ represents the number of data items, and the crossover point occurs when:
-\begin{equation}
-C_{\text{recursive}}(n) < C_{\text{standard}}(n)
-\end{equation}
-
-\subsubsection{Explanation of both formulas}
-
-Standard path: For each of the $n$ items we generate and verify one proof and incur storage/transfer once, hence linear aggregation of per-item terms: $C_{\text{standard}}(n)=n\cdot(C_{\text{proof}}+C_{\text{storage}}+C_{\text{verify}})$. This matches an $\Theta(n)$ work model where each item contributes a constant amount of proving, storage, and verification effort.\\
-
-\noindent Recursive path: We pay a one-time setup cost $C_{\text{setup}}$, then fold partial proofs in balanced rounds until a single accumulator remains. With pairwise folding the number of rounds is $\approx \lceil\log_2 n\rceil$, so the critical-path folding cost is $C_{\text{fold}}\cdot\log(n)$. Finally, we perform a constant final compression/encoding step captured by $C_{\text{const}}$. This structure corresponds to a classic divide-and-conquer recurrence where the tree depth is logarithmic in $n$ \cite{212SolvingRecurrence, lenznerRekurrenzenUndMasterTheorem}. If folding were strictly sequential rather than batched/balanced, the total fold work scales linearly and the model would replace $\log(n)$ by $n$.\\
-
-Terminology:
-\begin{itemize}
-    \item $C_{\text{standard}}(n)$: Total cost of the standard (non-recursive) path for $n$ items
-    \item $C_{\text{recursive}}(n)$: Total cost of the recursive path for $n$ items
-    \item $C_{\text{proof}}$: Per-item proving cost (e.g., prover time per proof)
-    \item $C_{\text{storage}}$: Per-item storage/transmission cost (e.g., bytes or time-equivalent)
-    \item $C_{\text{verify}}$: Per-proof verification cost (e.g., verifier time)
-    \item $C_{\text{setup}}$: One-time setup/compilation/key-generation cost
-    \item $C_{\text{fold}}$: Per-step folding/composition overhead in the recursive path
-    \item $C_{\text{const}}$: Fixed finalization/compression cost of the recursive path
-\end{itemize}
-
-\subsection{Definition of the Breakeven Point}
-\label{subsec:breakeven-definition}
-
-The breakeven point (crossover point) is defined as the minimum data size where recursive SNARKs demonstrate overall superiority considering:
-
-\begin{enumerate}
-    \item \textbf{Storage efficiency}: Constant vs. linear storage growth
-    \item \textbf{Memory requirements}: Peak memory usage during proof generation
-    \item \textbf{Computational overhead}: Time complexity for proof generation and verification
-    \item \textbf{Privacy benefits}: Enhanced anonymity through batch processing
-\end{enumerate}
-
-\section{Circuit Design: Generalized Function Set}
-\label{sec:circuit-design}
-
-    \subsection{Filter Operations}
-\label{subsec:filter-operations}
-
-The filter circuit (\texttt{filter\_range.zok}) implements privacy-preserving range validation:
-
-\begin{itemize}
-    \item \textbf{Range validation}: Verify sensor readings fall within acceptable bounds
-    \item \textbf{Threshold detection}: Identify anomalous readings without revealing values
-    \item \textbf{Privacy preservation}: Zero-knowledge proof of validity without exposing data
-\end{itemize}
-
-    \subsection{Statistical Functions: min, max, median}
-\label{subsec:statistical-functions}
-
-Statistical aggregation circuits enable privacy-preserving data analysis:
-
-\begin{itemize}
-    \item \textbf{Min/Max circuits} (\texttt{min\_max.zok}): Compute bounds without revealing individual values
-    \item \textbf{Median circuit} (\texttt{median.zok}): Robust central tendency estimation
-    \item \textbf{Multi-sensor aggregation} (\texttt{aggregation.zok}): Cross-sensor statistical correlation
-    \item \textbf{Recursive composition} (\texttt{iot\_recursive.zok}): Batch processing with constant proof size
-\end{itemize}
-
-The circuit library supports both standard and Nova-compatible implementations, enabling direct performance comparison under identical computational logic.
-\begin{comment}
-    
-
-\section{Reproducibility}
-\label{sec:reproducibility}
+\noindent Host platform (for emulation):
 \begin{table}[H]
-\centering
-\caption{System and Tooling}
-\label{tab:repro}
-\begin{tabular}{@{}ll@{}}
-\toprule
-\textbf{OS / Kernel} & Linux (WSL2), kernel 6.6.87.2 \\
-\textbf{Python} & 3.12 (see \texttt{requirements.txt}) \\
-\textbf{ZoKrates} & 0.8.8 (Nova experimental backend) \\
-\textbf{Hardware} & CPU/GPU/RAM: \textit{document exact specs here} \\
-\textbf{Commit IDs} & \textit{document git commit hash of evaluation run} \\
-\bottomrule
-\end{tabular}
+  \centering
+  \begin{tabular}{ll}
+    \hline
+    Component & Specification \\
+    \hline
+    CPU & AMD Ryzen 7 7800X3D (8 cores, 16 threads; base \SI{4.2}{GHz}) \\
+    RAM & \SI{32}{GB} DDR5 @ \SI{6000}{MT/s} (2\,\texttimes{} DIMM) \\
+    GPU & NVIDIA GeForce RTX 4070 SUPER (12\,GB VRAM) \\
+    Virtualization & Windows 11 + WSL2 (Ubuntu kernel 6.6.87.2) \\
+    \hline
+  \end{tabular}
+  \caption{Host platform used to simulate IoT-like environments under resource constraints via Docker/cgroups.}
 \end{table}
 
-\noindent Recursive SNARKs provide distinct advantages at different scales: storage becomes favorable around 128 items due to a constant final proof size; memory benefits appear immediately thanks to sub-linear scaling, which is critical for RAM-constrained devices; proving-time advantages emerge only at very large data sizes (about 2000 items) once overheads are amortized; taken together, the overall efficiency turns in favor of recursion at roughly 171 items, which serves as the practical threshold for system design.
 
-\paragraph{Build and Run Commands}
-\begin{verbatim}
-python -m venv iot_zk_env && source iot_zk_env/bin/activate && pip install -r requirements.txt
-bash build_zokrates_nova.sh
-bash run_evaluation.sh
-python demo.py --help
-\end{verbatim}
 
-\paragraph{Parameters}
-Batch sizes, time windows, and circuit variants are configured via \texttt{configs/} and CLI flags; record exact values in the camera-ready artifact.
-\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Empirical Results and Analysis}
+% Requirements (load once in the preamble):
+% \usepackage{graphicx}
+% \usepackage{booktabs}
+% \usepackage{siunitx}
+% \usepackage{hyperref}
+% \usepackage{caption}
+% \sisetup{round-mode=places,round-precision=2,detect-weight=true,detect-inline-weight=math}
+
+\chapter{Results and Analysis}
 \label{chap:empirical-results}
 
-This chapter presents the comprehensive empirical evaluation results from our IoT ZK-SNARK evaluation system. Our analysis covers multi-dimensional performance assessments, crossover point validation, temporal batch analysis, and privacy-performance trade-offs in realistic smart home scenarios.
+This chapter presents the empirical evaluation of Standard zk-SNARKs versus recursive zk-SNARKs for IoT data aggregation. The analysis reveals significant performance differences between the two approaches.
 
-\section{Evaluation Methodology and Setup}
-\label{sec:evaluation-methodology-arch}
 
-\subsection{Experimental Design}
+\section{Performance Results}
+\label{sec:performance-results}
 
-Our evaluation framework systematically compared standard zk-SNARKs against recursive SNARKs across multiple time scales and batch configurations. The evaluation encompassed:
+\subsection{Docker Environment Results (Resource-Constrained)}
 
-\begin{enumerate}
-    \item \textbf{Multi-period IoT simulation}: 1-day, 1-week, and 1-month data generation periods
-    \item \textbf{Temporal batch analysis}: Variable batch sizes from hourly to full-period aggregation
-    \item \textbf{Circuit complexity analysis}: Five different ZK circuit types for varying computational demands
-    \item \textbf{Performance metrics}: Proof generation time, verification time, proof size, memory usage, and throughput
-    \item \textbf{Privacy assessment}: Information leakage, anonymity set size, and re-identification risk analysis
-\end{enumerate}
-
-\subsection{Dataset Characteristics}
-
-Our evaluation utilized a comprehensive smart home IoT dataset with the following characteristics:
-
-\begin{table}[H]
-    \centering
-\caption{IoT Dataset Summary}
-\label{tab:dataset-summary-arch}
-    \begin{tabular}{|l|c|c|c|}
-    \hline
-\textbf{Period} & \textbf{Total Readings} & \textbf{Sensors} & \textbf{Time Resolution} \\
-    \hline
-    \hline
-1 Day & 24,480 & 17 & 1 minute \\
-1 Week & 34,272 & 17 & 5 minutes \\
-1 Month & 48,960 & 17 & 15 minutes \\
-\hline
-\textbf{Total} & \textbf{107,712} & \textbf{17} & \textbf{Variable} \\
-    \hline
-    \end{tabular}
-    \end{table}
-
-\noindent Calculation (per period): Total Readings $= \big(\text{duration}/\text{time resolution}\big)\times\text{number of sensors}$. For example, 1 Month at 15-minute resolution with 18 sensors yields $30\cdot24\cdot60/15=2{,}880$ intervals per sensor and $2{,}880\times17=48,960$ readings in total.
-    
-The dataset includes seven sensor types (temperature, humidity, motion, light, sleep\_sensor, gas, wind\_speed) distributed across five room categories (living\_room, bedroom, kitchen, bathroom, outdoor) with realistic temporal patterns.
-
-\section{Crossover Point Analysis Results}
-\label{sec:crossover-results-arch}
-
-This section presents a systematic comparison between standard zk-SNARKs and Nova recursive SNARKs using identical IoT sensor data. The analysis identifies critical crossover points where recursive SNARKs become superior to standard SNARKs.
-
-\subsection{Experimental Setup}
-
-For a fair comparison, identical IoT sensor data from the smart home scenario were used across all tests. The evaluation covers various batch sizes from 10 to 200 IoT readings, with each test using exactly the same input data for both SNARK systems:
-
-\begin{itemize}
-    \item \textbf{Standard SNARKs}: Each IoT reading is processed individually, resulting in $N$ separate proofs
-    \item \textbf{Nova Recursive}: All $N$ IoT readings are aggregated into a single recursive proof
-    \item \textbf{Metrics}: Proving time, verification time, proof size, memory consumption
-    \item \textbf{Implementation}: Real ZoKrates and Nova measurements without simulations
-\end{itemize}
-
-\subsection{Quantitative Results}
-
-Table~\ref{tab:crossover-comparison} shows detailed measurement results for different batch sizes. The data is based on real ZoKrates and Nova implementations without any simulations.
-
-\begin{table}[htbp]
-\centering
-\caption{Crossover Analysis: Standard vs. Nova Recursive SNARKs}
-\label{tab:crossover-comparison}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-\textbf{Batch} & \textbf{Items} & \textbf{Standard} & \textbf{Standard} & \textbf{Nova} & \textbf{Nova} & \textbf{Time} & \textbf{Verification} & \textbf{Storage} \\
-\textbf{Size} & & \textbf{Time (s)} & \textbf{Proofs} & \textbf{Time (s)} & \textbf{Proofs} & \textbf{Speedup} & \textbf{Reduction} & \textbf{Ratio} \\
-\hline
-10  & 10  & 6.27  & 10 & 8.77  & 1 & 0.7x & 10:1 & 1.1:1 \\
-25  & 25  & 15.67 & 25 & 9.59  & 1 & \textbf{1.6x} & 25:1 & 2.8:1 \\
-50  & 50  & 31.35 & 50 & 9.66  & 1 & \textbf{3.2x} & 50:1 & 5.6:1 \\
-100 & 100 & 62.70 & 100 & 10.92 & 1 & \textbf{5.7x} & 100:1 & 10.3:1 \\
-200 & 200 & 125.39 & 200 & 12.93 & 1 & \textbf{9.7x} & 200:1 & 18.4:1 \\
-\hline
-\end{tabular}%
-}
-\end{table}
-
-\subsection{Critical Crossover Point Identification}
-
-The empirical analysis identifies three critical crossover points based on real measurements:
-
-\begin{enumerate}
-    \item \textbf{Time Crossover (25 Items)}: Nova Recursive becomes faster than standard SNARKs starting at 25 IoT readings
-    \item \textbf{Verification Crossover (2 Items)}: Nova requires fewer verification operations starting at 2 items
-    \item \textbf{Storage Crossover (10 Items)}: Nova becomes more storage-efficient starting at 10 items
-\end{enumerate}
+Table \ref{tab:docker-performance} shows the performance results under Docker resource limitations, which simulate typical IoT edge device constraints.
 
 \begin{table}[H]
 \centering
-\caption{Empirically Validated Crossover Points}
-\label{tab:crossover-validation-real}
-\begin{tabular}{|l|c|p{6cm}|}
-\hline
-\textbf{Metric} & \textbf{Crossover Point} & \textbf{Performance Implication} \\
-\hline
-\textbf{Time} & \textbf{25 items} & \textbf{Nova becomes faster than N individual standard proofs} \\
-\textbf{Verification} & 2 items & Always better: 1 verification vs. N verifications \\
-\textbf{Storage} & 10 items & Constant Nova proof size vs. linear growth in standard \\
-\hline
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Readings} & \textbf{Standard (s)} & \textbf{Nova (s)} & \textbf{Winner} & \textbf{Ratio} \\
+\midrule
+50 & 4.67 & 37.09 & Standard & 7.9\texttimes{} \\
+60 & 5.48 & 38.67 & Standard & 7.1\texttimes{} \\
+70 & 6.55 & 40.90 & Standard & 6.2\texttimes{} \\
+80 & 7.44 & 42.80 & Standard & 5.8\texttimes{} \\
+90 & 8.47 & 43.97 & Standard & 5.2\texttimes{} \\
+100 & 9.13 & 46.66 & Standard & 5.1\texttimes{} \\
+\bottomrule
 \end{tabular}
+\caption{Performance comparison under Docker resource constraints (CPU: 0.5, RAM: 1GB)}
+\label{tab:docker-performance}
 \end{table}
 
-\subsection{Scaling Behavior Analysis}
+Under resource-constrained conditions, Standard SNARKs consistently outperform Nova by a factor of 5-8\texttimes{}, with no crossover point observed. This suggests that Nova's recursive processing requires significantly more computational resources than available in typical IoT edge devices.
 
-The results demonstrate clear exponential advantages for Nova recursive SNARKs with increasing batch sizes:
+\subsection{Native Environment Results (Full Resources)}
 
-\begin{itemize}
-    \item \textbf{Standard SNARKs}: Linear time complexity $O(n)$ with factor 0.627s per item
-    \item \textbf{Nova Recursive}: Nearly constant time $\approx 10$s independent of batch size
-    \item \textbf{Verification Advantage}: Reduction from $N$ to 1 verification means $N$:1 efficiency gain
-    \item \textbf{Exponential Scaling}: Nova advantage grows from 1.6x at 25 items to 9.7x at 200 items
-\end{itemize}
-
-\subsection{Visualization and Performance Analysis}
-
-Figure~\ref{fig:crossover-plots} visualizes the scaling behavior of both SNARK systems. The results show exponential growth of Nova advantages with increasing batch size.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{data/visualizations/crossover_analysis_plots.png}
-\caption{Crossover Analysis Visualization: (A) Proving time comparison with crossover point at 25 items, (B) Nova performance advantage showing exponential growth, (C) Verification complexity demonstrating N:1 reduction, (D) Cost efficiency per IoT reading}
-\label{fig:crossover-plots}
-\end{figure}
-
-The experimental results reveal fundamental differences in scaling behavior:
-
-\begin{enumerate}
-    \item \textbf{Critical Threshold}: Nova becomes superior at 25 IoT items, a practically relevant threshold for smart home scenarios
-    \item \textbf{Exponential Advantage}: The benefit factor grows exponentially (1.6x → 9.7x) with batch size
-    \item \textbf{Verification Efficiency}: Dramatic reduction in verification complexity (up to 200:1) improves scalability
-    \item \textbf{Storage Efficiency}: Constant proof size vs. linear growth provides significant storage advantages
-\end{enumerate}
-
-\subsection{Application Recommendations}
-
-Based on the crossover analysis, the following recommendations emerge for IoT applications:
-
-\begin{table}[htbp]
-\centering
-\caption{Application Recommendations Based on Crossover Analysis}
-\label{tab:recommendations}
-\begin{tabular}{|p{0.25\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
-\hline
-\textbf{Application} & \textbf{Recommended System} & \textbf{Justification} \\
-\hline
-Real-time processing (< 25 items) & Standard SNARKs & Lower latency, simpler implementation \\
-\hline
-Batch processing (≥ 25 items) & Nova Recursive & Exponential speed advantage \\
-\hline
-Smart home aggregation & Nova Recursive & Daily/weekly data batches > 25 items \\
-\hline
-Micro-transactions & Standard SNARKs & Individual transactions, low latency \\
-\hline
-IoT data archiving & Nova Recursive & Large datasets, storage efficiency \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Scientific Interpretation}
-
-The identified crossover points confirm theoretical expectations for recursive SNARK systems. The crossover at 25 items lies within the practically relevant range for IoT applications, making Nova Recursive a promising technology for smart home scenarios.
-
-The verification reduction from $N$:1 is particularly significant for decentralized systems where each network participant must verify proofs. The dramatic reduction in verification complexity (up to 200:1) can significantly improve the scalability of IoT networks.
-
-The empirical data provides a solid foundation for system design decisions in IoT privacy applications, clearly delineating when each approach offers optimal performance characteristics.
-
-\section{Performance Scaling Analysis}
-\label{sec:performance-scaling}
-
-\subsection{Temporal Batch Analysis Results}
-
-Our temporal batch analysis reveals how performance characteristics change across different aggregation time scales. The results demonstrate clear patterns of recursive SNARK advantages that scale with batch size.
-
-\subsubsection{Daily Aggregation Patterns}
-
-For 1-day data processing (24,480 readings), recursive SNARKs show progressive advantages:
+Table \ref{tab:native-performance} presents the performance results without resource limitations, revealing a fundamentally different performance profile.
 
 \begin{table}[H]
 \centering
-\caption{Daily Temporal Batch Analysis Results}
-\label{tab:daily-results-arch}
-\setlength{\tabcolsep}{3pt}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}lcccc@{}}%
-\hline
-\textbf{Batch Size} & \textbf{Compression Ratio} & \textbf{Size Efficiency} & \textbf{Memory Efficiency} & \textbf{Overall Efficiency} \\
-\hline
-\hline
-1 Hour (60 items) & 156.0$\times$ & 155.99$\times$ & 0.62$\times$ & 52.66$\times$ \\
-4 Hour (240 items) & 39.0$\times$ & 39.00$\times$ & 0.66$\times$ & 13.66$\times$ \\
-12 Hour (720 items) & 13.0$\times$ & 13.00$\times$ & 0.78$\times$ & 5.00$\times$ \\
-Full Day (1440 items) & 6.5$\times$ & 6.50$\times$ & 0.91$\times$ & 2.83$\times$ \\
-\hline
-\end{tabular}%
-}\end{table}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Readings} & \textbf{Standard (s)} & \textbf{Nova (s)} & \textbf{Winner} & \textbf{Ratio} \\
+\midrule
+50 & 8.16 & 9.60 & Standard & 1.18\texttimes{} \\
+60 & 9.75 & 9.86 & Standard & 1.01\texttimes{} \\
+70 & 11.62 & 10.27 & \textbf{Nova} & \textbf{1.13\texttimes{}} \\
+80 & 13.15 & 10.47 & Nova & 1.26\texttimes{} \\
+90 & 14.43 & 10.65 & Nova & 1.36\texttimes{} \\
+100 & 16.32 & 10.87 & Nova & 1.50\texttimes{} \\
+\bottomrule
+\end{tabular}
+\caption{Performance comparison with full system resources (no Docker limitations)}
+\label{tab:native-performance}
+\end{table}
 
-\textbf{Key Observation}: Compression ratios decrease with larger batch sizes, but overall efficiency remains positive across all configurations. This validates the theoretical prediction that recursive SNARKs provide consistent advantages above the crossover threshold.
+The native environment reveals a clear crossover point at approximately 70 readings, where Nova begins to outperform Standard SNARKs. Beyond this point, Nova's advantage grows linearly with batch size, reaching 1.5\texttimes{} faster performance at 100 readings.
 
-\section{Conclusion and Key Insights}
-\label{sec:empirical-conclusion-arch}
-
-Our comprehensive empirical evaluation provides definitive answers to the core research questions:
-
-\subsection{Critical Findings}
-
-    \begin{enumerate}
-    \item \textbf{Crossover Threshold}: Recursive SNARKs become superior at 171 data items with 95\% confidence interval [153, 188]
-    \item \textbf{Scaling Benefits}: Size efficiency scales linearly (0.38n), while memory efficiency follows sub-linear scaling ($n^{0.3}$)
-    \item \textbf{Multi-dimensional Optimization}: Storage, memory, and proving efficiency exhibit different crossover points, requiring holistic evaluation
-    \item \textbf{Privacy Enhancement}: Larger batch sizes provide improved anonymity (57-item anonymity set at crossover threshold)
-    \item \textbf{Device Dependency}: Memory-constrained devices benefit from recursive SNARKs at much lower thresholds (45-120 items)
-    \end{enumerate}
-    
-\subsection{Practical Impact}
-
-The evaluation demonstrates that recursive SNARKs provide:
-\begin{itemize}
-    \item \textbf{Storage savings}: 6.5-156$\times$ compression ratios across batch sizes
-    \item \textbf{Memory efficiency}: 40\% energy savings for memory-constrained devices
-    \item \textbf{Privacy enhancement}: Reduced re-identification risk through improved anonymity
-    \item \textbf{Scalability}: Sustained advantages for IoT deployments processing > 171 items
-\end{itemize}
-
-This empirical validation provides the foundation for informed architectural decisions in real-world IoT ZK-SNARK deployments, confirming that the choice between standard and recursive SNARKs should be based on data volume, resource constraints, and privacy requirements rather than theoretical preferences.
-\end{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Discussion}
 \label{chap:discussion}
-\begin{comment}
-    
-\section{When to Use Recursive vs. Non‑recursive ZKPs}
-\label{sec:when-to-use}
-
-Based on our comprehensive evaluation, we can provide clear guidelines for choosing between standard and recursive zk-SNARKs in IoT deployments.
-
-\subsection{Quantitative Guidelines}
-
-Our empirical analysis establishes concrete thresholds for proof system selection:
-
-\begin{table}[H]
-    \centering
-\caption{Proof System Selection Guidelines}
-\label{tab:selection-guidelines}
-\begin{tabular}{|l|l|l|}
-    \hline
-\textbf{Data Volume} & \textbf{Recommended System} & \textbf{Primary Benefit} \\
-    \hline
-    \hline
-< 85 items & Standard SNARKs & Lower setup overhead, simpler implementation \\
-85-171 items & Application-dependent & Evaluate specific requirements \\
-> 171 items & Recursive SNARKs & Storage, memory, and verification efficiency \\
-    \hline
-    \end{tabular}
-    \end{table}
-    
-\subsubsection{Memory-Constrained Environments}
-
-For IoT devices with severe memory limitations (< 10MB), recursive SNARKs become advantageous at much lower thresholds:
-
-\begin{itemize}
-    \item \textbf{Arduino Nano 33}: 45 items threshold
-    \item \textbf{ESP32}: 120 items threshold
-    \item \textbf{Raspberry Pi Zero}: 171 items threshold (standard)
-\end{itemize}
-
-\subsection{Scenario Dependencies}
-\subsection{Compact Decision Matrix}
-\label{sec:decision-matrix}
-\begin{figure}[H]
-    \centering
-    % If you generate a dedicated decision heatmap, point to it here.
-    % For now, the overview plot provides sufficient guidance alongside Table~\ref{tab:selection-guidelines}.
-    \includegraphics[width=0.82\textwidth]{img/crossover_point_overview.png}
-    \caption{Practical decision support: use standard SNARKs below $\sim$85 items; transition zone 85--171; recursive SNARKs above 171 or when RAM/bandwidth constraints dominate.}
-    \label{fig:decision-matrix}
-\end{figure}
-
-
-Different IoT deployment scenarios exhibit varying optimal crossover points:
-
-\subsubsection{Smart Home Deployments}
-\begin{itemize}
-    \item \textbf{Real-time monitoring}: Standard SNARKs for < 60 sensor readings
-    \item \textbf{Hourly aggregation}: Transition zone requiring case-by-case evaluation
-    \item \textbf{Daily reports}: Clear advantage for recursive SNARKs
-    \item \textbf{Historical analysis}: Overwhelming recursive SNARK benefits
-\end{itemize}
-
-\subsubsection{Industrial IoT}
-\begin{itemize}
-    \item \textbf{High-frequency sensors}: Recursive SNARKs for continuous monitoring
-    \item \textbf{Predictive maintenance}: Batch processing favors recursive approaches
-    \item \textbf{Supply chain tracking}: Large-scale data requires recursive SNARKs
-\end{itemize}
-
-\section{Strengths, Limitations \& Open Issues}
-\label{sec:strengths-limitations}
-
-\subsection{Strengths of Our Approach}
-
-\subsubsection{Comprehensive Evaluation Framework}
-Our evaluation provides the first systematic comparison of standard and recursive SNARKs in IoT contexts, covering multiple dimensions: performance, privacy, scalability, and energy consumption.
-
-\subsubsection{Empirical Validation}
-The 97.1\% accuracy of our theoretical model against empirical results demonstrates the reliability of our crossover predictions for real-world deployments.
-
-\subsubsection{Practical Implementation}
-By leveraging ZoKrates' experimental Nova support, we demonstrate the feasibility of recursive SNARKs in existing development workflows.
-
-\subsection{Limitations}
-
-\subsubsection{Technology Constraints}
-Our recursive SNARK implementation relies on experimental ZoKrates features, which may not be production-ready for all applications.
-
-\subsubsection{Circuit Complexity}
-The evaluation focuses on relatively simple IoT operations. More complex computations may exhibit different crossover characteristics.
-
-\subsubsection{Network Considerations}
-Our analysis primarily focuses on computational and storage aspects, with limited consideration of network topology and communication patterns.
-
-\subsection{Open Issues}
-
-\subsubsection{Production Readiness}
-The transition from experimental to production-ready recursive SNARK implementations requires further development and testing.
-
-\subsubsection{Dynamic Optimization}
-Current approaches require static selection between proof systems. Dynamic switching based on runtime conditions remains an open research problem.
-
-\subsubsection{Circuit Optimization}
-Further optimization of ZK circuits for IoT-specific operations could shift crossover points and improve overall performance.
-
-\section{Applicability Beyond IoT}
-\label{sec:applicability-beyond-iot}
-
-\subsection{Healthcare Data Processing}
-
-The principles established in our IoT evaluation apply to healthcare scenarios where patient data requires privacy-preserving aggregation:
-
-\begin{itemize}
-    \item \textbf{Wearable device data}: Similar constraints to IoT devices
-    \item \textbf{Hospital sensor networks}: Large-scale deployment benefits
-    \item \textbf{Clinical trial data}: Privacy requirements favor recursive approaches
-\end{itemize}
-
-\subsection{Financial Technology}
-
-Privacy-preserving financial computations could benefit from our crossover analysis:
-
-\begin{itemize}
-    \item \textbf{Transaction batching}: Similar aggregation patterns
-    \item \textbf{Compliance reporting}: Large-scale data processing
-    \item \textbf{Risk assessment}: Continuous data streams
-\end{itemize}
-
-\subsection{Smart Cities}
-\subsection{Applicability to Blockchain Contexts}
-While our primary focus is centralized/fog-style IoT deployments, the recursive zk-SNARK pipeline translates naturally to blockchain systems. In on-chain settings, the succinct final proof is submitted as a transaction, and a smart contract verifies it in constant time, preserving privacy while ensuring end-to-end integrity. Prior work has established the feasibility of recursive verification on-chain (e.g., Halo) and efficient folding schemes such as Nova that absorb per-step complexity into a concise accumulator \cite{boweRecursiveProofComposition2019, kothapalli_nova_2022}. Because proof size remains constant regardless of the number of folded intervals, gas costs become predictable; however, data availability and fee dynamics must be considered in practical designs. This suggests that streaming IoT workloads with stringent auditability requirements could leverage public ledgers as verifiers without exposing raw telemetry, complementing the private/fog deployment discussed in this thesis.
-
-Urban sensor networks present scaling challenges similar to our IoT evaluation:
-
-\begin{itemize}
-    \item \textbf{Traffic monitoring}: High-frequency data collection
-    \item \textbf{Environmental sensing}: Distributed sensor networks
-    \item \textbf{Public safety}: Privacy-sensitive aggregation requirements
-\end{itemize}
-  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Evaluation Methodology and Setup}
-\label{sec:evaluation-methodology}
-
-\subsection{Experimental Design}
-
-Our evaluation framework systematically compared standard zk-SNARKs against recursive SNARKs across multiple time scales and batch configurations. The evaluation encompassed:
-
-\begin{enumerate}
-    \item \textbf{Multi-period IoT simulation}: 1-day, 1-week, and 1-month data generation periods
-    \item \textbf{Temporal batch analysis}: Variable batch sizes from hourly to full-period aggregation
-    \item \textbf{Circuit complexity analysis}: Five different ZK circuit types for varying computational demands
-    \item \textbf{Performance metrics}: Proof generation time, verification time, proof size, memory usage, and throughput
-    \item \textbf{Privacy assessment}: Information leakage, anonymity set size, and re-identification risk analysis
-\end{enumerate}
-
-\subsection{Dataset Characteristics}
-
-Our evaluation utilized a comprehensive smart home IoT dataset with the following characteristics:
-
-\begin{table}[H]
-    \centering
-\caption{IoT Dataset Summary}
-\label{tab:dataset-summary}
-    \begin{tabular}{|l|c|c|c|}
-    \hline
-\textbf{Period} & \textbf{Total Readings} & \textbf{Sensors} & \textbf{Time Resolution} \\
-    \hline
-    \hline
-1 Day & 24,480 & 18 & 1 minute \\
-1 Week & 34,272 & 18 & 5 minutes \\
-1 Month & 48,960 & 18 & 15 minutes \\
-\hline
-\textbf{Total} & \textbf{107,712} & \textbf{18} & \textbf{Variable} \\
-    \hline
-    \end{tabular}
-    \end{table}
-    
-The dataset includes seven sensor types (temperature, humidity, motion, light, sleep\_sensor, gas, wind\_speed) distributed across five room categories (living\_room, bedroom, kitchen, bathroom, outdoor) with realistic temporal patterns and privacy levels.
-
-\section{Crossover Point Analysis Results}
-\label{sec:crossover-results}
-
-\subsection{Critical Threshold Identification}
-
-Our theoretical crossover analysis identified multiple performance transition points where recursive SNARKs become superior to standard SNARKs:
-
-\begin{table}[H]
-\centering
-\caption{Empirically Validated Crossover Points}
-\label{tab:crossover-validation}
-\begin{tabular}{|l|c|c|p{5cm}|}
-\hline
-\textbf{Metric} & \textbf{Crossover Point} & \textbf{Confidence Interval} & \textbf{Performance Implication} \\
-\hline
-\hline
-\textbf{Storage} & 128 items & 115-141 items & Constant 2KB proof size becomes advantageous over linear growth \\
-\textbf{Memory} & 1 item & Immediate & Sub-linear scaling provides immediate benefits for memory-constrained devices \\
-\textbf{Proving} & 2,000 items & 1,800-2,200 items & Folding efficiency overcomes higher setup overhead \\
-\textbf{Overall} & \textbf{171 items} & \textbf{153-188 items} & \textbf{Combined optimization threshold for practical deployment} \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsubsection{Mathematical Model Validation}
-
-Our empirical results validate the theoretical crossover model with high accuracy. Using the analytical model from \cref{subsec:analytical-cost-model}:
-
-\begin{align}
-C_{\text{standard}}(n) &= n \cdot \big(C_{\text{proof}} + C_{\text{storage}} + C_{\text{verify}}\big) \\
-C_{\text{recursive}}(n) &= C_{\text{setup}} + C_{\text{fold}} \cdot \log(n) + C_{\text{const}}
-\end{align}
-
-At the critical threshold of $n=171$ items (with calibrated constants):
-
-\begin{align}
-C_{\text{standard}}(171) &= 171 \cdot \big(C_{\text{proof}} + C_{\text{storage}} + C_{\text{verify}}\big) = 1.919 \; \text{units} \\
-C_{\text{recursive}}(171) &= C_{\text{setup}} + C_{\text{fold}} \cdot \log(171) + C_{\text{const}} = 1.873 \; \text{units} \\
-\text{Efficiency Ratio} &= \dfrac{C_{\text{standard}}(171)}{C_{\text{recursive}}(171)} = 1.024 \; \text{ (2.4\% improvement)}
-\end{align}
-
-The cost breakdown demonstrates that recursive SNARKs achieve superior performance through:
-\begin{itemize}
-    \item \textbf{Storage efficiency}: 85.5 vs. 2.0 storage units (42.75$\times$ improvement)
-    \item \textbf{Memory efficiency}: 85.5 vs. 11.0 memory units (7.77$\times$ improvement)
-    \item \textbf{Verification efficiency}: 0.02 vs. 0.005 verification time (4$\times$ improvement)
-\end{itemize}
-
-\subsection{Sensitivity Analysis}
-
-The crossover point exhibits differential sensitivity to key parameters:
-    
-    \begin{figure}[H]
-    \centering
-\includegraphics[width=\textwidth]{img/crossover_sensitivity_analysis.png}
-\caption{Crossover point sensitivity to critical parameters. Batch size and memory constraints show highest impact on threshold determination.}
-\label{fig:sensitivity-analysis}
-    \end{figure}
-    
-\begin{table}[H]
-\centering
-\caption{Mini-Ablation: Parameter Sensitivity Impact on the Crossover Point}
-\label{tab:parameter-sensitivity}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Parameter} & \textbf{Baseline} & \textbf{Range} & \textbf{Crossover Impact} \\
-\hline
-\hline
-Batch Size & 50 items & 10-120 items & 156-171 items \\
-Folding Speedup & 2.5$\times$ & 2$\times$-5$\times$ & 116-241 items \\
-Memory Constraint & 1.0$\times$ & 0.5$\times$-2$\times$ & 156-176 items \\
-Setup Cost Ratio & 8$\times$ & 2$\times$-20$\times$ & 56-206 items \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsubsection{Mini-Ablation: What moves the crossover?}
-The sensitivity plot in \cref{fig:sensitivity-analysis} and \cref{tab:parameter-sensitivity} act as a compact ablation study: changing one factor at a time while keeping others fixed. Two knobs dominate in practice: batch size and setup cost. Batch size mainly tunes amortization, while setup cost shifts the intercept of recursive systems.
-
-\begin{table}[H]
-\centering
-\caption{Mini-Ablation Summary (single-factor variation)}
-\label{tab:mini-ablation-summary}
-\setlength{\tabcolsep}{5pt}
-\begin{tabularx}{\linewidth}{@{}l c c Y@{}}
-\toprule
-\textbf{Factor} & \textbf{Range} & \textbf{Crossover shift} & \textbf{Interpretation} \\
-\midrule
-Batch size & 10$\to$120 & 156$\to$171 (\,+15) & Larger batches improve amortization; overall threshold rises moderately. \\
-Setup cost ratio & 2$\times$$\to$20$\times$ & 56$\to$206 (\,+150) & Higher setup pushes the threshold right; long-lived/large-$n$ jobs mitigate this. \\
-Memory constraint & 0.5$\times$$\to$2$\times$ & 156$\to$176 (\,+20) & Tighter RAM favors recursion earlier. \\
-Folding speedup & 2$\times$$\to$5$\times$ & 241$\to$116 (\,$-125$) & Faster folding pulls the threshold left (recursion earlier). \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Empirically, \cref{tab:daily-results} confirms the batch-driven trend: from 1h to 24h aggregation, overall efficiency remains $>$1 and declines smoothly (52.66$\times$ $\to$ 2.83$\times$) as amortization saturates. Together, these results explain why the consolidated crossover stabilizes around $n\!=\!171$ for our workload and tooling.
-
-\section{Temporal Batch Analysis Results}
-\label{sec:temporal-results}
-
-\subsection{Multi-Scale Performance Evaluation}
-
-Our temporal batch analysis reveals how performance characteristics change across different aggregation time scales. The results demonstrate clear patterns of recursive SNARK advantages that scale with batch size.
-
-\subsubsection{Daily Aggregation Patterns}
-
-For 1-day data processing (24,480 readings), recursive SNARKs show progressive advantages:
-    
-    \begin{table}[H]
-    \centering
-\caption{Daily Temporal Batch Analysis Results}
-\label{tab:daily-results}
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\linewidth}{@{}lYYYYY@{}}
-    \hline
-\textbf{Batch Size} & \textbf{Compression Ratio} & \textbf{Size Efficiency} & \textbf{Memory Efficiency} & \textbf{Overall Efficiency} \\
-    \hline
-    \hline
-1 Hour (60 items) & 156.0$\times$ & 155.99$\times$ & 0.62$\times$ & 52.66$\times$ \\
-4 Hour (240 items) & 39.0$\times$ & 39.00$\times$ & 0.66$\times$ & 13.66$\times$ \\
-12 Hour (720 items) & 13.0$\times$ & 13.00$\times$ & 0.78$\times$ & 5.00$\times$ \\
-Full Day (1440 items) & 6.5$\times$ & 6.50$\times$ & 0.91$\times$ & 2.83$\times$ \\
-    \hline
-    \end{tabularx}
-    \end{table}
-    
-\textbf{Key Observation}: Compression ratios decrease with larger batch sizes, but overall efficiency remains positive across all configurations. This validates the theoretical prediction that recursive SNARKs provide consistent advantages above the crossover threshold.
-
-\subsubsection{Weekly Aggregation Analysis}
-
-For 1-week data processing (34,272 readings), the pattern continues with sustained advantages:
-
-\begin{table}[H]
-\centering
-\caption{Weekly Temporal Batch Analysis Results}
-\label{tab:weekly-results}
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\linewidth}{@{}lYYYYY@{}}
-\hline
-\textbf{Batch Size} & \textbf{Compression Ratio} & \textbf{Size Efficiency} & \textbf{Memory Efficiency} & \textbf{Overall Efficiency} \\
-\hline
-\hline
-6 Hour (360 items) & 36.3$\times$ & 36.32$\times$ & 0.69$\times$ & 12.77$\times$ \\
-12 Hour (720 items) & 18.0$\times$ & 17.97$\times$ & 0.78$\times$ & 6.65$\times$ \\
-1 Day (1440 items) & 8.8$\times$ & 8.79$\times$ & 0.91$\times$ & 3.59$\times$ \\
-3 Day (4320 items) & 2.7$\times$ & 2.68$\times$ & 1.25$\times$ & 1.56$\times$ \\
-Full Week (10080 items) & 1.1$\times$ & 1.15$\times$ & 1.54$\times$ & 1.05$\times$ \\
-\hline
-\end{tabularx}
-\end{table}
-
-\textbf{Critical Finding}: At very large batch sizes (full week), memory efficiency (1.54$\times$) becomes the primary advantage, while size efficiency approaches parity. This demonstrates the transition from storage-dominated to memory-dominated benefits.
-
-\subsubsection{Monthly Aggregation Insights}
-
-For 1-month data processing (48,960 readings), we observe the complete spectrum of scaling behavior:
-    
-\begin{table}[H]
-\centering
-\caption{Monthly Temporal Batch Analysis Results}
-\label{tab:monthly-results}
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\linewidth}{@{}lYYYYY@{}}
-    \hline
-\textbf{Batch Size} & \textbf{Compression Ratio} & \textbf{Size Efficiency} & \textbf{Memory Efficiency} & \textbf{Overall Efficiency} \\
-    \hline
-    \hline
-1 Day (1440 items) & 13.0$\times$ & 13.00$\times$ & 0.91$\times$ & 5.00$\times$ \\
-3 Day (4320 items) & 4.2$\times$ & 4.21$\times$ & 1.25$\times$ & 2.07$\times$ \\
-1 Week (10080 items) & 1.5$\times$ & 1.53$\times$ & 1.54$\times$ & 1.18$\times$ \\
-2 Week (20160 items) & 0.8$\times$ & 0.76$\times$ & 1.72$\times$ & 0.92$\times$ \\
-Full Month (43200 items) & 0.4$\times$ & 0.38$\times$ & 1.85$\times$ & 0.79$\times$ \\
-    \hline
-    \end{tabularx}
-\end{table}
-    
-\textbf{Significant Discovery}: At extreme batch sizes (2-week and full month), overall efficiency drops below 1.0, indicating a practical upper limit for recursive SNARK advantages. However, memory efficiency continues to improve (1.85$\times$), suggesting value for memory-constrained environments.
-    
-\subsection{Performance Scaling Laws}
-    
-Our empirical analysis reveals clear scaling laws governing the transition between proof systems:
-    
-    \begin{align}
-\text{Size Efficiency}(n) &\approx \frac{n \cdot S_{\text{standard}}}{S_{\text{recursive}}} = \frac{n \cdot 783}{2048} \approx 0.38n \\
-\text{Memory Efficiency}(n) &\approx \left(\frac{n}{n_0}\right)^{0.3} \text{ for } n > n_0 \\
-\text{Overall Efficiency}(n) &\approx \frac{0.38n + 1.85(n/n_0)^{0.3}}{2}
-    \end{align}
-    
-where $n_0 = 171$ is the crossover threshold.
-
-\section{Circuit Complexity Analysis}
-\label{sec:circuit-complexity}
-
-\subsection{Multi-Circuit Performance Assessment}
-
-Our evaluation encompassed five distinct ZK circuit types, each representing different computational and privacy trade-offs:
-
-\begin{table}[H]
-\centering
-\caption{Circuit Type Performance Characteristics}
-\label{tab:circuit-performance}
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{Circuit Type} & \textbf{Complexity} & \textbf{Privacy Level} & \textbf{Prove Time} & \textbf{Use Case} \\
-\hline
-\hline
-filter\_range & Low & High & 0.12s & Threshold monitoring \\
-min\_max & Medium & Medium & 0.14s & Statistical bounds \\
-median & Medium & High & 0.13s & Robust aggregation \\
-aggregation & High & Medium & 0.16s & Multi-sensor fusion \\
-batch\_processor & High & Low & 0.15s & Stream processing \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Privacy-Performance Trade-offs}
-
-The evaluation reveals distinct privacy-performance characteristics across circuit types:
-
-\begin{enumerate}
-    \item \textbf{High Privacy Circuits}: filter\_range and median circuits provide maximum privacy protection with moderate computational overhead
-    \item \textbf{Balanced Circuits}: min\_max and aggregation circuits offer good privacy with higher computational demands
-    \item \textbf{Performance-Optimized}: batch\_processor prioritizes throughput over privacy protection
-\end{enumerate}
-
-\section{IoT Device Performance Analysis}
-\label{sec:iot-device-analysis}
-
-\subsection{Resource-Constrained Performance}
-
-Our analysis evaluated performance across four representative IoT device categories:
-
-\begin{table}[H]
-\centering
-\caption{IoT Device Performance Analysis}
-\label{tab:iot-device-performance}
-\begin{tabularx}{\linewidth}{|l|p{1.4cm}|p{1.6cm}|c|Y|}
-\hline
-\textbf{Device Type} & \textbf{Memory (MB)} & \textbf{CPU (MHz)} & \textbf{Crossover Point} & \textbf{Recommended System} \\
-\hline
-\hline
-Arduino Nano 33 & 0.25 & 48 & 45 items & Recursive (memory constraint) \\
-ESP32 & 4 & 240 & 120 items & Recursive (moderate scale) \\
-Raspberry Pi Zero & 512 & 1000 & 171 items & Standard/Recursive (balanced) \\
-Raspberry Pi 4 & 4096 & 1500 & 250 items & Standard (abundant resources) \\
-\hline
-\end{tabularx}
-\end{table}
-
-\subsection{Energy Consumption Analysis}
-
-Memory-constrained devices benefit significantly from recursive SNARKs due to sub-linear memory scaling:
-    
-    \begin{align}
-\text{Energy Savings} &= \left(1 - \frac{M_{\text{recursive}}}{M_{\text{standard}}}\right) \times 100\% \\
-&= \left(1 - \frac{0.3n^{0.7}}{0.5n}\right) \times 100\% \\
-&\approx 40\% \text{ for } n = 171
-    \end{align}
-    
-\section{Privacy Impact Assessment}
-\label{sec:privacy-assessment}
-
-\subsection{Information Leakage Analysis}
-
-Our privacy evaluation reveals differential information leakage across circuit types and data sizes:
-
-\begin{table}[H]
-\centering
-\caption{Privacy Metrics by Circuit Type}
-\label{tab:privacy-metrics}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Circuit Type} & \textbf{Information Leakage} & \textbf{Anonymity Set Size} & \textbf{Re-identification Risk} \\
-\hline
-\hline
-filter\_range & 0.089 & 25 & 0.044 \\
-min\_max & 0.127 & 20 & 0.055 \\
-median & 0.095 & 23 & 0.047 \\
-aggregation & 0.134 & 18 & 0.061 \\
-batch\_processor & 0.156 & 15 & 0.073 \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Privacy-Scale Relationship}
-
-The analysis demonstrates that privacy benefits improve with scale:
-
-\begin{align}
-\text{Anonymity Set Size}(n) &= \frac{n}{4 - \text{privacy\_level}} \\
-\text{Re-identification Risk}(n) &= \frac{1.1}{\text{Anonymity Set Size}(n)}
-\end{align}
-
-For the critical crossover point (n = 171), this yields an anonymity set of 57 items and re-identification risk of 1.9\%.
-
-\section{Practical Implementation Insights}
-\label{sec:implementation-insights}
-
-\subsection{System Architecture Recommendations}
-
-Based on our comprehensive evaluation, we propose the following decision framework:
-    
-\begin{algwithnotes}[IoT ZK-SNARK System Selection Framework]
-\textbf{Input:} {\color{teal!80!black}$n$ (items), $M$ (RAM in MB), $R$ (real-time)}\\
-\textbf{Hint:} {\color{orange!80!black}Prefer recursion if memory is the bottleneck or $n>171$.}
-
-\medskip
-\begin{algorithmic}[1]
-\State \textbf{Input:} $n$, $M$, $R$
-\If{$M < 10\,\text{MB}$}
-  \State Choose Recursive SNARKs (RAM constraint)
-\ElsIf{$n < 85$ \text{ and } $R = \text{critical}$}
-  \State Choose Standard SNARKs (low latency)
-\ElsIf{$85 \le n \le 171$}
-  \State Evaluate storage/network/privacy trade-offs
-\Else
-  \State Choose Recursive SNARKs
-\EndIf
-\end{algorithmic}
-
-\medskip
-\textbf{Command:} \texttt{bash run\_evaluation.sh --phase compile}
-\end{algwithnotes}
-    
-\subsection{Deployment Guidelines}
-
-\subsubsection{Smart Home Scenarios}
-
-For typical smart home deployments:
-
-\begin{itemize}
-    \item \textbf{Real-time monitoring} (< 60 items): Standard SNARKs
-    \item \textbf{Hourly reports} (60-240 items): Transition zone - evaluate specific requirements
-    \item \textbf{Daily aggregation} (> 1440 items): Recursive SNARKs with 5-50$\times$ efficiency gains
-    \item \textbf{Historical analysis} (> 10,000 items): Recursive SNARKs with overwhelming advantages
-\end{itemize}
-
-\subsubsection{Industrial IoT Applications}
-
-For industrial deployments with higher data volumes:
-
-\begin{itemize}
-    \item \textbf{Sensor fusion} (> 500 items): Recursive SNARKs recommended
-    \item \textbf{Predictive maintenance} (> 1000 items): Strong recursive SNARK preference
-    \item \textbf{Supply chain tracking} (> 5000 items): Mandatory recursive SNARK usage
-\end{itemize}
-
-\section{Limitations and Edge Cases}
-\label{sec:limitations}
-
-\subsection{Threats to Validity}
-\label{sec:threats-validity}
-To maintain focus and interpretability, we briefly discuss validity threats:
-\begin{itemize}
-    \item \textbf{Internal validity}: The cost model uses calibrated parameters (constant proof size 2KB, 783-byte standard proofs, sub-linear memory exponent 0.7). While aligned with our tooling and literature, deviations in implementations could shift thresholds.
-    \item \textbf{Construct validity}: ``Cost units'' aggregate heterogeneous factors (storage, memory, proving, verification). We mitigate this by reporting component-wise crossovers (storage at 128, memory immediate, proving at $\sim$2000) in addition to the overall crossover (171).
-    \item \textbf{External validity}: Results generalize to IoT-like streaming workloads with similar batching patterns. Alternative ZK systems (e.g., Plonky2, Halo2) may differ by constants but should preserve qualitative trends (constant vs. linear proof size; sub-linear vs. linear memory).
-    \item \textbf{Conclusion validity}: Confidence intervals (95\% CI: 153--188) quantify uncertainty. Sensitivity analysis indicates batch size and memory constraints dominate threshold variance, which we capture in \cref{fig:crossover-overview,fig:sensitivity-analysis}.
-\end{itemize}
-
-\subsection{Performance Boundary Conditions}
-
-Our analysis identified several limitations and edge cases:
-
-\begin{enumerate}
-    \item \textbf{Extreme Batch Sizes}: At very large batch sizes (> 20,000 items), memory efficiency becomes the primary benefit while storage efficiency may become negative
-    \item \textbf{Real-time Constraints}: Applications requiring sub-second response times may favor standard SNARKs despite higher overall costs
-    \item \textbf{Setup Overhead}: The 8$\times$ higher setup cost for recursive SNARKs may be prohibitive for short-lived or one-time computations
-\end{enumerate}
-
-\subsection{System Integration Challenges}
-    
-    \begin{enumerate}
-    \item \textbf{Circuit Compatibility}: Not all ZK circuits are suitable for recursive composition
-    \item \textbf{Verification Infrastructure}: Recursive SNARKs require more sophisticated verification infrastructure
-    \item \textbf{Debugging Complexity}: Recursive proof systems are significantly more complex to debug and optimize
-    \end{enumerate}
-    
-\section{Validation Against Theoretical Predictions}
-\label{sec:validation}
-    
-\subsection{Model Accuracy Assessment}
-    
-Our empirical results validate the theoretical crossover model with high accuracy:
-    
-    \begin{table}[H]
-    \centering
-\caption{Theoretical vs. Empirical Validation}
-\label{tab:model-validation}
-    \begin{tabular}{|l|c|c|c|}
-    \hline
-\textbf{Prediction Category} & \textbf{Theoretical} & \textbf{Empirical} & \textbf{Accuracy} \\
-    \hline
-    \hline
-Main Crossover Point & 171 items & 165-175 items & 97.1\% \\
-Storage Advantage & 128 items & 120-135 items & 94.5\% \\
-Memory Scaling & Immediate & Confirmed & 100\% \\
-Proving Efficiency & 2000 items & 1800-2200 items & 90.0\% \\
-    \hline
-    \end{tabular}
-    \end{table}
-    
-\subsection{Sensitivity Validation}
-    
-The sensitivity analysis confirms theoretical predictions about parameter impact:
-    
-    \begin{itemize}
-    \item \textbf{Batch size} shows highest sensitivity (±23 items per ±20\% change)
-    \item \textbf{Memory constraints} exhibit very high impact (±67 items per ±20\% change)
-    \item \textbf{Setup costs} demonstrate lowest sensitivity (±12 items per ±20\% change)
-    \end{itemize}
-    
-\section{Conclusion and Key Insights}
-\label{sec:empirical-conclusion}
-
-Our comprehensive empirical evaluation provides definitive answers to the core research questions:
-
-\subsection{Critical Findings}
-
-\begin{enumerate}
-    \item \textbf{Crossover Threshold}: Recursive SNARKs become superior at 171 data items with 95\% confidence interval [153, 188]
-    \item \textbf{Scaling Benefits}: Size efficiency scales linearly (0.38n), while memory efficiency follows sub-linear scaling ($n^{0.3}$)
-    \item \textbf{Multi-dimensional Optimization}: Storage, memory, and proving efficiency exhibit different crossover points, requiring holistic evaluation
-    \item \textbf{Privacy Enhancement}: Larger batch sizes provide improved anonymity (57-item anonymity set at crossover threshold)
-    \item \textbf{Device Dependency}: Memory-constrained devices benefit from recursive SNARKs at much lower thresholds (45-120 items)
-\end{enumerate}
-
-\subsection{Practical Impact}
-
-The evaluation demonstrates that recursive SNARKs provide:
-    \begin{itemize}
-    \item \textbf{Storage savings}: 6.5-156$\times$ compression ratios across batch sizes
-    \item \textbf{Memory efficiency}: 40\% energy savings for memory-constrained devices
-    \item \textbf{Privacy enhancement}: Reduced re-identification risk through improved anonymity
-    \item \textbf{Scalability}: Sustained advantages for IoT deployments processing > 171 items
-    \end{itemize}
-
-This empirical validation provides the foundation for informed architectural decisions in real-world IoT ZK-SNARK deployments, confirming that the choice between standard and recursive SNARKs should be based on data volume, resource constraints, and privacy requirements rather than theoretical preferences.
-
-\section{Theoretical Crossover Analysis}
-\label{sec:theoretical-crossover}
-
-This section provides a comprehensive theoretical analysis of the performance characteristics that determine when recursive SNARKs become superior to standard SNARKs. This analysis is independent of any specific application domain and establishes the fundamental mathematical principles governing the choice between proof systems.
-
-\subsection{Problem Formulation}
-
-Consider a computational task involving the processing of $n$ data items in batches of size $b$, requiring $\lceil n/b \rceil$ total batches. We define the \textbf{crossover point} $n^*$ as the data size where recursive SNARKs become more efficient than standard SNARKs across all relevant metrics.
-
-\begin{definition}[Crossover Point]
-The crossover point $n^*$ is defined as:
-\begin{align}
-n^* = \min\{n \in \mathbb{N} : C_{\text{recursive}}(n) < C_{\text{standard}}(n)\}
-\end{align}
-where $C_{\text{system}}(n)$ represents the total computational cost for processing $n$ data items.
-\end{definition}
-
-The theoretical model establishes fundamental crossover thresholds that guide practical system design decisions for IoT ZK-SNARK deployments.
-\end{comment}
 
 \chapter{Conclusion \& Future Work}
 \label{chap:conclusion}
 
-\begin{comment}
-\section{Summary}
-\label{sec:summary}
 
-This thesis presents the first comprehensive empirical evaluation of standard versus recursive zk-SNARKs in IoT environments, addressing critical questions about when and how to deploy privacy-preserving proof systems in resource-constrained settings.
 
-\subsection{Key Contributions}
-
-\subsubsection{Theoretical Framework}
-We developed and validated mathematical models that accurately predict crossover points between proof systems with 97.1\% empirical accuracy. The theoretical framework establishes fundamental principles for proof system selection based on data volume, memory constraints, and privacy requirements.
-
-\subsubsection{Comprehensive Evaluation System}
-Our evaluation framework processed 107,712 IoT sensor readings across multiple temporal scales, providing systematic comparison of proof systems under identical conditions. The architecture successfully integrates realistic IoT simulation with dual proof generation systems.
-
-\subsubsection{Empirical Validation}
-The evaluation identified a critical crossover threshold at 171 data items where recursive SNARKs become superior to standard SNARKs across multiple performance dimensions. Component-specific analysis revealed storage advantages at 128 items and immediate memory benefits.
-
-\subsubsection{Practical Implementation}
-By leveraging ZoKrates' experimental Nova support, we demonstrated the feasibility of recursive SNARKs in existing development workflows, providing a pathway for practical deployment.
-
-\subsection{Research Questions Answered}
-
-Our evaluation provides definitive answers to the core research questions:
-
-\begin{enumerate}
-    \item \textbf{When are recursive SNARKs beneficial?} Above 171 data items for general deployments, with lower thresholds (45-120 items) for memory-constrained devices.
-    
-    \item \textbf{What privacy advantages do recursive SNARKs provide?} Enhanced anonymity through larger batch sizes (57-item anonymity set) and reduced re-identification risk (1.9\% at crossover threshold).
-    
-    \item \textbf{At what scale do recursive SNARKs become more efficient?} Storage efficiency emerges at 128 items, memory efficiency is immediate, and overall efficiency at 171 items.
-    
-    \item \textbf{How do different proof systems perform in IoT contexts?} Recursive SNARKs provide 6.5-156× compression ratios and 40\% energy savings for memory-constrained devices.
-    
-    \item \textbf{Can theoretical predictions be validated practically?} Yes, with 97.1\% accuracy between theoretical models and empirical measurements.
-    
-    \item \textbf{What are the privacy-performance trade-offs?} Larger batch sizes improve both performance and privacy, creating aligned incentives for recursive SNARK adoption.
-\end{enumerate}
-
-\subsection{Practical Impact}
-
-The research provides actionable guidance for IoT system architects:
-
-\begin{itemize}
-    \item \textbf{Decision Framework}: Clear thresholds for proof system selection based on data volume and device constraints
-    \item \textbf{Performance Predictions}: Mathematical models for estimating efficiency gains across deployment scenarios
-    \item \textbf{Privacy Enhancement}: Quantified privacy benefits through improved anonymity and reduced re-identification risk
-    \item \textbf{Energy Optimization}: Demonstrated energy savings for resource-constrained IoT devices
-\end{itemize}
-
-  \section{Future Research Directions}
-\label{sec:future-work}
-
-\subsection{Technology Advancement}
-
-\subsubsection{Production-Ready Recursive SNARKs}
-The transition from experimental to production-ready recursive SNARK implementations requires:
-\begin{itemize}
-    \item Enhanced security auditing of Nova implementations
-    \item Performance optimization for IoT-specific use cases
-    \item Integration with established cryptographic libraries
-    \item Standardization of recursive proof formats
-\end{itemize}
-
-\subsubsection{Circuit Optimization}
-Further research into IoT-optimized ZK circuits could:
-\begin{itemize}
-    \item Reduce proving overhead for common sensor operations
-    \item Develop specialized circuits for temporal data processing
-    \item Optimize memory usage for resource-constrained devices
-    \item Enable more complex privacy-preserving computations
-\end{itemize}
-
-\subsection{System Architecture Evolution}
-
-\subsubsection{Dynamic Proof System Selection}
-Future systems could automatically switch between proof systems based on:
-\begin{itemize}
-    \item Real-time performance monitoring
-    \item Dynamic resource availability
-    \item Changing privacy requirements
-    \item Network conditions and topology
-\end{itemize}
-
-\subsubsection{Hybrid Approaches}
-Combining standard and recursive SNARKs within single systems could:
-\begin{itemize}
-    \item Optimize for both real-time and batch processing
-    \item Provide graceful degradation under resource constraints
-    \item Enable application-specific optimization strategies
-    \item Support multi-tier IoT architectures
-\end{itemize}
-
-\subsection{Application Domain Extension}
-
-\subsubsection{Healthcare IoT}
-Extending our findings to healthcare applications requires:
-\begin{itemize}
-    \item Evaluation of medical device constraints
-    \item Integration with healthcare data standards
-    \item Compliance with regulatory requirements
-    \item Assessment of clinical workflow integration
-\end{itemize}
-
-\subsubsection{Industrial IoT}
-Industrial applications present unique challenges:
-\begin{itemize}
-    \item Real-time performance requirements
-    \item Safety-critical system integration
-    \item Large-scale sensor network deployment
-    \item Integration with existing industrial protocols
-\end{itemize}
-
-\subsection{Theoretical Advancement}
-
-\subsubsection{Multi-Dimensional Optimization}
-Future theoretical work could address:
-\begin{itemize}
-    \item Joint optimization across multiple performance metrics
-    \item Dynamic crossover point prediction
-    \item Uncertainty quantification in performance models
-    \item Integration of network topology considerations
-\end{itemize}
-
-\subsubsection{Privacy Analysis}
-Enhanced privacy analysis could include:
-\begin{itemize}
-    \item Formal privacy guarantees for recursive constructions
-    \item Analysis of metadata leakage in batch processing
-    \item Differential privacy integration with ZK proofs
-    \item Long-term privacy preservation across time periods
-\end{itemize}
-
-\subsection{Standardization and Deployment}
-
-\subsubsection{Industry Standards}
-The development of industry standards could facilitate:
-\begin{itemize}
-    \item Interoperability between different proof systems
-    \item Standardized performance benchmarking
-    \item Common security evaluation criteria
-    \item Integration with existing IoT frameworks
-\end{itemize}
-
-\subsubsection{Open Source Ecosystem}
-Building an open source ecosystem around IoT ZK-SNARKs could:
-\begin{itemize}
-    \item Accelerate practical deployment
-    \item Enable community-driven optimization
-    \item Facilitate security auditing and review
-    \item Support educational and research applications
-\end{itemize}
-
-\section{Final Remarks}
-\label{sec:final-remarks}
-
-This research establishes the foundation for informed decision-making in privacy-preserving IoT deployments. By providing empirically validated crossover thresholds and practical implementation guidance, we enable system architects to make evidence-based choices between proof systems.
-
-The demonstrated feasibility of recursive SNARKs in IoT contexts, combined with clear performance and privacy advantages above identified thresholds, suggests a promising path toward more privacy-preserving and efficient IoT deployments. As recursive SNARK technology matures and moves from experimental to production readiness, the principles and findings presented in this thesis will guide the next generation of privacy-preserving IoT systems.
-
-The convergence of improved privacy, enhanced efficiency, and reduced energy consumption at scale creates compelling incentives for recursive SNARK adoption in IoT deployments. This alignment of privacy and performance benefits represents a significant advancement toward practical, large-scale privacy-preserving computing in resource-constrained environments.
-\end{comment}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\clearpage
 \printbibliography
 
 \end{document}
-% Crossover Analysis Section for Bachelor Thesis
-% Copy-paste this into your thesis document
-
-\section{Experimentelle Evaluation: Crossover-Analyse}
-\label{sec:crossover-analysis}
-
-In diesem Abschnitt wird eine systematische Vergleichsanalyse zwischen klassischen zk-SNARKs und rekursiven zk-SNARKs (Nova) durchgeführt. Das Ziel ist die Identifikation von Crossover-Punkten, ab denen rekursive SNARKs gegenüber klassischen SNARKs Vorteile bieten.
-
-\subsection{Experimentelles Setup}
-\label{subsec:experimental-setup}
-
-Für eine faire Vergleichsanalyse wurden identische IoT-Sensordaten aus dem Smart-Home-Szenario verwendet. Die Evaluation umfasst verschiedene Batch-Größen von 10 bis 200 IoT-Readings. Jeder Test verwendet exakt dieselben Eingabedaten für beide SNARK-Systeme:
-
-\begin{itemize}
-    \item \textbf{Standard SNARKs}: Jedes IoT-Reading wird einzeln verarbeitet, resultierend in $N$ separaten Proofs
-    \item \textbf{Nova Recursive}: Alle $N$ IoT-Readings werden in einem einzigen rekursiven Proof aggregiert
-    \item \textbf{Metriken}: Proving-Zeit, Verifikations-Zeit, Proof-Größe, Speicherverbrauch
-\end{itemize}
-
-\subsection{Quantitative Ergebnisse}
-\label{subsec:quantitative-results}
-
-Tabelle~\ref{tab:crossover-comparison} zeigt die detaillierten Messergebnisse für verschiedene Batch-Größen. Die Daten basieren auf echten ZoKrates- und Nova-Implementierungen ohne Simulationen.
-
-\begin{table}[htbp]
-\centering
-\caption{Crossover-Analyse: Standard vs. Nova Recursive SNARKs}
-\label{tab:crossover-comparison}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\textbf{Batch} & \textbf{Items} & \textbf{Standard} & \textbf{Standard} & \textbf{Nova} & \textbf{Nova} & \textbf{Zeit-} & \textbf{Verifikations-} & \textbf{Speicher-} \\
-\textbf{Größe} & & \textbf{Zeit (s)} & \textbf{Proofs} & \textbf{Zeit (s)} & \textbf{Proofs} & \textbf{Vorteil} & \textbf{Reduktion} & \textbf{Ratio} \\
-\hline
-10  & 10  & 6.27  & 10 & 8.77  & 1 & 0.7x & 10:1 & 1.1:1 \\
-25  & 25  & 15.67 & 25 & 9.59  & 1 & \textbf{1.6x} & 25:1 & 2.8:1 \\
-50  & 50  & 31.35 & 50 & 9.66  & 1 & \textbf{3.2x} & 50:1 & 5.6:1 \\
-100 & 100 & 62.70 & 100 & 10.92 & 1 & \textbf{5.7x} & 100:1 & 10.3:1 \\
-200 & 200 & 125.39 & 200 & 12.93 & 1 & \textbf{9.7x} & 200:1 & 18.4:1 \\
-\hline
-\end{tabular}%
-}
-\end{table}
-
-\subsection{Crossover-Punkt-Identifikation}
-\label{subsec:crossover-identification}
-
-Die Analyse identifiziert drei kritische Crossover-Punkte:
-
-\begin{enumerate}
-    \item \textbf{Zeit-Crossover (25 Items)}: Ab 25 IoT-Readings wird Nova Recursive schneller als Standard SNARKs
-    \item \textbf{Verifikations-Crossover (2 Items)}: Nova benötigt ab 2 Items weniger Verifikationsoperationen
-    \item \textbf{Speicher-Crossover (10 Items)}: Ab 10 Items ist Nova speichereffizienter
-\end{enumerate}
-
-\subsection{Skalierungsverhalten}
-\label{subsec:scaling-behavior}
-
-Abbildung~\ref{fig:crossover-plots} visualisiert das Skalierungsverhalten beider SNARK-Systeme. Die Ergebnisse zeigen ein exponentielles Wachstum des Nova-Vorteils mit steigender Batch-Größe.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{data/visualizations/crossover_analysis_plots.png}
-\caption{Crossover-Analyse Visualisierung: (A) Proving-Zeit-Vergleich mit Crossover-Punkt bei 25 Items, (B) Nova Performance-Vorteil zeigt exponentielles Wachstum, (C) Verifikations-Komplexität demonstriert N:1 Reduktion, (D) Kosten-Effizienz pro IoT-Reading}
-\label{fig:crossover-plots}
-\end{caption}
-\end{figure}
-
-\subsection{Leistungsanalyse}
-\label{subsec:performance-analysis}
-
-Die experimentellen Ergebnisse zeigen deutliche Unterschiede im Skalierungsverhalten:
-
-\begin{itemize}
-    \item \textbf{Standard SNARKs}: Lineare Zeitkomplexität $O(n)$ mit Faktor 0.627s pro Item
-    \item \textbf{Nova Recursive}: Nahezu konstante Zeit $\approx 10$s unabhängig von der Batch-Größe
-    \item \textbf{Verifikations-Vorteil}: Reduktion von $N$ auf 1 Verifikation bedeutet $N$:1 Effizienzgewinn
-\end{itemize}
-
-\subsection{Anwendungsempfehlungen}
-\label{subsec:application-recommendations}
-
-Basierend auf der Crossover-Analyse ergeben sich folgende Empfehlungen für IoT-Anwendungen:
-
-\begin{table}[htbp]
-\centering
-\caption{Anwendungsempfehlungen basierend auf Crossover-Analyse}
-\label{tab:recommendations}
-\begin{tabular}{|p{0.25\textwidth}|p{0.35\textwidth}|p{0.35\textwidth}|}
-\hline
-\textbf{Anwendungsfall} & \textbf{Empfohlenes System} & \textbf{Begründung} \\
-\hline
-Real-time Verarbeitung (< 25 Items) & Standard SNARKs & Geringere Latenz, einfachere Implementierung \\
-\hline
-Batch-Verarbeitung (≥ 25 Items) & Nova Recursive & Exponentieller Geschwindigkeitsvorteil \\
-\hline
-Smart Home Aggregation & Nova Recursive & Tägliche/wöchentliche Datenbatches > 25 Items \\
-\hline
-Mikro-Transaktionen & Standard SNARKs & Einzelne Transaktionen, niedrige Latenz \\
-\hline
-IoT-Datenarchivierung & Nova Recursive & Große Datenmengen, Speichereffizienz \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Wissenschaftliche Einordnung}
-\label{subsec:scientific-classification}
-
-Die identifizierten Crossover-Punkte bestätigen die theoretischen Erwartungen rekursiver SNARK-Systeme. Der Zeitpunkt des Crossovers bei 25 Items liegt im praktisch relevanten Bereich für IoT-Anwendungen und macht Nova Recursive zu einer vielversprechenden Technologie für Smart-Home-Szenarien.
-
-Die Verifikations-Reduktion von $N$:1 ist besonders bedeutsam für dezentrale Systeme, wo jeder Netzwerk-Teilnehmer Proofs verifizieren muss. Die dramatische Reduktion der Verifikations-Komplexität (bis zu 200:1) kann die Skalierbarkeit von IoT-Netzwerken erheblich verbessern.
-
-% Optional: References section
-% \begin{thebibliography}{9}
-% \bibitem{nova2022} 
-% Kothapalli, A., Setty, S. Nova: Recursive Zero-Knowledge Arguments from Folding Schemes. 
-% \textit{Cryptology ePrint Archive}, 2022.
-% 
-% \bibitem{zokrates2018}
-% Eberhardt, J., Tai, S. ZoKrates - Scalable Privacy-Preserving Off-Chain Computations.
-% \textit{IEEE International Conference on Internet of Things}, 2018.
-% \end{thebibliography}

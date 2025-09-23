@@ -48,7 +48,7 @@ class ZoKratesNovaManager:
     """
     
     def __init__(self, circuit_path: str = "circuits/nova/iot_recursive.zok", 
-                 batch_size: int = 3):
+                 batch_size: int = 10):
         self.circuit_path = Path(circuit_path)
         self.batch_size = batch_size
         self.working_dir = Path("nova_workspace")
@@ -363,3 +363,39 @@ class ZoKratesNovaManager:
         import shutil
         if self.working_dir.exists():
             shutil.rmtree(self.working_dir)
+
+class SNARKManager:
+    def __init__(self, project_root: Path):
+        self.project_root = Path(project_root)
+
+    def compile_circuit(self, circuit_file: str, circuit_name: str) -> Path:
+        build_dir = self.project_root / "circuits" / "build_standard"
+        build_dir.mkdir(parents=True, exist_ok=True)
+
+        out_path = build_dir / f"{circuit_name}.out"
+
+        # Vorher evtl. Altartefakte entfernen (Datei/Symlink/Ordner)
+        if out_path.exists() or out_path.is_symlink():
+            out_path.unlink(missing_ok=True)
+
+        # WICHTIG: absoluter -o Pfad + check=True + definiertes cwd
+        subprocess.run(
+            ["zokrates", "compile", "-i", str(circuit_file), "-o", str(out_path)],
+            cwd=str(self.project_root),
+            check=True,
+        )
+        return out_path
+
+    def setup_circuit(self, circuit_name: str) -> Path:
+        build_dir = self.project_root / "circuits" / "build_standard"
+        out_path = build_dir / f"{circuit_name}.out"
+        if not out_path.exists():
+            raise FileNotFoundError(f"Missing compiled circuit: {out_path}")
+
+        # keys landen im Build-Dir (kein clutter im Source-Tree)
+        subprocess.run(
+            ["zokrates", "setup", "-i", str(out_path)],
+            cwd=str(build_dir),
+            check=True,
+        )
+        return out_path

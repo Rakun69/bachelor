@@ -189,15 +189,17 @@ class SNARKManager:
             os.chdir(original_dir)
     
     def generate_proof(self, circuit_name: str, inputs: List[str]) -> CircuitResult:
-        """Generate proof for circuit with given inputs"""
+        """Generate proof for circuit with given inputs, mit zusätzlichem Timing-Log pro Phase."""
         original_dir = os.getcwd()
         proof_time = 0.0
         verify_time = 0.0
         try:
-            metrics_start = time.time()
-            
-            # Generate witness first
+            # Witness generieren und messen
+            witness_start = time.time()
             witness_success, witness_time = self.generate_witness(circuit_name, inputs)
+            witness_end = time.time()
+            logger.info(f"[snark_manager] Witness generation took {witness_end - witness_start:.4f}s for circuit {circuit_name}")
+
             if not witness_success:
                 return CircuitResult(
                     success=False,
@@ -205,48 +207,64 @@ class SNARKManager:
                     metrics=ProofMetrics(0, 0, witness_time, 0, 0, 0, 0, 0),
                     error_message="Witness generation failed"
                 )
-            
+
+            # In Output-Verzeichnis wechseln
             os.chdir(self.output_dir)
-            
-            # Copy circuit file to expected name
+
+            # Kopiere die kompilierte Circuit Datei falls vorhanden
             circuit_file = f"{circuit_name}.out"
             if os.path.exists(circuit_file):
                 shutil.copy(circuit_file, "out")
-            
-            # Generate proof
+
+            # Proof Generation messen
             proof_start = time.time()
             cmd = ['zokrates', 'generate-proof']
             try:
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)  # 60 second timeout for proof gen
-                proof_time = max(0.0, time.time() - proof_start)  # Ensure positive time
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+                proof_time = max(0.0, time.time() - proof_start)
             except subprocess.TimeoutExpired:
                 logger.warning(f"Proof generation timed out for {circuit_name} after 60 seconds")
-                proof_time = 60.0  # Set to timeout value  
-                result = type('MockResult', (), {'returncode': 1, 'stderr': 'Proof generation timed out'})()  # Mock failed result
-            
+                proof_time = 60.0
+                result = type('MockResult', (), {'returncode': 1, 'stderr': 'Proof generation timed out'})()
+
+            logger.info(f"[snark_manager] Single proof generation for circuit {circuit_name} with inputs {inputs[:3]}... took {proof_time:.4f}s")
+
             if result.returncode == 0:
-                # Load the generated proof
+                # Beweis laden
                 with open('proof.json', 'r') as f:
                     proof = json.load(f)
-                
-                # Calculate proof size
+
+                # Größe des Beweises
                 proof_size = len(json.dumps(proof).encode('utf-8'))
-                
-                # Verify the proof
+
+                # Verifizierung messen
                 verify_start = time.time()
                 verify_cmd = ['zokrates', 'verify']
                 try:
-                    verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, timeout=30)  # 30 second timeout
-                    verify_time = max(0.0, time.time() - verify_start)  # Ensure positive time
+                    verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, timeout=30)
+                    verify_time = max(0.0, time.time() - verify_start)
+                    verify_success = verify_result.returncode == 0
                 except subprocess.TimeoutExpired:
                     logger.warning(f"Verification timed out for {circuit_name} after 30 seconds")
-                    verify_time = 30.0  # Set to timeout value
-                    verify_result = type('MockResult', (), {'returncode': 1, 'stderr': 'Verification timed out'})()  # Mock failed result
+                    verify_time = 30.0
+                    verify_result = type('MockResult', (), {'returncode': 1, 'stderr': 'Verification timed out'})()
+                    verify_success = False
+
+                logger.info(f"[snark_manager] Single verify phase for circuit {circuit_name} took {verify_time:.4f}s")
                 
-                # Create metrics
+                if not verify_success:
+                    logger.error(f"Verification failed for {circuit_name}: {verify_result.stderr}")
+                    return CircuitResult(
+                        success=False,
+                        proof=proof,
+                        metrics=ProofMetrics(0, 0, witness_time, proof_time, verify_time, proof_size, 0, 0),
+                        error_message=f"Verification failed: {verify_result.stderr}"
+                    )
+
+                # Hol Compile- und Setup-Zeit aus vorherigen Schritten
                 compile_time = self.compiled_circuits.get(circuit_name, {}).get('compile_time', 0)
                 setup_time = self.compiled_circuits.get(circuit_name, {}).get('setup_time', 0)
-                
+
                 metrics = ProofMetrics(
                     compile_time=compile_time,
                     setup_time=setup_time,
@@ -257,18 +275,15 @@ class SNARKManager:
                     circuit_constraints=self._get_circuit_constraints(circuit_name),
                     memory_usage=self._get_memory_usage()
                 )
-                
-                logger.info(f"Proof generated for {circuit_name}:")
-                logger.info(f"  Proof time: {proof_time:.2f}s")
-                logger.info(f"  Verify time: {verify_time:.2f}s")
-                logger.info(f"  Proof size: {proof_size} bytes")
-                
+
+                logger.info(f"[snark_manager] Proof generated for {circuit_name}: proof_time={proof_time:.4f}s, verify_time={verify_time:.4f}s, size={proof_size} bytes")
+
                 return CircuitResult(
                     success=True,
                     proof=proof,
                     metrics=metrics
                 )
-                
+
             else:
                 logger.error(f"Proof generation failed for {circuit_name}: {result.stderr}")
                 return CircuitResult(
@@ -277,7 +292,7 @@ class SNARKManager:
                     metrics=ProofMetrics(0, 0, witness_time, proof_time, 0, 0, 0, 0),
                     error_message=f"Proof generation failed: {result.stderr}"
                 )
-                
+
         except Exception as e:
             logger.error(f"Error generating proof for {circuit_name}: {e}")
             return CircuitResult(
@@ -288,6 +303,8 @@ class SNARKManager:
             )
         finally:
             os.chdir(original_dir)
+
+
     
     def _get_circuit_constraints(self, circuit_name: str) -> int:
         """Get number of constraints in the circuit (simplified)"""
@@ -440,6 +457,26 @@ class SNARKManager:
         
         return comparison
     
+    def verify_proof(self, circuit_name: str, proof_path: str) -> bool:
+        """Verify a proof using ZoKrates"""
+        try:
+            original_cwd = os.getcwd()
+            os.chdir(self.output_dir)
+            
+            result = subprocess.run(
+                ['zokrates', 'verify'],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            return result.returncode == 0
+        except Exception as e:
+            logger.error(f"Verification failed for {circuit_name}: {e}")
+            return False
+        finally:
+            os.chdir(original_cwd)
+
     def prove_circuit(self, circuit_name: str, inputs: List[str]) -> CircuitResult:
         """Wrapper for generate_proof - provides compatibility with orchestrator"""
         return self.generate_proof(circuit_name, inputs)
