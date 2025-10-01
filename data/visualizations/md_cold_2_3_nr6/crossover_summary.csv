@@ -1,0 +1,11 @@
+IoT Readings,Standard Zeit (s),Standard Größe (KB),Nova Zeit (s),Nova Größe (KB),Zeit Vorteil,Größe Vorteil,Gewinner
+100,4.36,83.3,16.21,69.2,0.27x,1.20x,Standard
+200,6.80,166.6,22.99,69.2,0.30x,2.41x,Standard
+300,13.18,249.9,24.93,69.2,0.53x,3.61x,Standard
+400,15.56,333.2,29.95,69.1,0.52x,4.82x,Standard
+500,21.05,416.5,34.09,69.1,0.62x,6.02x,Standard
+600,24.20,499.8,40.42,69.1,0.60x,7.23x,Standard
+700,29.48,583.1,43.51,69.2,0.68x,8.43x,Standard
+800,32.85,666.4,48.45,69.2,0.68x,9.63x,Standard
+900,36.48,749.7,51.86,69.2,0.70x,10.84x,Standard
+1000,41.06,833.0,57.07,69.1,0.72x,12.05x,Standard

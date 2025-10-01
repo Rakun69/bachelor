@@ -10,9 +10,9 @@ docker build -t iot-zk-snark-eval .
 # Run container to recompile Nova circuit
 echo "[INFO] Recompiling Nova circuit in Docker..."
 docker run --rm \
-  --cpus=1.0 \
-  --memory=2g \
-  --memory-swap=2g \
+  --cpus=0.5\
+  --memory=1g \
+  --memory-swap=1g \
   -v "$(pwd)/data:/app/data" \
   -v "$(pwd)/circuits:/app/circuits" \
   iot-zk-snark-eval -c "

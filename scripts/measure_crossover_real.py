@@ -133,7 +133,7 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
         nova_dir = runs_root / f"run_{n}_{int(time.time()*1000)}"
         nova_dir.mkdir(parents=True, exist_ok=True)
         # Copy required static files
-        for fname in ["out", "out.r1cs", "abi.json", "nova.params"]:
+        for fname in ["out", "out.r1cs", "abi.json", "nova.params", "iot_recursive.zok"]:
             src = base_dir / fname
             if src.exists():
                 shutil.copy(src, nova_dir / fname)
@@ -150,14 +150,19 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
             v = 0
         vals.append(max(0, v))
 
-    # pad to multiple of 3
-    while len(vals) % 3 != 0:
+    # Konfigurierbare Batch-Größe
+    batch_size = 3
+    
+    # pad to multiple of batch_size
+    while len(vals) % batch_size != 0:
         vals.append(0)
 
     batch_id = 1
-    for i in range(0, len(vals), 3):
+    for i in range(0, len(vals), batch_size):
+        # Dynamisch die Werte für diesen Batch extrahieren
+        batch_values = [str(vals[i + j]) for j in range(batch_size)]
         steps.append({
-            "values": [str(vals[i]), str(vals[i + 1]), str(vals[i + 2])],
+            "values": batch_values,
             "batch_id": str(batch_id),
         })
         batch_id += 1
@@ -167,7 +172,84 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
     with open(nova_dir / "steps.json", "w", encoding="utf-8") as f:
         json.dump(steps, f)
 
+    # Verwende bereits kompilierte Artifacts aus dem Basis-Verzeichnis
+    # Das Circuit sollte bereits im circuits/nova/ Verzeichnis kompiliert sein
+    if not isolated:
+        # Im nicht-isolierten Modus, stelle sicher dass das Circuit kompiliert ist
+        if not (base_dir / "out").exists() or not (base_dir / "out.r1cs").exists():
+            _compile_nova_circuit(base_dir)
+
     return nova_dir, len(steps)
+
+
+def _compile_nova_circuit(nova_dir: Path) -> None:
+    """Kompiliert das Nova Circuit automatisch mit ZoKrates."""
+    import subprocess
+    import os
+    
+    # Wechsle in das Nova-Verzeichnis
+    original_cwd = os.getcwd()
+    os.chdir(nova_dir)
+    
+    try:
+        # Always recompile to ensure consistency with current batch size
+        LOGGER.info("Recompiling Nova circuit to ensure consistency with batch size.")
+
+        if not Path("iot_recursive.zok").exists():
+            raise FileNotFoundError(f"iot_recursive.zok missing in {nova_dir}")
+
+        # Kompiliere das Circuit - versuche zuerst ohne Standard Library
+        result = subprocess.run(
+            ["zokrates", "compile", "-i", "iot_recursive.zok"],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
+        
+        # Falls das fehlschlägt, versuche mit Standard Library Pfaden
+        if result.returncode != 0:
+            stdlib_paths = [
+                "/usr/local/bin/stdlib",
+                "/usr/local/lib/stdlib", 
+                "/opt/zokrates/stdlib",
+                "/root/.zokrates/stdlib"
+            ]
+            
+            for stdlib_path in stdlib_paths:
+                if os.path.exists(stdlib_path):
+                    result = subprocess.run(
+                        ["zokrates", "compile", "-i", "iot_recursive.zok", "--stdlib-path", stdlib_path],
+                        capture_output=True,
+                        text=True,
+                        timeout=300
+                    )
+                    if result.returncode == 0:
+                        break
+        
+        if result.returncode != 0:
+            raise RuntimeError(f"ZoKrates compile failed\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
+        
+        # Setup für Nova
+        result = subprocess.run(
+            ["zokrates", "setup"],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
+        
+        if result.returncode != 0:
+            raise RuntimeError(f"ZoKrates setup failed\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
+            
+        LOGGER.info("Nova Circuit erfolgreich kompiliert und eingerichtet")
+        
+    except subprocess.TimeoutExpired:
+        LOGGER.error("Nova Circuit Kompilierung timeout")
+    except Exception as e:
+        LOGGER.error(f"Fehler beim Kompilieren des Nova Circuits: {e}")
+        raise
+    finally:
+        # Zurück zum ursprünglichen Verzeichnis
+        os.chdir(original_cwd)
 
 
 def _prewarm_nova_artifacts(nova_dir: Path) -> None:
@@ -216,22 +298,27 @@ def run_nova(nova_dir: Path, *, cleanup_artifacts: bool = True, prewarm: bool = 
         if prewarm:
             _prewarm_nova_artifacts(nova_dir)
 
+        # Sanity-Checks vor dem Prove
+        for req in ["out.r1cs", "out", "abi.json", "nova.params", "init.json", "steps.json"]:
+            if not (nova_dir / req).exists():
+                raise RuntimeError(f"Missing required artifact: {req}")
+
         # --- Prove + Compress ---
         t0 = time.time()
         r_prove = subprocess.run(["zokrates", "nova", "prove"], capture_output=True, text=True)
         if r_prove.returncode != 0:
-            raise RuntimeError(f"nova prove failed: {r_prove.stderr}")
+            raise RuntimeError(f"nova prove failed:\nSTDOUT:\n{r_prove.stdout}\nSTDERR:\n{r_prove.stderr}")
 
         r_comp = subprocess.run(["zokrates", "nova", "compress"], capture_output=True, text=True)
         if r_comp.returncode != 0:
-            raise RuntimeError(f"nova compress failed: {r_comp.stderr}")
+            raise RuntimeError(f"nova compress failed:\nSTDOUT:\n{r_comp.stdout}\nSTDERR:\n{r_comp.stderr}")
         prove_time = time.time() - t0
 
         # --- Verify separat ---
         t1 = time.time()
         r_ver = subprocess.run(["zokrates", "nova", "verify"], capture_output=True, text=True)
         if r_ver.returncode != 0:
-            raise RuntimeError(f"nova verify failed: {r_ver.stderr}")
+            raise RuntimeError(f"nova verify failed:\nSTDOUT:\n{r_ver.stdout}\nSTDERR:\n{r_ver.stderr}")
         verify_time = time.time() - t1
 
         proof_size = 0
