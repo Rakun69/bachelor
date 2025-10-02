@@ -40,4 +40,6 @@ ENV PYTHONPATH=/app
 ENV VIRTUAL_ENV=/opt/iot_zk_env
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+RUN pip install cryptography
+
 CMD ["bash"]

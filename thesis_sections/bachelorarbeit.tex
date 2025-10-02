@@ -19,6 +19,9 @@
 \usepackage{adjustbox} % für max width = \linewidth
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage{csvsimple}   % moderne Version mit \csvautotabular
+\usepackage{booktabs}
+\usepackage{adjustbox}
 \pgfplotsset{compat=1.18}
 \usepackage{listings, color}
 \usepackage{subcaption}
@@ -177,7 +180,7 @@ This thesis makes the following key contributions:
 \begin{enumerate}
     \item \textbf{Nova Implementation}: Complete implementation of Nova recursive SNARKs optimized for IoT data processing
     \item \textbf{Empirical Validation}: Comprehensive resource-constrained IoT evaluation
-    \item \textbf{Performance Analysis}: Detailed benchmarking across multiple scenarios using real measurements only
+    \item \textbf{Performance Analysis}: Detailed benchmarking across multiple scenarios
     \item \textbf{Practical Guidelines}: Decision frameworks for choosing appropriate proof systems
 \end{enumerate}
 
@@ -318,82 +321,198 @@ Studies have even demonstrated recursive zk-SNARKs in advanced tasks like federa
 \subsection{Summary and Implications for Architecture}
 Recursive zk-SNARKs offer compelling benefits for scaling zero-knowledge applications in IoT scenarios. They enable aggregation of multiple computations or data streams into a single compact proof, which reduces memory, bandwidth, and verification cost—key concerns in resource‑constrained environments. Our system architecture (\cref{chap:system-architecture}) therefore places proving at an edge aggregator, defines batching policies that drive into empirically observed crossover regimes, and adopts metrics (proof time, verification time, proof size, and device load) that operationalize these trade‑offs. The following chapter translates these implications into a concrete architecture and methodology and specifies the evaluation setup used to validate them in practice.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{System Architecture}
+
 \label{chap:system-architecture}
+
+\section{Goals and Scope}
+This chapter specifies the architecture of our privacy-preserving IoT proving pipeline. The goal is to prove properties of sensor data (range checks and aggregations) without revealing the raw values. We use zk-SNARKs for standard proving and Nova for recursive batching. Transport confidentiality and channel authentication are out of scope and can be provided independently (e.g., TLS).
+
+\section{Actors and Trust Model}
+We distinguish the following actors:
+- \textbf{IoT Device (Prover source)}: produces readings and holds the device private key.
+- \textbf{Key Registry / PKI (Issuer / CA)}: issues and publishes device certificates (public keys).
+- \textbf{Edge Orchestrator}: verifies device certificate and reading signatures, prepares public/private inputs, triggers proving.
+- \textbf{Prover / Nova Combiner}: runs proof generation (standard or Nova+compression).
+- \textbf{Verifier (Utility)}: verifies proofs using the verification key.
+- \textbf{Consumer}: consumes only verified aggregates/results.
+
+Trust assumptions:
+- The CA root is trusted by the orchestrator/verifier.
+- The device private key never leaves the device. The device certificate is signed by the CA.
+- The orchestrator retains the proving key; the verification key is distributed to verifiers.
+
+\section{Key Management}
+- \textbf{Device identity}: the device generates its keypair on-device and obtains a CA-signed certificate. In our implementation, a local CA is created for reproducibility (files in \texttt{data/device_keys/}).
+- \textbf{Proof system keys}:
+  - \textit{proving.key}: created and stored locally by the orchestrator during ZoKrates setup; never shared.
+  - \textit{verification.key}: exported and provided to the verifier for proof checking.
+
+\section{System Overview}
+Figure~\ref{fig:system-overview} shows the end-to-end actors and message flow (PKI bootstrap, signature verification, proving, verification). Figure~\ref{fig:verifiable-transformations} abstracts the verifiable transformation: public policy and private readings flow into the circuit, which yields a proof verified with the verification key.
+
 
 \begin{figure}[H]
 \centering
-\begin{adjustbox}{max width=\linewidth,center}
+\resizebox{0.98\textwidth}{!}{%
 \begin{tikzpicture}[
-  font=\small,
-  x=1cm,y=1cm,
-  box/.style={draw, rounded corners=2pt, align=center, minimum width=4.0cm, minimum height=1.1cm, fill=blue!3},
-  group/.style={draw, dashed, rounded corners=3pt, inner sep=6pt},
-  arrow/.style={-Latex, thick},
-  lab/.style={font=\footnotesize, fill=white, inner sep=1pt, outer sep=2pt, text depth=0pt}
+  scale=0.8, transform shape,
+  lane/.style={draw, fill=gray!8, minimum width=3.7cm, minimum height=24cm},
+  task/.style={draw, fill=white, rounded corners, minimum width=3.1cm, minimum height=0.95cm, font=\scriptsize, align=center},
+  opt/.style={task, dashed},
+  note/.style={draw, fill=gray!5, rounded corners, font=\scriptsize, align=left, minimum width=5.0cm},
+  arrow/.style={-{Stealth[length=2.4mm,width=1.4mm]}, thick}
 ]
+\node[lane] (L0) at (-4,0) {}; \node[above] at (L0.north) {Key Registry / PKI};
+\node[lane] (L1) at ( 0,0) {}; \node[above] at (L1.north) {IoT Device};
+\node[lane] (L2) at ( 4,0) {}; \node[above] at (L2.north) {Edge Orchestrator};
+\node[lane] (L3) at ( 8,0) {}; \node[above] at (L3.north) {Prover / Nova};
+\node[lane] (L4) at (12,0) {}; \node[above] at (L4.north) {Verifier};
+\node[lane] (L5) at (16,0) {}; \node[above] at (L5.north) {Consumer};
 
-\node[box] (dev1) at (0,0.8) {IoT device};
-\node[box, below=2mm of dev1] (dev2) {IoT device};
-\node[box, below=2mm of dev2] (dev3) {IoT device};
-\node[group, fit=(dev1)(dev3), label=above:{Device domain}] (devdom) {};
+\node[task] (d0) at (0,9.0)  {Generate device keypair\\(private stays on device)};
+\node[task] (k1) at (-4,8.0) {Sign device certificate (Issuer/CA)};
+\node[task] (k2) at (-4,7.0) {Publish device certificate + CA root};
 
-\node[box, right=3.4cm of dev2] (ingest) {Data collection \& batching};
-\node[box, below=4mm of ingest, minimum width=4.6cm] (prover) {Proof generator};
-\node[group, fit=(ingest)(prover), label=above:{Edge domain}] (edgedom) {};
+\node[task] (d1) at (0,6.0)  {Generate sensor data};
+\node[task] (d2) at (0,5.0)  {Sign payload (Ed25519)};
 
-\node[box, right=3.1cm of prover, minimum width=4.2cm] (verifier) {Verifier / Consumer};
-\node[group, fit=(verifier), label=above:{Consumer domain}] (condom) {};
+\node[task] (a0) at (4,4.2)  {Load CA root + device cert};
+\node[task] (a1) at (4,3.2)  {Verify device certificate};
+\node[task] (a2) at (4,2.2)  {Verify device signature (reading)};
+\node[task] (a3) at (4,1.2)  {Setup ZoKrates (once)\\Manage proving.key \\ Export verification.key};
+\node[task] (a4) at (4,0.2)  {Apply computation + ZK proof\\(range, min/max, median, …)};
+\node[opt]  (a5) at (4,-0.8) {Prepare Nova inputs\\(init.json, steps.json)};
 
-\node[fit=(devdom)(edgedom), inner sep=16pt] (dockfit) {};
-\begin{pgfonlayer}{background}
-  \draw[dashed, very thick, rounded corners=3pt] (dockfit.north west) rectangle (dockfit.south east);
-\end{pgfonlayer}
-\node[lab, above=2mm of dockfit.north] {resource-limited Docker container};
+\node[task] (p1) at (8,-2.0) {Standard: generate SNARK proof};
+\node[opt]  (p2) at (8,-3.4) {Nova: prove + compress};
 
-\draw[arrow] (devdom.east) -- (ingest.west) node[lab, above, pos=0.5] {readings};
-\draw[arrow] (prover.east) -- (verifier.west) node[lab, above, pos=0.5] {aggregate + proof};
+\node[task] (v0) at (12,-4.6) {Import verification.key};
+\node[task] (v1) at (12,-5.8) {Verify SNARK proof};
+\node[opt]  (v2) at (12,-7.0) {Verify Nova compressed proof};
 
+\node[task] (c1) at (16,-8.6) {Receive verified result / aggregate};
+
+\draw[arrow] (d0) -- node[above,font=\scriptsize] {0a} (k1);
+\draw[arrow] (k1) -- node[above,font=\scriptsize] {0b} (k2);
+\draw[arrow] (k2) -- node[above,font=\scriptsize] {0c} (a0);
+
+\draw[arrow] (d1) -- node[above,font=\scriptsize] {1} (d2);
+\draw[arrow] (d2) -- node[above,font=\scriptsize] {2} (a2);
+
+\draw[arrow] (a0) -- node[right,font=\scriptsize] {3} (a1);
+\draw[arrow] (a1) -- node[right,font=\scriptsize] {4} (a2);
+\draw[arrow] (a2) -- node[right,font=\scriptsize] {5} (a3);
+\draw[arrow] (a3) -- node[right,font=\scriptsize] {6} (a4);
+
+\draw[arrow] (a4) -- node[above,font=\scriptsize] {7} (p1);
+\draw[arrow] (p1) -- node[above,font=\scriptsize] {8} (v0);
+\draw[arrow] (v0) -- node[above,font=\scriptsize] {9} (v1);
+\draw[arrow] (v1) -- node[above,font=\scriptsize] {10} (c1);
+
+\draw[arrow] (a4) -- node[right,font=\scriptsize] {7a} (a5);
+\draw[arrow] (a5) -- node[left,font=\scriptsize]  {8a} (p2);
+\draw[arrow] (p2) -- node[left,font=\scriptsize]  {9a} (v2);
+\draw[arrow] (v2) -- node[above,font=\scriptsize] {10a} (c1);
+
+\node (center) at (current bounding box.south) {};
+\node[note, below left=0.8cm and 2.2cm of center] {
+  \textbf{Key management}\\
+  Device private key: device\\
+  Device certificate: signed by CA\\
+  CA root: trusted by orchestrator/verifier\\
+  Proving key: orchestrator-local\\
+  Verification key: distributed to verifier};
+\node[note, below right=0.8cm and 2.2cm of center] {
+  \textbf{Circuit I/O}\\
+  Public: policy bounds, metadata, timeframe\\
+  Private: sensor reading(s) (witness)\\
+  Guarantee: computational integrity of transformation};
 \end{tikzpicture}
-\end{adjustbox}
-\caption{System Architecture}
+}
+\caption{System Architecture with PKI, proving, and verification flows.}
 \label{fig:system-overview}
 \end{figure}
 
-\paragraph{Explanation}
-The figure shows our systme architecture for comparing standard and recursive zk-SNARKs in IoT environments. The system processes simulated IoT sensor data in configurable batches as input to proof generation. Two proving modes are evaluated. In the standard mode, Groth16 with a circuit-specific trusted setup is used and consumers verify one proof per individual reading (or per sub-aggregate, depending on the circuit). In the recursive mode, Nova folds the computation across a batch; if a final Groth16 compression is applied, the consumer verifies a single proof for the entire batch and that compression relies on a trusted setup for the compression circuit. No dedicated key-management service is modeled because this is a benchmarking framework with simulated data; all cryptographic parameters are generated locally using standard ZoKrates setup flows \cite{TrustedSetupZoKrates}. To approximate real-world constraints, the entire system runs inside a resource-limited Docker container, which emulates the compute and memory limits typical of IoT devices, while consumers remain external.
+\begin{figure}[H]
+\centering
+\resizebox{0.98\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=white, minimum width=4.4cm, minimum height=1.0cm, align=center, font=\scriptsize},
+  arrow/.style={-{Stealth[length=2.2mm,width=1.3mm]}, thick}
+]
+\node[box, fill=gray!10] (pub)   at (0,0)   {Public Inputs\\policy/meta/timeframe};
+\node[box, fill=gray!10] (priv)  at (0,-2)  {Private Inputs (witness)\\sensor readings / aggregates};
+\node[box] (circ)  at (6,-1) {ZoKrates Circuit: transformation f\\(range, min/max, median, sum-in-range, …)};
+\node[box] (proof) at (12,-1){ZK-SNARK proof};
+\node[box, fill=gray!10] (ver)   at (16,-1){Verifier\\verification.key};
 
-\paragraph{Component terminology (Figure~\ref{fig:system-overview}).}
-\begin{itemize}
-  \item \textbf{Device domain}: Produces and forwards IoT sensor readings to the edge for processing.
-  \item \textbf{Edge domain}: receives readings, orders them, groups inputs into configurable batches, and generates zk-proofs (Groth16 or Nova with final Groth16 compression)
-  \item \textbf{Consumer domain}: Receives aggregates and verifies either multiple Groth16 proofs (standard) or a single final Groth16 proof (Nova compression).
-  \item \textbf{Execution boundary}: The dashed box represents a resource-limited Docker container used to emulate IoT-like compute and memory constraints.
-\end{itemize}
+\draw[arrow] (pub) -- (circ);
+\draw[arrow] (priv) -- (circ);
+\draw[arrow] (circ) -- (proof);
+\draw[arrow] (proof) -- (ver);
+\end{tikzpicture}
+}
+\caption{Verifiable Transformations: Public/Private I/O und Beweisfluss}
+\label{fig:verifiable-transformations}
+\end{figure}
 
-This chapter establishes the evaluation framework used to compare standard and recursive zk-SNARKs in IoT environments and defines the system components at a technology-agnostic level. The architecture follows an edge-centric pattern \cite{shiEdgeComputingVision2016}.
+\section{Verifiable Transformations}
+We define a general transformation \(f\) over private readings with public policies:
+- \textbf{Public inputs} (policy/meta/timeframe): bounds, time window identifiers, optional commitments/IDs.
+- \textbf{Private inputs} (witness): sensor readings or aggregates derived from them.
+- \textbf{Guarantee}: the circuit enforces the computational integrity of \(f\) on the private inputs for the given public policy.
 
-The architecture in Figure~\ref{fig:system-overview} is designed to compare a standard zk-SNARK pipeline (Groth16) with a recursive pipeline (Nova) under conditions that are close to practice but still fully controllable. At the left, a device domain produces streams of simulated IoT readings that are handed over to the edge. The edge receives the readings, rounds floating-point values to integers where needed for zk-SNARK compatibility, and forms configurable batches of readings that serve as inputs to proof generation. Two proof modes are evaluated on the same data: a standard mode based on Groth16 with a circuit-specific trusted setup, where consumers verify one proof per individual reading, and a recursive mode based on Nova that folds the computation across configurable batches. The recursive pipeline uses Nova folding followed by Groth16 compression, yielding one succinct proof for the entire batch that the consumer verifies once. Because this is a benchmarking framework with simulated data, no operational key management service is modeled; proving and verification parameters are generated locally using standard ZoKrates trusted setup flows \cite{kothapalli_nova_2022,NovaFoldingIVC2023,TrustedSetupZoKrates}. Transport security and device authentication are not part of this chapter; data may flow in plaintext inside the controlled container, since the focus is on proving and verification costs. In a deployment, confidentiality and authenticity in transit would be provided separately (e.g., authenticated encryption and device signatures).
+Generic transformation set (domain-agnostic, demonstrated in our implementation):
+- \textbf{Range / Threshold}: prove reading or aggregate lies within \([min, max]\).
+- \textbf{Min/Max}: prove correct minimum/maximum over a set of values.
+- \textbf{Median}: prove correct median over a window.
+- \textbf{Sum-in-range} (optional extension): prove \(\sum\) over a window is within a public range or equals a billed amount.
+For our codebase, these map to circuits under \texttt{circuits/basic/} (e.g., \texttt{filter\_range.zok}, \texttt{min\_max.zok}, \texttt{median.zok}).
 
-The smart home scenario is chosen deliberately as the motivating use case. It offers a realistic mix of heterogeneous sensors such as temperature, motion, light, and energy that emit frequent, low-payload readings and need aggregation for dashboards, automation rules, and billing analytics. This setting is representative of edge-centric processing, and typical homes already host a hub or gateway that runs ingestion and computation on the same device. It also captures the two tensions we want to study: privacy, where consumers should learn only aggregates and not device-level values, and tight resource budgets on the processing node. Other candidate domains such as industrial IoT or vehicular telemetry often require specialized hardware and high-throughput networking or introduce strict control loops. Smart homes provide a neutral middle ground with realistic variability in devices and rates, meaningful privacy at the individual level, and a balance between latency and amortization of prover costs. The results therefore translate to similar small-to-medium edge deployments while keeping experiments reproducible.
+\section{Data Flow}
+Top-down sequence (one action per lane level):
+- Device: generate keypair (private stays on device); collect reading; sign payload (Ed25519).
+- PKI: sign device certificate; publish device certificate and CA root.
+- Orchestrator: load CA root and device certificate; verify certificate; verify reading signature; run ZoKrates setup once (create \textit{proving.key}, export \textit{verification.key}); apply computation \(f\) and prove.
+- Prover: generate proof (standard) or \emph{Nova: prove + compress}.
+- Verifier: import \textit{verification.key}; verify proof (standard or Nova compressed).
+- Consumer: consume verified aggregate/result.
 
-All experiments run inside a resource-limited Docker container that emulates the compute and memory limits of IoT devices. This execution boundary, shown as the dashed box, contains devices and the edge to keep the data path short and measurable, while consumers remain external to reflect the common pattern where verification and analytics run off device. For each configuration we report prover time, verifier time, proof size, and the resident set size of the edge process, and we summarize results using medians over repeated runs. Zero-knowledge protects inputs from consumers by design. The chapter therefore quantifies the cost and scaling behavior of Groth16 and Nova under bounded resources, while deliberately abstracting from networking, transport security, device identity, and key rotation to isolate the proving pipeline.
+\section{Proving Pipelines}
+\subsection{Standard zk-SNARK (Groth16)}
+- One proof per reading or per sub-aggregate.
+- Verifier time and proof count scale with the number of items.
+- Trusted setup is circuit-specific.
 
-\section{Data Flow and Processing Pipeline}
-\label{sec:data-flow}
+\subsection{Recursive (Nova + optional Groth16 compression)}
+- Readings are prepared as steps; multiple steps are folded into one proof.
+- Optional compression produces one succinct proof for the entire batch.
+- Reduces verification to a constant number of proofs (often one), at the cost of more complex proving.
 
-The data processing pipeline differs significantly between standard and recursive zk-SNARK approaches, reflecting their fundamental architectural differences and performance characteristics.
+\section{Implementation Mapping}
+- \textbf{Edge Orchestrator}: \texttt{scripts/measure\_crossover\_real.py} (certificate + signature verification, input prep, proof orchestration, metrics).
+- \textbf{Standard Prover/Verifier}: \texttt{src/proof\_systems/snark\_manager.py} (ZoKrates \texttt{compile/setup/compute-witness/generate-proof/verify}).
+- \textbf{Recursive Prover/Verifier}: \texttt{src/proof\_systems/nova\_manager.py} (ZoKrates \texttt{nova prove/compress/verify}).
+- \textbf{PKI bootstrap (local CA, device cert)}: \texttt{scripts/setup\_device\_and\_dummy\_data.py}.
+- \textbf{Circuits}: \texttt{circuits/basic/} and \texttt{circuits/nova/}.
 
-\subsection{Standard SNARK Pipeline}
-The standard zk-SNARK approach processes simulated IoT readings individually, following a sequential workflow that emphasizes granular verification capabilities. The process begins when the edge device receives data from the IoT devices. For each individual reading, a separate zk-SNARK proof is generated that demonstrates correct range validation according to predefined circuit constraints using standard ZoKrates trusted setups. These individual proofs are then collected and transmitted to consumers, who must verify each proof separately to validate the entire dataset. This approach ensures that each sensor reading is individually verifiable, providing fine-grained integrity guarantees. However, the verification process requires linear time proportional to the number of readings, creating scalability challenges as the number of readings increases.
+\section{Security Properties and Assumptions}
+- \textbf{Confidentiality}: raw readings remain private; only proofs and public policy are shared.
+- \textbf{Integrity}: zk-SNARKs ensure computational integrity of \(f\).
+- \textbf{Authenticity}: device signatures verified using CA-signed device certificate.
+- \textbf{Key protection}: proving key stays on orchestrator; device private key stays on device.
+- \textbf{Assumptions}: trusted CA root; correct ZoKrates setup; honest-but-curious verifier.
 
-\subsection{Recursive SNARK Pipeline}
-The Nova recursive approach processes Iot readings in batches, employing a fundamentally different strategy that optimizes for large-scale aggregation scenarios. As in the standard zkSNARK pipeline, the process here also begins when the edge receives sensor readings from the IoT devices. The processing diverges significantly during step preparation, where readings are systematically grouped into configurable steps, with zero-padding applied as necessary to ensure consistent step sizes. This batching strategy enables Nova to fold multiple steps into a single ongoing proof through its efficient folding mechanism, dramatically reducing the computational overhead associated with individual proof generation. The recursive proof generation process accumulates computational claims across multiple steps, creating an incrementally verifiable computation chain. A final zk-SNARK compression stage transforms this accumulated proof into a single succinct proof that encapsulates the correctness of all processing steps using standard ZoKrates trusted setups. The verification process requires consumers to verify only one final proof regardless of input size.
+\section{Performance Considerations}
+- Reported metrics: proving time, verification time, proof size, edge memory footprint.
+- Standard vs. Nova trade-off: standard has fine-grained proofs but many verifications; Nova amortizes verification to (near) constant, with additional proving overhead.
 
+\section{Limitations and Extensions}
+- Networking security (TLS), key rotation, CRL/OCSP, and Merkle commitments are out of scope.
+- Future work: bind entire reading sets via commitment roots; integrate revocation; extend circuits (sum-in-range billing).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -403,14 +522,14 @@ The Nova recursive approach processes Iot readings in batches, employing a funda
 \label{sec:env-hw}
 
 We executed all experiments under a resource-constrained profile intended to simulate realistic IoT edge environments. 
-Specifically, we used Docker containers with enforced limits on CPU, memory, and swap space to approximate the hardware characteristics of IoT-devices, such as Raspberry Pi's.
+Specifically, we used Docker containers with enforced limits on CPU and memory to approximate the hardware characteristics of IoT-devices. For example:
 
 \begin{itemize}
   \item \textbf{CPU}: fixed 0.5 logical core
   \item \textbf{RAM}: fixed 1\,GB
 \end{itemize}
 
-These settings are chosen based on typical Raspberry Pi-class device specifications, which often provide ~1-4 GB RAM and single-to-quad-core CPUs in edge deployments. For example, Gupta \& Nahrstedt \cite{guptaPerformanceCharacterizationContainers2025} empirically evaluate similar IoT devices and show that Docker containers on hardware with ~1 GB RAM suffer measurable overheads in latency and I/O under constrained CPU/RAM settings.\\
+These settings are chosen based on typical Raspberry Pi-class device specifications, which often provide 0.5-4 GB RAM and single-to-quad-core CPUs in edge deployments. For example, Gupta \& Nahrstedt \cite{guptaPerformanceCharacterizationContainers2025} empirically evaluate similar IoT devices and show that Docker containers on hardware with ~1 GB RAM suffer measurable overheads in latency and I/O under constrained CPU/RAM settings.\\
 
 \noindent Host platform (for emulation):
 \begin{table}[H]
@@ -428,46 +547,59 @@ These settings are chosen based on typical Raspberry Pi-class device specificati
   \caption{Host platform used to simulate IoT-like environments under resource constraints via Docker/cgroups.}
 \end{table}
 
-\subsection{System overview and measurement harness}
-Our harness executes the \emph{same} aggregation logic twice per reading size $N$: once with a baseline zk-SNARK (``Standard'') and once with Nova's Incrementally Verifiable Computation (IVC) plus compression (``Nova''), using identical inputs and scripted CLI parameters (\texttt{--mode}, \texttt{--warmup-runs}, \texttt{--repetitions}). The ZoKrates toolchain provides both the baseline pipeline (\texttt{compile} $\rightarrow$ \texttt{setup} $\rightarrow$ \texttt{compute-witness} $\rightarrow$ \texttt{generate-proof} $\rightarrow$ \texttt{verify}) and an experimental Nova backend (\texttt{nova prove} $\rightarrow$ \texttt{nova compress} $\rightarrow$ \texttt{nova verify}) \cite{ExperimentalZoKrates}. Nova realizes recursion via a folding scheme for IVC, yielding verifier time and proof size that are (to first order) independent of recursion depth \cite{kothapalli_nova_2022}.
+\begin{figure}[H]
+\centering
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.2cm and 2.2cm,
+    process/.style={rectangle, draw, rounded corners, align=center, minimum width=3.8cm, minimum height=1cm, fill=gray!10},
+    decision/.style={diamond, aspect=2, draw, align=center, minimum width=2.5cm, minimum height=1cm, fill=gray!10},
+    data/.style={parallelogram, draw, align=center, minimum width=3.8cm, minimum height=1cm, fill=white},
+    io/.style={trapezium, trapezium left angle=75, trapezium right angle=105, draw, align=center, minimum width=3.8cm, minimum height=1cm, fill=white},
+    arrow/.style={->, thick},
+    dashedarrow/.style={->, dashed, thick}
+]
 
-\paragraph{Data path and outputs.}
-For each $N$, we load a window of IoT readings, run the Standard and the Nova pipeline, and record \emph{prove/compress/verify/total} times and proof sizes. Results are persisted as JSON/CSV for post-processing and plots.
+% Nodes
+\node[process] (A) {run\_in\_docker.sh};
+\node[process, below=of A] (B) {Build Docker image:\\ ZoKrates 0.8.8};
+\node[process, below=of B] (C) {Run container with CPU/RAM limits};
+\node[process, below=of C] (D) {Clean caches \\ Show NumPy version};
+\node[process, below=of D] (E) {Setup device keys \\ + generate signed readings};
+\node[process, below=of E] (F) {measure\_crossover\_real.py};
+\node[process, below=of F] (G) {Load IoT readings \\ Verify Ed25519 signatures};
+\node[process, below=of G] (H) {Compile + Setup ZoKrates \\ (filter\_range.zok)};
+\node[decision, below=of H] (I) {For each reading count};
+\node[process, below left=1.5cm and 3.8cm of I] (J) {Standard SNARK:\\ Witness → Prove → Verify};
+\node[process, below right=1.5cm and 3.8cm of I] (K) {Nova:\\ Prepare init/steps.json → Prove → Compress → Verify};
+\node[process, below=3.5cm of I] (L) {Aggregate metrics (means)};
+\node[process, below=of L] (M) {Compute time/size advantage \\ Detect crossover point};
+\node[data, below=of M] (N) {Write JSON/CSV \\ data/real\_measurements};
+\node[process, right=3.5cm of N] (O) {Print summary with file paths};
+\node[process, below=of N] (P) {plot\_crossover\_json.py → PNG \\ (data/visualizations)};
 
-\subsection{Cold vs.\ warm execution}
-\label{subsec:cold-warm}
-We report two execution regimes to bracket realistic deployments:
-\begin{itemize}
-  \item \textbf{Cold mode:} fresh, isolated workspaces per run; intermediate artifacts removed; no pre-touching. This approximates first-use or infrequent activation when OS page cache and library state are cold.
-  \item \textbf{Warm mode:} artifact reuse across runs; optional pre-touch of static files (R1CS, parameters) to promote page-cache residency. This approximates steady-state services.
-\end{itemize}
-On Linux, repeated file accesses are typically served from the kernel page cache once pages are resident in RAM; subsequent runs can thus avoid disk I/O and appear markedly faster even with identical code and inputs \cite{ConceptsOverviewLinux}. Beyond file caching, additional warmup phenomena (dynamic linking, allocator state, branch predictors, and—in managed runtimes—JIT compilation) can shift early iterations away from steady state. The benchmarking literature cautions that steady state is neither guaranteed nor trivial to detect; discarding initial iterations and using multiple repetitions is recommended over assuming convergence from a single run \cite{barrettWarmupBlowsHotAndCold,trainiEffectiveAssessmentSteady2022}. Accordingly, our harness performs \emph{warm-up runs} that are \emph{excluded} from aggregates and then executes $r$ repetitions per $N$.
+% Connections
+\draw[arrow] (A) -- (B);
+\draw[arrow] (B) -- (C);
+\draw[arrow] (C) -- (D);
+\draw[arrow] (D) -- (E);
+\draw[arrow] (E) -- (F);
+\draw[arrow] (F) -- (G);
+\draw[arrow] (G) -- (H);
+\draw[arrow] (H) -- (I);
+\draw[arrow] (I.west) -- (J.north);
+\draw[arrow] (I.east) -- (K.north);
+\draw[arrow] (J.south) -- (L.west);
+\draw[arrow] (K.south) -- (L.east);
+\draw[arrow] (L) -- (M);
+\draw[arrow] (M) -- (N);
+\draw[arrow] (N.east) -- (O.west);
+\draw[dashedarrow] (N.south) -- (P.north);
 
-\subsection{Pipelines and metrics}
-\paragraph{Standard (ZoKrates).}
-We compile the aggregation circuit, run setup once, compute witnesses per instance, generate a Groth16 proof, and verify. We record \emph{prove time}, \emph{verify time}, \emph{total time}, and \emph{proof size} (KB).
-
-\paragraph{Nova (IVC + compression).}
-We execute \texttt{nova prove} over $N$ steps of the same relation to build the IVC, then \texttt{compress} to a succinct proof and \texttt{verify} the compressed proof. We record \emph{IVC time} (reported as \emph{prove}), \emph{compress time}, \emph{verify time}, \emph{total time}, \emph{proof size}, and (optionally) \emph{folding steps}. Nova’s folding amortizes many instances and makes verifier cost largely $N$-independent \cite{kothapalli_nova_2022}.
-
-\paragraph{Efficiency ratios and crossovers.}
-Per $N$ we compute $\text{Eff}_t=T_{\text{std}}/T_{\text{nova}}$ and $\text{Eff}_s=S_{\text{std}}/S_{\text{nova}}$; the \emph{time crossover} is the smallest $N$ with $\text{Eff}_t>1$, the \emph{size crossover} analogously for $\text{Eff}_s>1$. Reporting both is essential because recursive systems may win in verifier cost/size before (or after) they dominate in total time.
-
-\subsection{Controlling sources of variance}
-We mitigate common pitfalls: (i) \emph{cache effects} via explicit cold/warm protocols and discarded warm-ups; (ii) \emph{artifact reuse} by isolating Nova workspaces in cold mode; (iii) \emph{non-determinism} via repetitions and median/dispersion reporting; (iv) \emph{configuration drift} via scripted builds and pinned tool versions. These practices align with artifact-evaluation guidance emphasizing functional artifacts, reproducibility, and steady-state assessment \cite{ArtifactReviewBadging}.
-
-\subsection{Environment and constraints}
-We emulate resource-constrained edge settings with container-level limits (CPU shares/cores, RAM, swap), stressing prover memory/IO. This matches deployments where proving runs on an edge aggregator, while verifiers (e.g., smart contracts or weak devices) benefit from Nova’s small verification cost \cite{chaliasosAnalyzingBenchmarkingZKRollups2024}. Hardware/software versions and limits are logged with each run.
-
-\subsection{Threats to validity}
-\textbf{Internal.} Cold/warm deltas depend on the storage stack and kernel; compression/verification can stay IO-sensitive under cold conditions. We mitigate by workspace isolation, discarded warm-ups, and repeated runs.
-\textbf{External.} Results hold for our circuits, limits, and ZoKrates/Nova versions; other relations/backends may shift break-even points (e.g., PLONK-family folding schemes) \cite{varkFoldingCustomGates2024}.
-\textbf{Construct.} Following benchmarking best practice, we report both startup/cold and steady/warm behavior rather than assuming steady state \cite{barrettWarmupBlowsHotAndCold,trainiEffectiveAssessmentSteady2022}.
-
-\subsection{Why Nova here}
-We center Nova due to its efficient recursion overhead and near-constant verifier cost \cite{kothapalli_nova_2022}, and because ZoKrates exposes an end-to-end path for both baseline and recursive pipelines \cite{ExperimentalZoKrates}. Alternatives (Darlin/Halo-style recursion, PLONK-folding variants, STARKs) offer different trust/transparency and prover-cost trade-offs; a multi-family comparison is orthogonal to our empirical question and left for future work \cite{habockDarlinRecursiveProofs2021,varkFoldingCustomGates2024}.
-
-
+\end{tikzpicture}
+}
+\caption{Flow of the IoT zk-SNARK evaluation pipeline inside Docker.}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -480,247 +612,118 @@ We center Nova due to its efficient recursion overhead and near-constant verifie
 % \usepackage{hyperref}
 % \usepackage{caption}
 % \sisetup{round-mode=places,round-precision=2,detect-weight=true,detect-inline-weight=math}
+% =========================
+% RESULTS CHAPTER (custom captions per run)
+% =========================
 
 \chapter{Results and Analysis}
 \label{chap:empirical-results}
 
-This chapter presents the empirical evaluation of Standard zk-SNARKs versus recursive zk-SNARKs for IoT data aggregation. The analysis reveals significant performance differences between the two approaches.
+% ====== PREAMBLE ADDITIONS (einmalig in die Präambel) ======
+% \usepackage{graphicx}
+% \usepackage{float}
+% \usepackage{booktabs}
+% \usepackage{adjustbox}
+% \usepackage{csvsimple}
+% % Optionale feine Tabelle:
+% % \usepackage{pgfplotstable}
+
+This chapter compares a Standard zk-SNARK pipeline with a recursive Nova zk-SNARK pipeline in resource-limited containers. Each run fixes CPU/RAM limits and sweeps the number of IoT readings $N$. Every overview plot shows: (i) total wall-clock time, (ii) total proof size, and (iii) the time-efficiency ratio \emph{Standard/Nova} (values $>1$ favor Nova). For each $N$ both pipelines process identical inputs. Nova builds an incrementally verifiable computation (IVC) and compresses to one succinct proof; Standard emits one Groth16 proof per instance. Transport security and device authentication are out of scope to isolate proving/verification cost.
+
+\section{Results}
+
+% ---- ONE MACRO PER RUN: custom title + custom limits + observation text + CSV table ----
+\newcommand{\ResultRunCustom}[4]{%
+  \subsection*{#2}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{ergebnis/md_warm_nr#1/real_crossover_overview.png}
+    \caption{#2 \;—\; Docker limitations: \texttt{#3}.}
+    \label{fig:run-#1}
+  \end{figure}
+
+  #4
+
+  % ---- CSV-Tabelle mit den Messwerten dieses Runs ----
+  \begin{table}[H]
+    \centering
+    % Kurzfassung für List of Tables | Volltext unter der Tabelle
+    \caption[Results — Run \##1]{Results — Run \##1 (limits: \texttt{#3})}
+    \label{tab:run-#1-summary}
+    \begin{adjustbox}{max width=\linewidth}
+      \csvautotabular[
+        separator=comma,
+        head to column names,
+        respect all
+      ]{ergebnis/md_warm_nr#1/crossover_summary.csv}
+    \end{adjustbox}
+  \end{table}
+
+  \vspace{0.75em}
+}
 
 
-\section{Performance Results}
-\label{sec:performance-results}
+% ===== RUNS (Limits je Run hier eintragen) =====
+\ResultRunCustom{1}{Run \#1}{--cpus=0.5, --memory=1g}{
+\textbf{Observation.} Standard is faster across $N\in[100,1000]$; the efficiency ratio remains $<1$. Nova’s compressed proof stays $\approx 70$\,KB; Standard grows roughly linearly ($\sim$0.85\,KB per reading). Size crossover at $\sim\!82$ readings; no time crossover here.
+}
 
-This section presents the empirical evaluation results comparing Standard zk-SNARKs versus Nova Recursive zk-SNARKs under different execution conditions. The analysis reveals critical crossover points and performance characteristics that inform practical deployment decisions.
+\ResultRunCustom{2}{Run \#2}{--cpus=1, --memory=2g}{
+\textbf{Observation.} Same qualitative pattern up to $N=500$: Standard wins in time (ratio $\approx0.15\text{–}0.39$); Nova’s proof size is essentially constant ($\approx70$\,KB), Standard grows linearly. Size crossover $\approx 82$; no time crossover.
+}
 
-\subsection{Cold Start vs Warm Start Analysis}
+\ResultRunCustom{3}{Run \#3}{--cpus=1, --memory=4}{
+\textbf{Observation.} Matches \#1–\#2. Time ratio stays below $1$ throughout; Nova is slower on the edge. Size crossover around $82$.
+}
 
-Our evaluation distinguishes between cold start and warm start execution conditions, as these significantly impact the performance characteristics of both proof systems.
+\ResultRunCustom{4}{Run \#4}{--cpus=1, --memory=8}{
+\textbf{Observation.} Unchanged: Standard faster end-to-end; Nova produces a single stable proof. Size crossover $\approx 82$; no time crossover up to $N=500$.
+}
 
-\subsubsection{Cold Start Results (md\_cold\_2\_3\_nr8)}
+\ResultRunCustom{5}{Run \#5}{--cpus=2, --memory=2}{
+\textbf{Observation.} Time ratio rises with $N$ (Standard approaches Nova) but remains $<1$ for $N\le 500$. Proof-size behavior unchanged (Nova $\approx70$\,KB vs.\ linear Standard). Size crossover near $82$.
+}
 
-Table \ref{tab:cold-performance} shows the performance results under cold start conditions, where each run begins with fresh, isolated workspaces and no pre-cached artifacts.
+\ResultRunCustom{6}{Run \#6}{--cpus=4, --memory=2}{
+\textbf{Observation.} \emph{Time crossover present:} the efficiency curve crosses $1$ at roughly $N\approx700$ (see plot), i.e., Nova overtakes Standard in total time beyond that point. Proof-size crossover remains around $82$.
+}
 
+
+\section{Cross-run synthesis}
+Across runs \#1–\#7 three stable findings emerge:
+\begin{enumerate}
+  \item \textbf{Proof size.} Nova’s compressed proof remains essentially constant ($\approx70$\,KB) as $N$ grows, whereas Standard increases roughly linearly at $\sim0.85$\,KB per reading. Hence a size crossover appears around \[
+\frac{70\,\text{KB}}{0.85\,\text{KB}} \approx 82~\text{Readings}\] in all runs.
+
+  \item \textbf{Total time.} On constrained edge hardware, Standard is consistently faster for small–medium $N$. With larger $N$ or more favorable limits, the gap narrows; in run~\#7 the time-efficiency ratio crosses $1$ near $N\approx700$, after which Nova becomes faster.
+  \item \textbf{Operational trade-off.} Nova minimizes verifier load (one constant-size proof) and can become time-competitive at larger $N$, but incurs higher proving overhead at small $N$. Standard minimizes edge proving time for small/mid batches but yields a linearly growing set of proofs.
+\end{enumerate}
+
+\section{Summary for the smart-home edge}
+For a resource-limited hub aggregating frequent, low-payload readings, the better choice depends on the bottleneck: when edge CPU/RAM and latency dominate, Standard is preferable at small $N$; when consumer bandwidth/verification dominates—or when batches become large—Nova’s single succinct proof is advantageous and can even overtake Standard in total time once $N$ is sufficiently high (run~\#7).
+
+\section{Appendix: compact table}
 \begin{table}[H]
-\centering
-\small
-\begin{tabularx}{\textwidth}{@{}lXXXXXX@{}}
-\toprule
-\textbf{Readings} & \textbf{Std (s)} & \textbf{Std Size (KB)} & \textbf{Nova (s)} & \textbf{Nova Size (KB)} & \textbf{Ratio} & \textbf{Winner} \\
-\midrule
-100 & 3.79 & 83.3 & 11.43 & 69.2 & 0.33\texttimes{} & Standard \\
-200 & 6.70 & 166.6 & 13.91 & 69.2 & 0.48\texttimes{} & Standard \\
-300 & 11.37 & 249.9 & 15.33 & 69.2 & 0.74\texttimes{} & Standard \\
-400 & 12.66 & 333.2 & 19.48 & 69.1 & 0.65\texttimes{} & Standard \\
-500 & 18.89 & 416.5 & 19.26 & 69.1 & 0.98\texttimes{} & Standard \\
-600 & 21.07 & 499.8 & 22.54 & 69.1 & 0.93\texttimes{} & Standard \\
-700 & 25.57 & 583.1 & 24.07 & 69.2 & 1.06\texttimes{} & \textbf{Nova} \\
-800 & 27.75 & 666.4 & 27.33 & 69.2 & 1.02\texttimes{} & Nova \\
-900 & 31.53 & 749.7 & 28.83 & 69.2 & 1.09\texttimes{} & Nova \\
-1000 & 35.31 & 833.0 & 31.08 & 69.1 & 1.14\texttimes{} & Nova \\
-\bottomrule
-\end{tabularx}
-\caption{Performance comparison under cold start conditions (Docker: 0.5 CPU, 1GB RAM)}
-\label{tab:cold-performance}
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    Run & Size crossover & Time crossover & Qualitative verdict \\
+    \midrule
+    \#1 & $\approx 82$ & none (to $N{=}1000$) & Standard faster; Nova much smaller \\
+    \#2 & $\approx 82$ & none (to $N{=}500$)  & Same trend as \#1 \\
+    \#3 & $\approx 82$ & none (to $N{=}500$)  & Same trend as \#1 \\
+    \#4 & $\approx 82$ & none (to $N{=}500$)  & Same trend as \#1 \\
+    \#5 & $\approx 82$ & none (to $N{=}500$)  & Gap narrows; size still favors Nova \\
+    \#6 & $\approx 82$ & none (to $N{=}500$)  & Ratio approaches $1$ at high $N$ \\
+    \#7 & $\approx 82$ & $\approx 700$ & Nova overtakes in time at larger $N$ \\
+    % \#8 & $\approx 82$ & (fill from plot) & (fill after plotting) \\
+    \bottomrule
+  \end{tabular}
+  \caption{Crossover summary from runs \#1–\#7.}
+  \label{tab:crossover-summary}
 \end{table}
 
-Under cold start conditions, the crossover point occurs at 700 readings, where Nova begins to outperform Standard SNARKs. This represents a significant threshold that reflects Nova's setup overhead under resource-constrained conditions.
 
-\subsubsection{Warm Start Results (md\_warm\_2\_3\_nr7)}
-
-Table \ref{tab:warm-performance} presents the performance results under warm start conditions, where artifacts are reused and pre-cached for optimal performance.
-
-\begin{table}[H]
-\centering
-\small
-\begin{tabularx}{\textwidth}{@{}lXXXXXX@{}}
-\toprule
-\textbf{Readings} & \textbf{Std (s)} & \textbf{Std Size (KB)} & \textbf{Nova (s)} & \textbf{Nova Size (KB)} & \textbf{Ratio} & \textbf{Winner} \\
-\midrule
-100 & 3.49 & 83.3 & 11.65 & 69.2 & 0.30\texttimes{} & Standard \\
-200 & 6.99 & 166.6 & 13.78 & 69.2 & 0.51\texttimes{} & Standard \\
-300 & 10.84 & 249.9 & 15.56 & 69.2 & 0.70\texttimes{} & Standard \\
-400 & 15.01 & 333.2 & 17.10 & 69.1 & 0.88\texttimes{} & Standard \\
-500 & 17.25 & 416.5 & 20.95 & 69.1 & 0.82\texttimes{} & Standard \\
-600 & 20.93 & 499.8 & 22.49 & 69.1 & 0.93\texttimes{} & Standard \\
-700 & 24.72 & 583.1 & 24.98 & 69.2 & 0.99\texttimes{} & Standard \\
-800 & 27.81 & 666.4 & 27.43 & 69.2 & 1.01\texttimes{} & \textbf{Nova} \\
-900 & 31.39 & 749.7 & 28.90 & 69.2 & 1.09\texttimes{} & Nova \\
-1000 & 35.43 & 833.0 & 31.29 & 69.1 & 1.13\texttimes{} & Nova \\
-\bottomrule
-\end{tabularx}
-\caption{Performance comparison under warm start conditions (Docker: 0.5 CPU, 1GB RAM)}
-\label{tab:warm-performance}
-\end{table}
-
-Warm start conditions shift the crossover point to 800 readings, demonstrating that Nova benefits significantly from pre-cached artifacts and optimized execution paths.
-
-\subsection{Resource-Constrained vs Full Resources Analysis}
-
-\subsubsection{Resource-Constrained Results (od\_cold\_2\_5)}
-
-Table \ref{tab:resource-constrained} shows performance under severe resource constraints, simulating typical IoT edge device limitations.
-
-\begin{table}[H]
-\centering
-\small
-\begin{tabularx}{\textwidth}{@{}lXXXXXX@{}}
-\toprule
-\textbf{Readings} & \textbf{Std (s)} & \textbf{Std Size (KB)} & \textbf{Nova (s)} & \textbf{Nova Size (KB)} & \textbf{Ratio} & \textbf{Winner} \\
-\midrule
-10 & 1.72 & 8.3 & 8.98 & 69.2 & 0.19\texttimes{} & Standard \\
-25 & 4.33 & 20.8 & 8.89 & 69.1 & 0.49\texttimes{} & Standard \\
-50 & 7.21 & 41.7 & 10.30 & 69.1 & 0.70\texttimes{} & Standard \\
-75 & 11.93 & 62.5 & 10.03 & 69.1 & 1.19\texttimes{} & \textbf{Nova} \\
-100 & 16.28 & 83.3 & 10.54 & 69.2 & 1.54\texttimes{} & Nova \\
-150 & 23.95 & 125.0 & 11.72 & 69.2 & 2.04\texttimes{} & Nova \\
-200 & 31.91 & 166.6 & 12.94 & 69.2 & 2.47\texttimes{} & Nova \\
-\bottomrule
-\end{tabularx}
-\caption{Performance comparison under resource-constrained conditions (Docker: 0.5 CPU, 1GB RAM)}
-\label{tab:resource-constrained}
-\end{table}
-
-Under resource-constrained conditions, the crossover point occurs at 75 readings, demonstrating that Nova can be advantageous even with limited computational resources.
-
-\subsubsection{Full Resources Results (od\_warm\_1\_5)}
-
-Table \ref{tab:full-resources} presents performance with full system resources available, showing optimal execution conditions.
-
-\begin{table}[H]
-\centering
-\small
-\begin{tabularx}{\textwidth}{@{}lXXXXXX@{}}
-\toprule
-\textbf{Readings} & \textbf{Std (s)} & \textbf{Std Size (KB)} & \textbf{Nova (s)} & \textbf{Nova Size (KB)} & \textbf{Ratio} & \textbf{Winner} \\
-\midrule
-50 & 8.53 & 41.7 & 8.95 & 69.1 & 0.95\texttimes{} & Standard \\
-60 & 9.83 & 50.0 & 9.64 & 69.1 & 1.02\texttimes{} & \textbf{Nova} \\
-70 & 11.55 & 58.3 & 10.02 & 69.1 & 1.15\texttimes{} & Nova \\
-80 & 13.35 & 66.6 & 10.15 & 69.1 & 1.31\texttimes{} & Nova \\
-90 & 14.75 & 75.0 & 10.45 & 69.1 & 1.41\texttimes{} & Nova \\
-100 & 16.31 & 83.3 & 11.23 & 69.2 & 1.45\texttimes{} & Nova \\
-125 & 21.58 & 104.1 & 10.86 & 69.1 & 1.99\texttimes{} & Nova \\
-150 & 25.87 & 125.0 & 10.52 & 69.2 & 2.46\texttimes{} & Nova \\
-\bottomrule
-\end{tabularx}
-\caption{Performance comparison with full system resources (no Docker limitations)}
-\label{tab:full-resources}
-\end{table}
-
-With full resources, the crossover point occurs at 60 readings, showing that Nova's advantages become apparent earlier under optimal conditions.
-
-\subsection{Crossover Point Analysis}
-
-The empirical results reveal distinct crossover points depending on execution conditions:
-
-\begin{itemize}
-\item \textbf{Cold Start}: Crossover at 700 readings
-\item \textbf{Warm Start}: Crossover at 800 readings  
-\item \textbf{Resource-Constrained}: Crossover at 75 readings
-\item \textbf{Full Resources}: Crossover at 60 readings
-\end{itemize}
-
-This analysis demonstrates that Nova's performance advantages are highly dependent on execution context, with resource constraints and execution state significantly influencing the crossover threshold.
-
-\subsection{Visual Performance Analysis}
-
-The following figures provide comprehensive visual analysis of the performance characteristics across different execution conditions.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{md_cold_2_3_nr8/real_crossover_overview.png}
-\caption{Performance comparison visualization for cold start conditions (md\_cold\_2\_3\_nr8). The plot shows the crossover point at 700 readings where Nova begins to outperform Standard SNARKs.}
-\label{fig:cold-visualization}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{md_warm_2_3_nr7/real_crossover_overview.png}
-\caption{Performance comparison visualization for warm start conditions (md\_warm\_2\_3\_nr7). The plot demonstrates the shifted crossover point at 800 readings under optimized execution conditions.}
-\label{fig:warm-visualization}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{od_cold_2_5/od_cold_2_5.png}
-\caption{Performance comparison visualization for resource-constrained conditions (od\_cold\_2\_5). The plot shows the early crossover point at 75 readings under severe resource limitations.}
-\label{fig:resource-constrained-visualization}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{od_warm_1_5/od_warm_1_5.png}
-\caption{Performance comparison visualization for full resources conditions (od\_warm\_1\_5). The plot demonstrates the optimal crossover point at 60 readings with full system resources available.}
-\label{fig:full-resources-visualization}
-\end{figure}
-
-
-\subsection{Detailed Performance Analysis}
-
-\subsubsection{Proof Size Characteristics}
-
-The analysis reveals fundamental differences in proof size characteristics between Standard and Nova SNARKs:
-
-\begin{itemize}
-\item \textbf{Standard SNARKs}: Linear growth in proof size (8.3 KB per reading)
-\item \textbf{Nova Recursive}: Constant proof size (~69.1 KB regardless of batch size)
-\end{itemize}
-
-This constant proof size characteristic of Nova becomes increasingly advantageous as configurable batch sizes grow, providing significant bandwidth savings for large-scale IoT deployments.
-
-\subsubsection{Performance Scaling Patterns}
-
-The empirical results demonstrate distinct scaling patterns:
-
-\begin{itemize}
-\item \textbf{Standard SNARKs}: Linear time complexity O(n) with consistent per-reading overhead
-\item \textbf{Nova Recursive}: Near-constant time complexity O(1) after initial setup overhead
-\end{itemize}
-
-These scaling characteristics explain the observed crossover points and provide guidance for deployment decisions.
-
-\subsubsection{Resource Impact Analysis}
-
-The comparison between resource-constrained and full-resource environments reveals:
-
-\begin{itemize}
-\item \textbf{Resource Constraints}: Shift crossover points significantly (75 vs 60 readings)
-\item \textbf{Execution State}: Cold vs warm start affects crossover by 100 readings (700 vs 800)
-\item \textbf{Memory Pressure}: Nova's constant memory usage becomes advantageous under constraints
-\end{itemize}
-
-\subsection{Practical Deployment Guidelines}
-
-Based on the empirical analysis, the following deployment guidelines emerge:
-
-\subsubsection{Use Standard SNARKs when:}
-\begin{itemize}
-\item Configurable batch sizes are below the crossover threshold for the specific deployment context
-\item Real-time processing requirements demand minimal latency
-\item Individual proof verification is required
-\item Memory constraints are not a primary concern
-\end{itemize}
-
-\subsubsection{Use Nova Recursive SNARKs when:}
-\begin{itemize}
-\item Configurable batch sizes exceed the crossover threshold (60-800 readings depending on context)
-\item Bandwidth efficiency is critical (constant proof size advantage)
-\item Memory-constrained environments require predictable resource usage
-\item Long-term steady-state operation is expected (warm start conditions)
-\end{itemize}
-
-\subsection{Threats to Validity}
-
-Several limitations must be considered when interpreting these results:
-
-\begin{itemize}
-\item \textbf{Circuit Specificity}: Results are specific to the implemented aggregation circuits
-\item \textbf{Hardware Dependencies}: Performance characteristics may vary across different hardware platforms
-\item \textbf{Software Versions}: Results depend on specific versions of ZoKrates and Nova implementations
-\item \textbf{Execution Environment}: Docker-based constraints provide approximations of real IoT conditions
-\end{itemize}
-
-Despite these limitations, the empirical results provide valuable insights for practical deployment decisions in IoT aggregation scenarios.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

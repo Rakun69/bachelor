@@ -9,6 +9,10 @@ from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Tuple
 from statistics import mean
+from cryptography.hazmat.primitives.asymmetric import ed25519
+from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
+from cryptography import x509
 
 
 import numpy as np
@@ -20,16 +24,78 @@ from src.proof_systems.snark_manager import SNARKManager
 LOGGER = logging.getLogger("measure_crossover_real")
 
 
+def load_public_key():
+    with open("data/device_keys/device1_public.pem", "rb") as f:
+        return serialization.load_pem_public_key(f.read())
+
+def load_and_verify_device_cert():
+    """Load CA and device cert, verify issuer and signature.
+    Returns the device public key if verification succeeds, else raises.
+    """
+    ca_cert_path = Path("data/device_keys/ca_cert.pem")
+    dev_cert_path = Path("data/device_keys/device1_cert.pem")
+    if not ca_cert_path.exists() or not dev_cert_path.exists():
+        raise FileNotFoundError("CA or device certificate missing. Run setup script first.")
+
+    with open(ca_cert_path, "rb") as f:
+        ca_cert = x509.load_pem_x509_certificate(f.read())
+    with open(dev_cert_path, "rb") as f:
+        dev_cert = x509.load_pem_x509_certificate(f.read())
+
+    # Check issuer -> subject match
+    if dev_cert.issuer != ca_cert.subject:
+        raise ValueError("Device cert issuer does not match CA subject")
+
+    # Verify certificate signature (Ed25519)
+    ca_pub = ca_cert.public_key()
+    try:
+        ca_pub.verify(dev_cert.signature, dev_cert.tbs_certificate_bytes)
+    except Exception as e:
+        raise ValueError(f"Device certificate signature invalid: {e}")
+
+    # Optional: validity window
+    now = time.time()
+    if dev_cert.not_valid_before.timestamp() - 60 > now or dev_cert.not_valid_after.timestamp() + 60 < now:
+        raise ValueError("Device certificate not currently valid")
+
+    return dev_cert.public_key()
+
+
+def verify_entry(public_key, entry):
+    data = entry["data"]
+    sig = bytes.fromhex(entry["signature"])
+    msg = json.dumps(data, sort_keys=True).encode("utf-8")
+    try:
+        public_key.verify(sig, msg)
+        return True
+    except InvalidSignature:
+        return False
+
 def load_iot_data(project_root: Path) -> List[Dict[str, Any]]:
-    """Load real IoT readings from 1_month.json file only."""
+    """Load real IoT readings with signature verification"""
     fp = project_root / "data/raw/iot_readings_1_month.json"
     if not fp.exists():
         raise FileNotFoundError(f"IoT readings file not found: {fp}")
-    
+
     with open(fp, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    LOGGER.info("Loaded IoT data: %s (%d readings)", fp, len(data))
-    return data
+        raw_data = json.load(f)
+
+    # Prefer PKI-verified device certificate; fallback to pinned key for legacy setups
+    try:
+        public_key = load_and_verify_device_cert()
+        LOGGER.info("Using device public key from verified certificate (CA)")
+    except Exception as e:
+        LOGGER.warning(f"Falling back to pinned public key: {e}")
+        public_key = load_public_key()
+    verified = []
+    for entry in raw_data:
+        if verify_entry(public_key, entry):
+            verified.append(entry["data"])
+        else:
+            LOGGER.warning("⚠️ Invalid signature, skipping entry")
+
+    LOGGER.info("Loaded %d valid IoT readings", len(verified))
+    return verified
 
 
 def ensure_dirs(project_root: Path) -> Path:
@@ -52,7 +118,7 @@ def compile_and_setup_standard(manager: SNARKManager, project_root: Path) -> str
 
 
 def measure_standard(manager: SNARKManager, circuit_name: str, readings: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Generate N real proofs and aggregate metrics.
+    """Generate N real proofs and aggreDU gate metrics.
     Symmetrisch zu Nova: Proving explizit gemessen, Verify separat gestoppt.
     """
     total_proof_time = 0.0
@@ -500,7 +566,7 @@ def parse_args() -> argparse.Namespace:
         help="Comma-separated IoT reading counts to test",
     )
     p.add_argument("--warmup-runs", type=int, default=1, help="Number of warmup runs discarded before each measurement")
-    p.add_argument("--repetitions", type=int, default=3, help="Number of measured repetitions per count; medians are reported")
+    p.add_argument("--repetitions", type=int, default=3, help="Number of measured repetitions per count; means are reported")
     p.add_argument("--mode", type=str, choices=["warm", "cold"], default="cold", help="Warm keeps artifacts (prewarmed), Cold cleans artifacts per run")
     return p.parse_args()
 

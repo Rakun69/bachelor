@@ -1,8 +1,0 @@
-{
-  "device_id": "DEV_001",
-  "proving_key": "bb97a4fba1aeed1fa747619dd05f7d5adb97062d3cceca9ecc258645a8f2c5e6",
-  "verification_key": "e33a86c6f53d408bbe38df36135bc86f",
-  "signature_key": "df1592855494836272558cd95214d0f069053746965236035e7b3a0c354123ef",
-  "created_at": "2025-09-30T21:32:06.080774",
-  "expires_at": "2026-09-30T21:32:06.080774"
-}
