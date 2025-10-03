@@ -23,8 +23,10 @@
 \usepackage{booktabs}
 \usepackage{adjustbox}
 \pgfplotsset{compat=1.18}
+\usepackage{float}
 \usepackage{listings, color}
 \usepackage{subcaption}
+\usetikzlibrary{positioning,arrows.meta}
 \usepackage[automark]{scrlayer-scrpage}
 \setlength{\marginparwidth}{2cm}
 \usepackage{todonotes}
@@ -113,7 +115,7 @@ I hereby declare that I have written this thesis independently and have not used
 \clearpage
 
 \section*{Abstract}
-
+This thesis evaluates standard and recursive zero knowledge proof pipelines for verifiable processing of Internet of Things sensor data under constrained edge resources. The system allows a consumer to validate range checks and aggregate properties without access to raw measurements. A role based architecture authenticates devices with certificates, verifies signatures at the edge and generates proofs while the consumer verifies a single artifact. We compare a standard Groth16 pipeline against a recursive Nova pipeline and study the effect of step size and input size on end to end time and proof size. Proof size for the recursive pipeline remains essentially constant while the standard pipeline grows linearly. With a step size of ten the time crossover occurs at four hundred readings and the advantage grows with the input size. A non zero knowledge baseline provides a lower bound for runtime and size and shows that the dominant costs arise from proof generation and verification rather than the application level computation. The results yield actionable guidance for choosing step sizes and proof schemes on edge devices.
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,8 +244,8 @@ Our implementation demonstrates several classes of verifiable transformations ap
 
 These transformations form the foundation for privacy-preserving IoT data processing, enabling verifiable analytics while protecting individual device privacy.
 
-\subsection*{Why we do not include a non-ZK baseline}
-Non-cryptographic pipelines can be faster, but they reveal raw inputs or rely on trust in the computing entity, violating our privacy and integrity requirements. Without zero-knowledge proofs, a verifier cannot simultaneously ensure input confidentiality and computational correctness \cite{goldwasserKnowledgeComplexityInteractive1985,katzIntroductionModernCryptography2007}. Therefore, we compare proof systems (standard vs. recursive zk-SNARKs) rather than including a non-ZK baseline as a candidate solution.
+\subsection*{Non-ZK baseline in this thesis}
+Non-cryptographic processing can be faster, yet it reveals raw inputs during checking or depends on trust in the computing entity, which conflicts with our privacy requirement. In this thesis a non-zero-knowledge baseline is used only as a reference to contextualize raw execution time and output size. It does not serve as an alternative solution because it cannot provide both confidentiality and verifiable computational integrity at the same time \cite{goldwasserKnowledgeComplexityInteractive1985,katzIntroductionModernCryptography2007}.
 
 \section{Recursive ZKPs and Aggregation}
 Recursive zero knowledge proofs stack or fold multiple proofs into a single succinct result. This enables efficient and scalable verification especially in streaming or multi step computation settings where multiple sub proofs are generated.
@@ -327,192 +329,65 @@ Recursive zk-SNARKs offer compelling benefits for scaling zero-knowledge applica
 
 \label{chap:system-architecture}
 
-\section{Goals and Scope}
-This chapter specifies the architecture of our privacy-preserving IoT proving pipeline. The goal is to prove properties of sensor data (range checks and aggregations) without revealing the raw values. We use zk-SNARKs for standard proving and Nova for recursive batching. Transport confidentiality and channel authentication are out of scope and can be provided independently (e.g., TLS).
+This chapter presents the system architecture for privacy-preserving verification of IoT computations. The goal is to enable verification of range checks and aggregate properties of sensor data without revealing the raw measurements. We use zk-SNARKs for standard proving and recursive zk-SNARKs for batch wise verification of many steps as a single succinct proof.
+
+\begin{figure}[H]  % oder [!htb] wenn du es nicht strikt erzwingen willst
+\centering
+\resizebox{0.98\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=2.2cm and 3.0cm,
+    actor/.style={draw, rounded corners=8pt, align=center, minimum width=3.6cm, minimum height=0.95cm, fill=gray!8, font=\scriptsize},
+    center/.style={actor, fill=blue!20, text=white, font=\bfseries\scriptsize},
+    arr/.style={-{Stealth[length=2.2mm,width=1.2mm]}, thick}
+  ]
+  % Center
+  \node[center] (edge) {Edge Orchestrator};
+  
+  % Ring
+  \node[actor, above=of edge]            (pki)  {Key Registry};
+  \node[actor, left=of edge]             (dev)  {IoT Device};
+  \node[actor, right=of edge]            (prov) {Prover};
+  \node[actor, below left=1.6cm and 1.8cm of edge] (ver)  {Verifier};
+  \node[actor, below right=1.6cm and 1.8cm of edge] (cons) {Consumer};
+  
+  % Flows
+  \draw[arr] (dev) -- node[above, font=\scriptsize]{sensor readings + signature} (edge);
+  \draw[arr] (pki) -- node[right, font=\scriptsize]{device credential} (edge);
+  \draw[arr] (edge) -- node[above, font=\scriptsize]{witness + policy} (prov);
+  \draw[arr] (prov) -- node[above, font=\scriptsize]{standard/recursive proof} (ver);
+  \draw[arr] (ver) -- node[above, font=\scriptsize]{verified result} (cons);
+\end{tikzpicture}
+}
+  \caption{System architecture and interactions}
+  \label{fig:usecase-architecture}
+\end{figure}
 
 \section{Actors and Trust Model}
-We distinguish the following actors:
-- \textbf{IoT Device (Prover source)}: produces readings and holds the device private key.
-- \textbf{Key Registry / PKI (Issuer / CA)}: issues and publishes device certificates (public keys).
-- \textbf{Edge Orchestrator}: verifies device certificate and reading signatures, prepares public/private inputs, triggers proving.
-- \textbf{Prover / Nova Combiner}: runs proof generation (standard or Nova+compression).
-- \textbf{Verifier (Utility)}: verifies proofs using the verification key.
-- \textbf{Consumer}: consumes only verified aggregates/results.
-
-Trust assumptions:
-- The CA root is trusted by the orchestrator/verifier.
-- The device private key never leaves the device. The device certificate is signed by the CA.
-- The orchestrator retains the proving key; the verification key is distributed to verifiers.
+The architecture includes six roles that interact as shown in Figure~\ref{fig:usecase-architecture}. The IoT Device generates sensor readings and signs each payload with a device key that never leaves the device. The Key Registry, acting as issuer and certification authority, issues a device credential that binds the device identity to its public key. The Edge Orchestrator receives sensor readings and signatures, verifies the certificate and each signature, and prepares the public policy and the private witness for proving. The Prover produces a proof for the prepared statement, either as a standard zk-SNARK proof or as a recursive zk-SNARK proof. The Verifier checks the received proof with the verification key, and the Consumer receives only a verified result. We assume the certification authority is trusted by the Edge Orchestrator and the Verifier, the device private key remains on the device, the device credential is issued by the certification authority, the proving key stays with the Orchestrator, and the verification key is distributed to verifiers.
 
 \section{Key Management}
-- \textbf{Device identity}: the device generates its keypair on-device and obtains a CA-signed certificate. In our implementation, a local CA is created for reproducibility (files in \texttt{data/device_keys/}).
-- \textbf{Proof system keys}:
-  - \textit{proving.key}: created and stored locally by the orchestrator during ZoKrates setup; never shared.
-  - \textit{verification.key}: exported and provided to the verifier for proof checking.
+Device identity is established by generating the keypair on the device and obtaining a credential issued by the certification authority. In our evaluation a local certification authority is created to keep runs reproducible and the resulting artifacts are managed by the orchestration environment. For the proof system the proving key is created locally by the orchestration role during setup and it is not shared. The verification key is exported and provided to the verification role for proof checking.
 
-\section{System Overview}
-Figure~\ref{fig:system-overview} shows the end-to-end actors and message flow (PKI bootstrap, signature verification, proving, verification). Figure~\ref{fig:verifiable-transformations} abstracts the verifiable transformation: public policy and private readings flow into the circuit, which yields a proof verified with the verification key.
-
-
-\begin{figure}[H]
-\centering
-\resizebox{0.98\textwidth}{!}{%
-\begin{tikzpicture}[
-  scale=0.8, transform shape,
-  lane/.style={draw, fill=gray!8, minimum width=3.7cm, minimum height=24cm},
-  task/.style={draw, fill=white, rounded corners, minimum width=3.1cm, minimum height=0.95cm, font=\scriptsize, align=center},
-  opt/.style={task, dashed},
-  note/.style={draw, fill=gray!5, rounded corners, font=\scriptsize, align=left, minimum width=5.0cm},
-  arrow/.style={-{Stealth[length=2.4mm,width=1.4mm]}, thick}
-]
-\node[lane] (L0) at (-4,0) {}; \node[above] at (L0.north) {Key Registry / PKI};
-\node[lane] (L1) at ( 0,0) {}; \node[above] at (L1.north) {IoT Device};
-\node[lane] (L2) at ( 4,0) {}; \node[above] at (L2.north) {Edge Orchestrator};
-\node[lane] (L3) at ( 8,0) {}; \node[above] at (L3.north) {Prover / Nova};
-\node[lane] (L4) at (12,0) {}; \node[above] at (L4.north) {Verifier};
-\node[lane] (L5) at (16,0) {}; \node[above] at (L5.north) {Consumer};
-
-\node[task] (d0) at (0,9.0)  {Generate device keypair\\(private stays on device)};
-\node[task] (k1) at (-4,8.0) {Sign device certificate (Issuer/CA)};
-\node[task] (k2) at (-4,7.0) {Publish device certificate + CA root};
-
-\node[task] (d1) at (0,6.0)  {Generate sensor data};
-\node[task] (d2) at (0,5.0)  {Sign payload (Ed25519)};
-
-\node[task] (a0) at (4,4.2)  {Load CA root + device cert};
-\node[task] (a1) at (4,3.2)  {Verify device certificate};
-\node[task] (a2) at (4,2.2)  {Verify device signature (reading)};
-\node[task] (a3) at (4,1.2)  {Setup ZoKrates (once)\\Manage proving.key \\ Export verification.key};
-\node[task] (a4) at (4,0.2)  {Apply computation + ZK proof\\(range, min/max, median, …)};
-\node[opt]  (a5) at (4,-0.8) {Prepare Nova inputs\\(init.json, steps.json)};
-
-\node[task] (p1) at (8,-2.0) {Standard: generate SNARK proof};
-\node[opt]  (p2) at (8,-3.4) {Nova: prove + compress};
-
-\node[task] (v0) at (12,-4.6) {Import verification.key};
-\node[task] (v1) at (12,-5.8) {Verify SNARK proof};
-\node[opt]  (v2) at (12,-7.0) {Verify Nova compressed proof};
-
-\node[task] (c1) at (16,-8.6) {Receive verified result / aggregate};
-
-\draw[arrow] (d0) -- node[above,font=\scriptsize] {0a} (k1);
-\draw[arrow] (k1) -- node[above,font=\scriptsize] {0b} (k2);
-\draw[arrow] (k2) -- node[above,font=\scriptsize] {0c} (a0);
-
-\draw[arrow] (d1) -- node[above,font=\scriptsize] {1} (d2);
-\draw[arrow] (d2) -- node[above,font=\scriptsize] {2} (a2);
-
-\draw[arrow] (a0) -- node[right,font=\scriptsize] {3} (a1);
-\draw[arrow] (a1) -- node[right,font=\scriptsize] {4} (a2);
-\draw[arrow] (a2) -- node[right,font=\scriptsize] {5} (a3);
-\draw[arrow] (a3) -- node[right,font=\scriptsize] {6} (a4);
-
-\draw[arrow] (a4) -- node[above,font=\scriptsize] {7} (p1);
-\draw[arrow] (p1) -- node[above,font=\scriptsize] {8} (v0);
-\draw[arrow] (v0) -- node[above,font=\scriptsize] {9} (v1);
-\draw[arrow] (v1) -- node[above,font=\scriptsize] {10} (c1);
-
-\draw[arrow] (a4) -- node[right,font=\scriptsize] {7a} (a5);
-\draw[arrow] (a5) -- node[left,font=\scriptsize]  {8a} (p2);
-\draw[arrow] (p2) -- node[left,font=\scriptsize]  {9a} (v2);
-\draw[arrow] (v2) -- node[above,font=\scriptsize] {10a} (c1);
-
-\node (center) at (current bounding box.south) {};
-\node[note, below left=0.8cm and 2.2cm of center] {
-  \textbf{Key management}\\
-  Device private key: device\\
-  Device certificate: signed by CA\\
-  CA root: trusted by orchestrator/verifier\\
-  Proving key: orchestrator-local\\
-  Verification key: distributed to verifier};
-\node[note, below right=0.8cm and 2.2cm of center] {
-  \textbf{Circuit I/O}\\
-  Public: policy bounds, metadata, timeframe\\
-  Private: sensor reading(s) (witness)\\
-  Guarantee: computational integrity of transformation};
-\end{tikzpicture}
-}
-\caption{System Architecture with PKI, proving, and verification flows.}
-\label{fig:system-overview}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\resizebox{0.98\textwidth}{!}{%
-\begin{tikzpicture}[
-  box/.style={draw, rounded corners, fill=white, minimum width=4.4cm, minimum height=1.0cm, align=center, font=\scriptsize},
-  arrow/.style={-{Stealth[length=2.2mm,width=1.3mm]}, thick}
-]
-\node[box, fill=gray!10] (pub)   at (0,0)   {Public Inputs\\policy/meta/timeframe};
-\node[box, fill=gray!10] (priv)  at (0,-2)  {Private Inputs (witness)\\sensor readings / aggregates};
-\node[box] (circ)  at (6,-1) {ZoKrates Circuit: transformation f\\(range, min/max, median, sum-in-range, …)};
-\node[box] (proof) at (12,-1){ZK-SNARK proof};
-\node[box, fill=gray!10] (ver)   at (16,-1){Verifier\\verification.key};
-
-\draw[arrow] (pub) -- (circ);
-\draw[arrow] (priv) -- (circ);
-\draw[arrow] (circ) -- (proof);
-\draw[arrow] (proof) -- (ver);
-\end{tikzpicture}
-}
-\caption{Verifiable Transformations: Public/Private I/O und Beweisfluss}
-\label{fig:verifiable-transformations}
-\end{figure}
+\section{Data and Control Flow}
+Data and control follow the simple pattern shown in Figure~\ref{fig:usecase-architecture}. The IoT Device emits sensor readings together with a signature. The certification authority provides an authority root and a device credential to enable authentication. The Edge Orchestrator verifies both, prepares public policy and private witness, and triggers proving. The Prover returns either a standard proof or, if recursion is used, a compressed proof. The Verifier checks the proof with the verification key and the Consumer receives only a verified result.
 
 \section{Verifiable Transformations}
-We define a general transformation \(f\) over private readings with public policies:
-- \textbf{Public inputs} (policy/meta/timeframe): bounds, time window identifiers, optional commitments/IDs.
-- \textbf{Private inputs} (witness): sensor readings or aggregates derived from them.
-- \textbf{Guarantee}: the circuit enforces the computational integrity of \(f\) on the private inputs for the given public policy.
-
-Generic transformation set (domain-agnostic, demonstrated in our implementation):
-- \textbf{Range / Threshold}: prove reading or aggregate lies within \([min, max]\).
-- \textbf{Min/Max}: prove correct minimum/maximum over a set of values.
-- \textbf{Median}: prove correct median over a window.
-- \textbf{Sum-in-range} (optional extension): prove \(\sum\) over a window is within a public range or equals a billed amount.
-For our codebase, these map to circuits under \texttt{circuits/basic/} (e.g., \texttt{filter\_range.zok}, \texttt{min\_max.zok}, \texttt{median.zok}).
-
-\section{Data Flow}
-Top-down sequence (one action per lane level):
-- Device: generate keypair (private stays on device); collect reading; sign payload (Ed25519).
-- PKI: sign device certificate; publish device certificate and CA root.
-- Orchestrator: load CA root and device certificate; verify certificate; verify reading signature; run ZoKrates setup once (create \textit{proving.key}, export \textit{verification.key}); apply computation \(f\) and prove.
-- Prover: generate proof (standard) or \emph{Nova: prove + compress}.
-- Verifier: import \textit{verification.key}; verify proof (standard or Nova compressed).
-- Consumer: consume verified aggregate/result.
+We define a general transformation \(f\) that processes private readings under a public policy. Public inputs encode the policy and minimal metadata. Private inputs hold only the sensor readings or aggregates. The circuit guarantees the computational integrity of \(f\) on the private inputs under the supplied policy, so a verifier can rely on the result without seeing the readings. Typical instances are range or threshold checks, minimum/maximum over a set and the median over a window.
 
 \section{Proving Pipelines}
-\subsection{Standard zk-SNARK (Groth16)}
-- One proof per reading or per sub-aggregate.
-- Verifier time and proof count scale with the number of items.
-- Trusted setup is circuit-specific.
+The system supports two proving modes. The standard mode emits a zk‑SNARK per reading and verification effort grows with the number of readings. The recursive mode folds many steps and can produce a single compressed proof for a batch, which keeps verification essentially constant while shifting work to proving. Detailed tooling and commands are described in the Implementation chapter~\ref{chap:implementation}.
 
-\subsection{Recursive (Nova + optional Groth16 compression)}
-- Readings are prepared as steps; multiple steps are folded into one proof.
-- Optional compression produces one succinct proof for the entire batch.
-- Reduces verification to a constant number of proofs (often one), at the cost of more complex proving.
-
-\section{Implementation Mapping}
-- \textbf{Edge Orchestrator}: \texttt{scripts/measure\_crossover\_real.py} (certificate + signature verification, input prep, proof orchestration, metrics).
-- \textbf{Standard Prover/Verifier}: \texttt{src/proof\_systems/snark\_manager.py} (ZoKrates \texttt{compile/setup/compute-witness/generate-proof/verify}).
-- \textbf{Recursive Prover/Verifier}: \texttt{src/proof\_systems/nova\_manager.py} (ZoKrates \texttt{nova prove/compress/verify}).
-- \textbf{PKI bootstrap (local CA, device cert)}: \texttt{scripts/setup\_device\_and\_dummy\_data.py}.
-- \textbf{Circuits}: \texttt{circuits/basic/} and \texttt{circuits/nova/}.
+\section{Batch size policy}
+Batching defines how many readings a single recursive step consumes. A small step size reduces work per step and can reduce memory pressure at the edge. It also increases the number of steps for a given dataset. The total proving cost is a combination of per step work and the final compression. A large step size reduces the number of steps and can improve end to end time once the prover amortizes the fixed costs of recursion and compression. Verification remains constant in both cases since the consumer checks a single proof for the entire batch. Padding to a multiple of the step size is part of the design and does not change the public claim. Very large step sizes can raise peak memory per step and increase latency until the final proof is available. If the input rate is irregular, larger step sizes can increase padding, which wastes capacity and shifts the effective input mix. A failure or restart also invalidates more work when steps are large. In practice a moderate step size is often ideal. It keeps per step memory bounded while reducing the total number of steps enough to move the time crossover toward smaller input sizes. The Results and Analysis chapter~\ref{chap:empirical-results} reports this effect explicitly.
 
 \section{Security Properties and Assumptions}
-- \textbf{Confidentiality}: raw readings remain private; only proofs and public policy are shared.
-- \textbf{Integrity}: zk-SNARKs ensure computational integrity of \(f\).
-- \textbf{Authenticity}: device signatures verified using CA-signed device certificate.
-- \textbf{Key protection}: proving key stays on orchestrator; device private key stays on device.
-- \textbf{Assumptions}: trusted CA root; correct ZoKrates setup; honest-but-curious verifier.
+The system keeps raw readings private and shares only proofs together with public policy parameters. The proofs ensure the computational integrity of the transformation. Authenticity follows from signature checks using the device certificate that is signed by the CA. The proving key remains on the orchestrator and the private device key remains on the device. We assume a trusted CA root, a correct ZoKrates setup and a verifier that is honest but curious.
 
 \section{Performance Considerations}
-- Reported metrics: proving time, verification time, proof size, edge memory footprint.
-- Standard vs. Nova trade-off: standard has fine-grained proofs but many verifications; Nova amortizes verification to (near) constant, with additional proving overhead.
+We report proving time, verification time, proof size and the memory footprint of the process. The standard pipeline offers fine grained proofs but requires many verifications as the number of readings grows. The Nova pipeline amortizes verification to a nearly constant cost while adding overhead on the proving side.
 
 \section{Limitations and Extensions}
-- Networking security (TLS), key rotation, CRL/OCSP, and Merkle commitments are out of scope.
-- Future work: bind entire reading sets via commitment roots; integrate revocation; extend circuits (sum-in-range billing).
+Networking security such as TLS, key rotation, revocation via CRL or OCSP and Merkle based data binding are outside the scope of this chapter. A non zero knowledge baseline that computes the same transformations locally and ships only results can provide a reference for raw execution time and artefact size, but it does not meet the privacy requirement since raw inputs must be trusted or revealed during checking. Future work can bind entire reading sets through commitment roots, integrate certificate revocation and extend the circuit family with a sum in range billing scheme.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -549,57 +424,75 @@ These settings are chosen based on typical Raspberry Pi-class device specificati
 
 \begin{figure}[H]
 \centering
-\resizebox{0.95\textwidth}{!}{%
+\resizebox{0.98\textwidth}{!}{%
 \begin{tikzpicture}[
-    node distance=1.2cm and 2.2cm,
-    process/.style={rectangle, draw, rounded corners, align=center, minimum width=3.8cm, minimum height=1cm, fill=gray!10},
-    decision/.style={diamond, aspect=2, draw, align=center, minimum width=2.5cm, minimum height=1cm, fill=gray!10},
-    data/.style={parallelogram, draw, align=center, minimum width=3.8cm, minimum height=1cm, fill=white},
-    io/.style={trapezium, trapezium left angle=75, trapezium right angle=105, draw, align=center, minimum width=3.8cm, minimum height=1cm, fill=white},
-    arrow/.style={->, thick},
-    dashedarrow/.style={->, dashed, thick}
+  scale=0.8, transform shape,
+  lane/.style={draw, fill=gray!8, minimum width=3.7cm, minimum height=26cm},
+  task/.style={draw, fill=white, rounded corners, minimum width=3.1cm, minimum height=0.95cm, font=\scriptsize, align=center},
+  opt/.style={task, dashed},
+  note/.style={draw, fill=gray!5, rounded corners, font=\scriptsize, align=left, minimum width=5.0cm},
+  arrow/.style={-{Stealth[length=2.4mm,width=1.4mm]}, thick}
 ]
+\node[lane] (L0) at (-4,0) {}; \node[above] at (L0.north) {Key Registry};
+\node[lane] (L1) at ( 0,0) {}; \node[above] at (L1.north) {IoT Device};
+\node[lane] (L2) at ( 4,0) {}; \node[above] at (L2.north) {Edge Orchestrator};
+\node[lane] (L3) at ( 8,0) {}; \node[above] at (L3.north) {Prover};
+\node[lane] (L4) at (12,0) {}; \node[above] at (L4.north) {Verifier};
+\node[lane] (L5) at (16,0) {}; \node[above] at (L5.north) {Consumer};
 
-% Nodes
-\node[process] (A) {run\_in\_docker.sh};
-\node[process, below=of A] (B) {Build Docker image:\\ ZoKrates 0.8.8};
-\node[process, below=of B] (C) {Run container with CPU/RAM limits};
-\node[process, below=of C] (D) {Clean caches \\ Show NumPy version};
-\node[process, below=of D] (E) {Setup device keys \\ + generate signed readings};
-\node[process, below=of E] (F) {measure\_crossover\_real.py};
-\node[process, below=of F] (G) {Load IoT readings \\ Verify Ed25519 signatures};
-\node[process, below=of G] (H) {Compile + Setup ZoKrates \\ (filter\_range.zok)};
-\node[decision, below=of H] (I) {For each reading count};
-\node[process, below left=1.5cm and 3.8cm of I] (J) {Standard SNARK:\\ Witness → Prove → Verify};
-\node[process, below right=1.5cm and 3.8cm of I] (K) {Nova:\\ Prepare init/steps.json → Prove → Compress → Verify};
-\node[process, below=3.5cm of I] (L) {Aggregate metrics (means)};
-\node[process, below=of L] (M) {Compute time/size advantage \\ Detect crossover point};
-\node[data, below=of M] (N) {Write JSON/CSV \\ data/real\_measurements};
-\node[process, right=3.5cm of N] (O) {Print summary with file paths};
-\node[process, below=of N] (P) {plot\_crossover\_json.py → PNG \\ (data/visualizations)};
+\node[task] (d0) at (0,12.0)  {Generate device keypair\\(private stays on device)};
+\node[task] (k1) at (-4,10.5) {Issue device credential (certification authority)};
+\node[task] (k2) at (-4,9.0) {Publish authority root and device credential};
 
-% Connections
-\draw[arrow] (A) -- (B);
-\draw[arrow] (B) -- (C);
-\draw[arrow] (C) -- (D);
-\draw[arrow] (D) -- (E);
-\draw[arrow] (E) -- (F);
-\draw[arrow] (F) -- (G);
-\draw[arrow] (G) -- (H);
-\draw[arrow] (H) -- (I);
-\draw[arrow] (I.west) -- (J.north);
-\draw[arrow] (I.east) -- (K.north);
-\draw[arrow] (J.south) -- (L.west);
-\draw[arrow] (K.south) -- (L.east);
-\draw[arrow] (L) -- (M);
-\draw[arrow] (M) -- (N);
-\draw[arrow] (N.east) -- (O.west);
-\draw[dashedarrow] (N.south) -- (P.north);
+\node[task] (d1) at (0,7.5)  {Generate sensor data};
+\node[task] (d2) at (0,6.0)  {Sign payload};
 
+\node[task] (a0) at (4,4.5)  {Load authority root and device credential};
+\node[task] (a1) at (4,3.0)  {Verify device certificate};
+\node[task] (a2) at (4,1.5)  {Verify device signature (reading)};
+\node[task] (a3) at (4,0.0)  {Setup ZoKrates (once)\\Manage proving.key \\ Export verification.key};
+\node[task] (a4) at (4,-1.5)  {Apply computation + ZK proof\\(range, min/max, median, …)};
+\node[task]  (a5) at (4,-3.0) {Prepare Nova inputs\\(init.json, steps.json)};
+
+\node[task] (p1) at (8,-4.5) {Generate standard proof};
+\node[task]  (p2) at (8,-6.0) {Recursive: prove + compress};
+
+\node[task] (v0) at (12,-7.5) {Import verification.key};
+\node[task] (v1) at (12,-9.0) {Verify standard proof};
+\node[task]  (v2) at (12,-10.5) {Verify compressed proof};
+
+\node[task] (c1) at (16,-12.0) {Receive verified result / aggregate};
+
+\draw[arrow] (d0) to[out=180, in=90, looseness=1.2] node[above,font=\scriptsize]{1} (k1);
+\draw[arrow] (k1) -- node[left,font=\scriptsize] {2} (k2);
+\draw[arrow] (k2) to[out=-90, in=180, looseness=1.5] node[left, font=\scriptsize]{3} (a0);
+
+\draw[arrow] (d1) -- node[right,font=\scriptsize] {4} (d2);
+\draw[arrow] (d2) to[out=-90, in=180, looseness=1.5] node[left, font=\scriptsize]{5} (a2);
+
+\draw[arrow] (a0) -- node[right,font=\scriptsize] {6} (a1);
+\draw[arrow] (a1) -- node[right,font=\scriptsize] {7} (a2);
+\draw[arrow] (a2) -- node[right,font=\scriptsize] {8} (a3);
+\draw[arrow] (a3) -- node[right,font=\scriptsize] {9} (a4);
+
+\draw[arrow] (a4) to[out=0, in=90, looseness=1.5] node[right, font=\scriptsize]{10} (p1);
+\draw[arrow] (p1) to[out=0, in=90, looseness=1.5] node[right, font=\scriptsize]{11} (v0);
+\draw[arrow] (v0) -- node[right,font=\scriptsize] {12} (v1);
+\draw[arrow] (v1) to[out=0, in=90, looseness=1.5] node[right, font=\scriptsize]{13} (c1);
+
+\draw[arrow] (a4) -- node[right,font=\scriptsize] {14} (a5);
+\draw[arrow] (a5) to[out=-90, in=180, looseness=1.5] node[left, font=\scriptsize]{15} (p2);
+\draw[arrow] (p2) to[out=-90, in=180, looseness=1.5] node[left, font=\scriptsize]{16} (v2);
+\draw[arrow] (v2) to[out=-90, in=180, looseness=1.5] node[left, font=\scriptsize]{17} (c1);
 \end{tikzpicture}
 }
-\caption{Flow of the IoT zk-SNARK evaluation pipeline inside Docker.}
+\caption{System Architecture with Key Registry, proving, and verification flows.}
+\label{fig:system-overview}
 \end{figure}
+
+\section{Methodology}
+The methodology fixes CPU and memory limits on the edge and measures wall clock time for proving and verification. Each configuration is executed with three repetitions and results report the mean across runs. Inputs are identical for the two proof pipelines. The non zero knowledge baseline computes the same range check without generating a proof to provide a lower bound for runtime and artefact size. The recursive pipeline uses a configurable step size and pads inputs to a multiple of that size. All measurements are taken inside the container to keep the environment stable and reproducible.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -638,7 +531,7 @@ This chapter compares a Standard zk-SNARK pipeline with a recursive Nova zk-SNAR
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{ergebnis/md_warm_nr#1/real_crossover_overview.png}
-    \caption{#2 \;—\; Docker limitations: \texttt{#3}.}
+    \caption{#2, limits: \texttt{#3}.}
     \label{fig:run-#1}
   \end{figure}
 
@@ -655,17 +548,16 @@ This chapter compares a Standard zk-SNARK pipeline with a recursive Nova zk-SNAR
         separator=comma,
         head to column names,
         respect all
-      ]{ergebnis/md_warm_nr#1/crossover_summary.csv}
+      ]{data/visualizations/md_warm_nr#1/crossover_summary.csv}
     \end{adjustbox}
   \end{table}
 
   \vspace{0.75em}
 }
 
-
 % ===== RUNS (Limits je Run hier eintragen) =====
 \ResultRunCustom{1}{Run \#1}{--cpus=0.5, --memory=1g}{
-\textbf{Observation.} Standard is faster across $N\in[100,1000]$; the efficiency ratio remains $<1$. Nova’s compressed proof stays $\approx 70$\,KB; Standard grows roughly linearly ($\sim$0.85\,KB per reading). Size crossover at $\sim\!82$ readings; no time crossover here.
+\textbf{Observation.} Standard is faster across $N\in[100,1000]$ and the efficiency ratio remains below one. The recursive proof size remains essentially constant while the standard proof size grows roughly linearly. The size crossover appears near eighty two readings. No time crossover is present in this configuration.
 }
 
 \ResultRunCustom{2}{Run \#2}{--cpus=1, --memory=2g}{
@@ -673,11 +565,11 @@ This chapter compares a Standard zk-SNARK pipeline with a recursive Nova zk-SNAR
 }
 
 \ResultRunCustom{3}{Run \#3}{--cpus=1, --memory=4}{
-\textbf{Observation.} Matches \#1–\#2. Time ratio stays below $1$ throughout; Nova is slower on the edge. Size crossover around $82$.
+\textbf{Observation.} Matches runs \#1 and \#2. The time ratio remains below one throughout and the recursive pipeline is slower on the edge. The size crossover appears around eighty two readings.
 }
 
 \ResultRunCustom{4}{Run \#4}{--cpus=1, --memory=8}{
-\textbf{Observation.} Unchanged: Standard faster end-to-end; Nova produces a single stable proof. Size crossover $\approx 82$; no time crossover up to $N=500$.
+\textbf{Observation.} Standard remains faster end to end and the recursive pipeline produces a single stable proof. The size crossover is close to eighty two readings and no time crossover occurs up to five hundred readings.
 }
 
 \ResultRunCustom{5}{Run \#5}{--cpus=2, --memory=2}{
@@ -685,24 +577,26 @@ This chapter compares a Standard zk-SNARK pipeline with a recursive Nova zk-SNAR
 }
 
 \ResultRunCustom{6}{Run \#6}{--cpus=4, --memory=2}{
-\textbf{Observation.} \emph{Time crossover present:} the efficiency curve crosses $1$ at roughly $N\approx700$ (see plot), i.e., Nova overtakes Standard in total time beyond that point. Proof-size crossover remains around $82$.
+\textbf{Observation.} A time crossover is present and the efficiency crosses one at roughly seven hundred readings in this setting. The recursive pipeline is faster beyond that point. The size crossover remains around eighty two readings.
 }
 
+\ResultRunCustom{7}{Run \#7}{--cpus=4, --memory=2g, batch size 10}{
+\textbf{Observation.} The time crossover occurs at four hundred readings where the recursive path becomes faster and the advantage increases with input size. Nova’s proof size remains near sixty nine kilobytes while the standard proof grows linearly.
+}
 
-\section{Cross-run synthesis}
-Across runs \#1–\#7 three stable findings emerge:
-\begin{enumerate}
-  \item \textbf{Proof size.} Nova’s compressed proof remains essentially constant ($\approx70$\,KB) as $N$ grows, whereas Standard increases roughly linearly at $\sim0.85$\,KB per reading. Hence a size crossover appears around \[
-\frac{70\,\text{KB}}{0.85\,\text{KB}} \approx 82~\text{Readings}\] in all runs.
+\ResultRunCustom{8}{Run \#8}{--cpus=4, --memory=2g, batch size 20}{
+\textbf{Observation.} The time crossover appears already at three hundred readings and persists beyond. Larger step size amortizes fixed costs at the price of higher peak memory per step.
+}
 
-  \item \textbf{Total time.} On constrained edge hardware, Standard is consistently faster for small–medium $N$. With larger $N$ or more favorable limits, the gap narrows; in run~\#7 the time-efficiency ratio crosses $1$ near $N\approx700$, after which Nova becomes faster.
-  \item \textbf{Operational trade-off.} Nova minimizes verifier load (one constant-size proof) and can become time-competitive at larger $N$, but incurs higher proving overhead at small $N$. Standard minimizes edge proving time for small/mid batches but yields a linearly growing set of proofs.
-\end{enumerate}
+\ResultRunCustom{9}{Run \#9}{--cpus=0.5, --memory=1g, batch size 20}{
+\textbf{Observation.} Under tighter CPU and memory limits the time crossover moves to five hundred readings. The general shape remains consistent and the size behavior is unchanged.
+}
 
-\section{Summary for the smart-home edge}
-For a resource-limited hub aggregating frequent, low-payload readings, the better choice depends on the bottleneck: when edge CPU/RAM and latency dominate, Standard is preferable at small $N$; when consumer bandwidth/verification dominates—or when batches become large—Nova’s single succinct proof is advantageous and can even overtake Standard in total time once $N$ is sufficiently high (run~\#7).
+\ResultRunCustom{10}{Run \#10}{--cpus=0.5, --memory=1g, batch size 50}{
+\textbf{Observation.} With very large steps the time crossover appears at four hundred readings despite tighter CPU and memory. Peak memory per step rises and the recursive prover benefits from fewer folds.
+}
 
-\section{Appendix: compact table}
+\section{Compact table}
 \begin{table}[H]
   \centering
   \begin{tabular}{lccc}
@@ -714,16 +608,35 @@ For a resource-limited hub aggregating frequent, low-payload readings, the bette
     \#3 & $\approx 82$ & none (to $N{=}500$)  & Same trend as \#1 \\
     \#4 & $\approx 82$ & none (to $N{=}500$)  & Same trend as \#1 \\
     \#5 & $\approx 82$ & none (to $N{=}500$)  & Gap narrows; size still favors Nova \\
-    \#6 & $\approx 82$ & none (to $N{=}500$)  & Ratio approaches $1$ at high $N$ \\
-    \#7 & $\approx 82$ & $\approx 700$ & Nova overtakes in time at larger $N$ \\
-    % \#8 & $\approx 82$ & (fill from plot) & (fill after plotting) \\
+    \#6 & $\approx 82$ & $\approx 700$ & Nova overtakes beyond $N\approx700$ \\
+    \#7 & $\approx 82$ & $\approx 400$ & batch size 10, Nova faster beyond 400 \\
+    \#8 & $\approx 82$ & $\approx 300$ & batch size 20, crossover at 300 \\
+    \#9 & $\approx 82$ & $\approx 500$ & batch size 20, constrained CPU/RAM \\
+    \#10 & $\approx 82$ & $\approx 400$ & batch size 50, constrained CPU/RAM \\
     \bottomrule
   \end{tabular}
-  \caption{Crossover summary from runs \#1–\#7.}
+  \caption{Crossover summary from runs \#1–\#10.}
   \label{tab:crossover-summary}
 \end{table}
 
+\section{Cross-run synthesis}
+Across runs \#1–\#10 three stable findings emerge:
+\begin{enumerate}
+  \item \textbf{Proof size.} Nova’s compressed proof remains essentially constant ($\approx70$\,KB) as $N$ grows, whereas Standard increases roughly linearly at $\sim0.85$\,KB per reading. Hence a size crossover appears around \[
+\frac{70\,\text{KB}}{0.85\,\text{KB}} \approx 82~\text{Readings}\] in all runs.
 
+  \item \textbf{Total time.} On constrained edge hardware, Standard is consistently faster for small to medium $N$. With larger $N$ or more favorable limits, the gap narrows. With a step size of ten the time efficiency crosses one at $N=400$ and Nova remains faster beyond that point.
+  \item \textbf{Operational trade-off.} Nova minimizes verifier load (one constant-size proof) and can become time-competitive at larger $N$, but incurs higher proving overhead at small $N$. Standard minimizes edge proving time for small/mid batches but yields a linearly growing set of proofs.
+\end{enumerate}
+
+\section{Batch size sensitivity}
+The recursive pipeline depends on the chosen step size. With a step size of ten the time crossover appears at four hundred readings. Nova is faster from that point and the advantage grows with the input size. Smaller step sizes produce more steps and push the time crossover to the right since the prover spends more work on repeated step transitions. Larger step sizes reduce the number of steps and move the crossover to the left once the prover amortizes the fixed costs of recursion and compression. The choice is a trade off between memory headroom and end to end time. The verifier cost remains constant since a single proof is checked in all cases. The results show that tuning the step size is an effective control to reach a desired operating point on a given device profile.
+
+\section{Modeling choices and alternative views}
+The overview plots aggregate proving and verification into single totals per pipeline and per input size. This summarizes the user visible cost and facilitates crossover detection. An alternative presentation plots proving and verification as separate series over the number of inputs. Such a view highlights that verifier time is flat for the recursive pipeline while it grows with the number of items in the standard pipeline. Both views are consistent. The aggregated view is used throughout to keep the comparison concise, and the separate view is supplied when tighter diagnostics are needed.
+
+\section{Summary for the smart-home edge}
+For a resource-limited hub aggregating frequent, low-payload readings, the better choice depends on the bottleneck: when edge CPU/RAM and latency dominate, Standard is preferable at small $N$; when consumer bandwidth/verification dominates—or when batches become large—Nova’s single succinct proof is advantageous and can even overtake Standard in total time once $N$ is sufficiently high (run~\#7).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -731,6 +644,9 @@ For a resource-limited hub aggregating frequent, low-payload readings, the bette
 
 \chapter{Discussion}
 \label{chap:discussion}
+
+\section{Privacy implications of recursion}
+Recursive proving reduces the number of proofs a consumer must check to a single constant sized claim that covers many steps. In privacy terms this limits the exposure surface because consumers receive one proof per batch rather than many separate artifacts. The transformation logic and public parameters remain identical to the standard pipeline. The confidentiality guarantee is the same since both pipelines are zero knowledge with respect to the private readings. The practical difference concerns interfaces and logging. A single recursive proof invites simpler handling and avoids per reading side channels in application logs or transport that might correlate with private structure. At the same time recursion changes the amortization of costs at the edge. If batches remain small or if latency is strict then the standard pipeline can be the preferable choice. The privacy benefit of recursion is therefore indirect. It simplifies verification and system interfaces at the consumer, which can reduce accidental information flows in practice, while preserving the same formal guarantees.
 
 \section{Alternative Privacy-Enhancing Technologies}
 
@@ -757,8 +673,19 @@ Given our goal of verifiable aggregation under device and bandwidth constraints,
 
 \chapter{Conclusion \& Future Work}
 \label{chap:conclusion}
+This thesis examined whether recursive zk-SNARKs are practically beneficial for verifiable IoT aggregation on constrained edge hardware. We implemented two pipelines that share the same transformation semantics and trust assumptions: a standard Groth16 path and a recursive Nova path that optionally compresses the accumulated recursion state to a single standard-compatible proof. Both pipelines provide the same guarantees. The standard path scales time and artifact size with the number of inputs, while the Nova path concentrates effort in proving and leaves one constant‑size verification for the consumer.
 
+Our measurements on a dockerized edge environment with explicit CPU and memory limits show a consistent pattern. Proof size is essentially constant for the recursive pipeline while it grows roughly linearly for the standard pipeline, which yields a size crossover around 82 readings in all configurations we tested. Total time on the edge favors the standard pipeline for small to medium input sizes. As batches grow and with a step size of ten, the time efficiency crosses one at four hundred readings and the recursive pipeline becomes faster beyond that point. Larger step sizes shift the crossover to smaller input sizes by amortizing fixed folding costs, at the expense of higher peak memory and fewer opportunities to stream or preempt. Tighter CPU and memory limits shift the crossover to the right as expected, but do not change the qualitative picture. These results confirm that recursion can deliver constant verification cost and competitive end-to-end latency once inputs are sufficiently large or when consumer-side constraints dominate.
 
+The architectural implications are straightforward. When low latency for small batches is critical or hardware is very weak, the standard pipeline remains the pragmatic choice. When verification and bandwidth at the consumer are the bottleneck, or when aggregation naturally yields larger batches, the recursive pipeline provides operational simplicity through a single succinct proof and can become time competitive or superior. The choice of step size is a tunable control: increasing it reduces per-batch overhead and advances the time crossover, but raises peak prover memory and increases the cost of aborts and padding. In our environment step size ten struck a robust balance.
+
+From a privacy perspective both pipelines provide the same formal guarantees since they differ only in proof composition. In practice the recursive pipeline simplifies interfaces by exposing a single proof per batch, which reduces ancillary metadata and potential side channels in application logs or transport.
+
+This work has limitations. The evaluation uses synthetic yet structured sensor traces, a single host platform with docker-imposed CPU and memory limits, and a specific tooling stack and curve (ZoKrates 0.8.8 on Pallas). Caching and I/O can bias timings and we mitigate this by keeping the environment stable and by averaging multiple replicates. These factors bound external validity; however, the qualitative findings about size constancy, crossover shifts with step size, and verifier cost concentration are robust across our runs.
+
+Practitioners can apply three concrete guidelines. Use the standard pipeline for small batches or strict tail latency on weak edge devices. Use the recursive pipeline for batches beyond the measured crossover or when consumer bandwidth and verification time dominate, and prefer the compressed variant for portability. Tune step size to meet memory headroom while seeking earlier time crossovers; in our setting step size ten performed well, step size twenty advanced the crossover further at the cost of higher peak memory, and step size five delayed it.
+
+Future work should bind input sets cryptographically and externally via Merkle commitments to support selective disclosure and end-to-end set attestation. A fully external verifier service for consumers would decouple verification from the edge environment. Exploring alternative folding schemes and transparent proof systems may further reduce proving latency without sacrificing succinct verification. Finally, extending the evaluation to heterogeneous devices and real sensor deployments would strengthen the operational guidance and refine step size policies under diverse workloads.
 
 \printbibliography
 

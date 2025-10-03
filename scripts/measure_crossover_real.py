@@ -180,7 +180,7 @@ def measure_standard(manager: SNARKManager, circuit_name: str, readings: List[Di
 
 
 
-def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: bool = True) -> Tuple[Path, int]:
+def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: bool = True, batch_size: int = 3) -> Tuple[Path, int]:
     """Prepare Nova workspace and write inputs; returns nova dir and number of steps.
 
     - If isolated=True (default), create a fresh temp workspace under circuits/nova_runs/
@@ -198,8 +198,8 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
         runs_root.mkdir(parents=True, exist_ok=True)
         nova_dir = runs_root / f"run_{n}_{int(time.time()*1000)}"
         nova_dir.mkdir(parents=True, exist_ok=True)
-        # Copy required static files
-        for fname in ["out", "out.r1cs", "abi.json", "nova.params", "iot_recursive.zok"]:
+        # Copy only source circuit; compiled artifacts will be regenerated
+        for fname in ["iot_recursive.zok"]:
             src = base_dir / fname
             if src.exists():
                 shutil.copy(src, nova_dir / fname)
@@ -216,9 +216,9 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
             v = 0
         vals.append(max(0, v))
 
-    # Konfigurierbare Batch-Größe
-    batch_size = 3
-    
+    # Konfigurierbare Batch-Größe (per Argument)
+    batch_size = max(1, int(batch_size))
+
     # pad to multiple of batch_size
     while len(vals) % batch_size != 0:
         vals.append(0)
@@ -238,12 +238,20 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
     with open(nova_dir / "steps.json", "w", encoding="utf-8") as f:
         json.dump(steps, f)
 
-    # Verwende bereits kompilierte Artifacts aus dem Basis-Verzeichnis
-    # Das Circuit sollte bereits im circuits/nova/ Verzeichnis kompiliert sein
-    if not isolated:
-        # Im nicht-isolierten Modus, stelle sicher dass das Circuit kompiliert ist
-        if not (base_dir / "out").exists() or not (base_dir / "out.r1cs").exists():
-            _compile_nova_circuit(base_dir)
+    # Passe das Nova-Circuit an die gewünschte Schrittgröße an und kompiliere neu
+    try:
+        zok_path = nova_dir / "iot_recursive.zok"
+        if zok_path.exists():
+            import re
+            contents = zok_path.read_text(encoding="utf-8")
+            # Ersetze field[<n>] -> field[batch_size] und 0..<n> -> 0..batch_size
+            contents = re.sub(r"field\[\d+\]", f"field[{batch_size}]", contents)
+            contents = re.sub(r"0\.\.\d+", f"0..{batch_size}", contents)
+            zok_path.write_text(contents, encoding="utf-8")
+        _compile_nova_circuit(nova_dir)
+    except Exception:
+        # Fallback: wenn Kompilierung fehlschlägt, belasse vorhandene Artefakte
+        pass
 
     return nova_dir, len(steps)
 
@@ -258,15 +266,15 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
     os.chdir(nova_dir)
     
     try:
-        # Always recompile to ensure consistency with current batch size
+        # Always recompile to ensure consistency with current batch size and curve
         LOGGER.info("Recompiling Nova circuit to ensure consistency with batch size.")
 
         if not Path("iot_recursive.zok").exists():
             raise FileNotFoundError(f"iot_recursive.zok missing in {nova_dir}")
 
-        # Kompiliere das Circuit - versuche zuerst ohne Standard Library
+        # Kompiliere das Circuit mit unterstützter Nova-Kurve (pallas)
         result = subprocess.run(
-            ["zokrates", "compile", "-i", "iot_recursive.zok"],
+            ["zokrates", "compile", "-i", "iot_recursive.zok", "--curve", "pallas"],
             capture_output=True,
             text=True,
             timeout=300
@@ -284,7 +292,7 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
             for stdlib_path in stdlib_paths:
                 if os.path.exists(stdlib_path):
                     result = subprocess.run(
-                        ["zokrates", "compile", "-i", "iot_recursive.zok", "--stdlib-path", stdlib_path],
+                        ["zokrates", "compile", "-i", "iot_recursive.zok", "--curve", "pallas", "--stdlib-path", stdlib_path],
                         capture_output=True,
                         text=True,
                         timeout=300
@@ -295,9 +303,9 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
         if result.returncode != 0:
             raise RuntimeError(f"ZoKrates compile failed\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
         
-        # Setup für Nova
+        # Setup für Nova (Parameter passend zum aktuellen Circuit erzeugen)
         result = subprocess.run(
-            ["zokrates", "setup"],
+            ["zokrates", "nova", "setup"],
             capture_output=True,
             text=True,
             timeout=300
@@ -337,9 +345,15 @@ def _prewarm_nova_artifacts(nova_dir: Path) -> None:
             pass
 
 
-def run_nova(nova_dir: Path, *, cleanup_artifacts: bool = True, prewarm: bool = False) -> Dict[str, Any]:
-    """Run zokrates nova prove/compress/verify and measure durations + proof size.
-    Symmetrisch zu Standard: Proving = prove+compress, Verify = separat gestoppt.
+def run_nova(
+    nova_dir: Path,
+    *,
+    cleanup_artifacts: bool = True,
+    prewarm: bool = False,
+    compress: bool = True,
+) -> Dict[str, Any]:
+    """Run zokrates nova prove and optionally compress/verify; measure durations and artifact size.
+    If compress=False, we skip compress/verify and report size of the uncompressed accumulator.
     """
     import subprocess
 
@@ -369,28 +383,38 @@ def run_nova(nova_dir: Path, *, cleanup_artifacts: bool = True, prewarm: bool = 
             if not (nova_dir / req).exists():
                 raise RuntimeError(f"Missing required artifact: {req}")
 
-        # --- Prove + Compress ---
+        # --- Prove (+ optional Compress) ---
         t0 = time.time()
         r_prove = subprocess.run(["zokrates", "nova", "prove"], capture_output=True, text=True)
         if r_prove.returncode != 0:
             raise RuntimeError(f"nova prove failed:\nSTDOUT:\n{r_prove.stdout}\nSTDERR:\n{r_prove.stderr}")
 
-        r_comp = subprocess.run(["zokrates", "nova", "compress"], capture_output=True, text=True)
-        if r_comp.returncode != 0:
-            raise RuntimeError(f"nova compress failed:\nSTDOUT:\n{r_comp.stdout}\nSTDERR:\n{r_comp.stderr}")
-        prove_time = time.time() - t0
+        verify_time = 0.0
+        if compress:
+            r_comp = subprocess.run(["zokrates", "nova", "compress"], capture_output=True, text=True)
+            if r_comp.returncode != 0:
+                raise RuntimeError(f"nova compress failed:\nSTDOUT:\n{r_comp.stdout}\nSTDERR:\n{r_comp.stderr}")
+            prove_time = time.time() - t0
 
-        # --- Verify separat ---
-        t1 = time.time()
-        r_ver = subprocess.run(["zokrates", "nova", "verify"], capture_output=True, text=True)
-        if r_ver.returncode != 0:
-            raise RuntimeError(f"nova verify failed:\nSTDOUT:\n{r_ver.stdout}\nSTDERR:\n{r_ver.stderr}")
-        verify_time = time.time() - t1
+            # Verify compressed proof
+            t1 = time.time()
+            r_ver = subprocess.run(["zokrates", "nova", "verify"], capture_output=True, text=True)
+            if r_ver.returncode != 0:
+                raise RuntimeError(f"nova verify failed:\nSTDOUT:\n{r_ver.stdout}\nSTDERR:\n{r_ver.stderr}")
+            verify_time = time.time() - t1
 
-        proof_size = 0
-        proof_path = nova_dir / "proof.json"
-        if proof_path.exists():
-            proof_size = proof_path.stat().st_size
+            proof_path = nova_dir / "proof.json"
+            proof_size = proof_path.stat().st_size if proof_path.exists() else 0
+        else:
+            # No compression; report size of running_instance (+steps) and skip verify
+            prove_time = time.time() - t0
+            acc = nova_dir / "running_instance.json"
+            steps = nova_dir / "steps.json"
+            proof_size = 0
+            if acc.exists():
+                proof_size += acc.stat().st_size
+            if steps.exists():
+                proof_size += steps.stat().st_size
 
         return {
             "success": True,
@@ -398,10 +422,47 @@ def run_nova(nova_dir: Path, *, cleanup_artifacts: bool = True, prewarm: bool = 
             "verify_time_s": verify_time,
             "total_time_s": prove_time + verify_time,
             "proof_size_bytes": proof_size,
+            "compressed": compress,
         }
     finally:
         os.chdir(original_cwd)
 
+
+
+def _compute_nonzk_range_pass(values_scaled_100: List[int], lower: int, upper: int) -> Dict[str, Any]:
+    total = len(values_scaled_100)
+    passes = 0
+    for v in values_scaled_100:
+        if lower <= v <= upper:
+            passes += 1
+    return {"total": total, "passes": passes, "fails": max(0, total - passes)}
+
+
+def measure_nonzk(readings: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Non-ZK baseline aligned to the filter_range circuit.
+    Scales values x100 like the standard circuit and checks lower<=value<=upper per reading.
+    Returns runtime and a compact artifact size for a like-for-like reference.
+    """
+    t0 = time.time()
+    vals: List[int] = []
+    for r in readings:
+        try:
+            v = int(round(float(r.get("value", 0.0)) * 100))
+        except Exception:
+            v = 0
+        vals.append(v)
+    # Use same bounds as measure_standard
+    lower = 0
+    upper = 10_000_000
+    stats = _compute_nonzk_range_pass(vals, lower, upper)
+    total_time = time.time() - t0
+    artifact = {"kind": "nonzk_baseline_range", "stats": stats}
+    artifact_size = len(json.dumps(artifact, separators=(",", ":")).encode("utf-8"))
+    return {
+        "success": True,
+        "total_time_s": total_time,
+        "artifact_size_bytes": artifact_size,
+    }
 
 
 def _median(values: List[float]) -> float:
@@ -411,7 +472,16 @@ def _median(values: List[float]) -> float:
     return float(np.median(arr))
 
 
-def measure_for_counts(project_root: Path, counts: List[int], *, warmup_runs: int = 1, repetitions: int = 3, warm_mode: bool = False) -> Dict[str, Any]:
+def measure_for_counts(
+    project_root: Path,
+    counts: List[int],
+    *,
+    warmup_runs: int = 1,
+    repetitions: int = 3,
+    warm_mode: bool = False,
+    batch_size: int = 3,
+    nova_compress: bool = True,
+) -> Dict[str, Any]:
     data = load_iot_data(project_root)
     out_dir = ensure_dirs(project_root)
 
@@ -426,8 +496,8 @@ def measure_for_counts(project_root: Path, counts: List[int], *, warmup_runs: in
         # Optional warm-up runs (discarded) to stabilize caches/keys
         for _ in range(max(0, warmup_runs)):
             _ = measure_standard(manager, circuit_name, subset)
-            nova_dir_tmp, _ = prepare_nova_inputs(n, subset, isolated=not warm_mode)
-            _ = run_nova(nova_dir_tmp, cleanup_artifacts=not warm_mode, prewarm=warm_mode)
+            nova_dir_tmp, _ = prepare_nova_inputs(n, subset, isolated=not warm_mode, batch_size=batch_size)
+            _ = run_nova(nova_dir_tmp, cleanup_artifacts=not warm_mode, prewarm=warm_mode, compress=nova_compress)
             try:
                 runs_root = project_root / "circuits/nova_runs"
                 if str(nova_dir_tmp).startswith(str(runs_root)) and nova_dir_tmp.exists():
@@ -450,6 +520,8 @@ def measure_for_counts(project_root: Path, counts: List[int], *, warmup_runs: in
         nova_sizes: List[float] = []
 
         steps = 0
+        baseline_totals: List[float] = []
+        baseline_sizes: List[float] = []
         for _ in range(max(1, repetitions)):
             # Standard replicate
             std_m = measure_standard(manager, circuit_name, subset)
@@ -460,13 +532,19 @@ def measure_for_counts(project_root: Path, counts: List[int], *, warmup_runs: in
             std_all_individual_times.append(std_m.get("individual_times", []))
 
             # Nova replicate
-            nova_dir, steps = prepare_nova_inputs(n, subset, isolated=not warm_mode)
-            nova_m = run_nova(nova_dir, cleanup_artifacts=not warm_mode, prewarm=warm_mode)
+            nova_dir, steps = prepare_nova_inputs(n, subset, isolated=not warm_mode, batch_size=batch_size)
+            nova_m = run_nova(nova_dir, cleanup_artifacts=not warm_mode, prewarm=warm_mode, compress=nova_compress)
             nova_totals.append(nova_m["total_time_s"])
             nova_proves.append(nova_m["prove_time_s"])
-            nova_compress.append(nova_m.get("compress_time_s", 0.0))
+            # keep placeholder for backward compat; we no longer split compress time
+            nova_compress.append(0.0)
             nova_verifs.append(nova_m["verify_time_s"])
             nova_sizes.append(float(nova_m["proof_size_bytes"]))
+
+            # Non-ZK baseline replicate
+            bz = measure_nonzk(subset)
+            baseline_totals.append(bz.get("total_time_s", 0.0))
+            baseline_sizes.append(float(bz.get("artifact_size_bytes", 0)))
 
             try:
                 runs_root = project_root / "circuits/nova_runs"
@@ -511,6 +589,10 @@ def measure_for_counts(project_root: Path, counts: List[int], *, warmup_runs: in
             "standard": std_metrics,
             "nova": nova_metrics,
             "nova_steps": steps,
+            "baseline": {
+                "total_time_s": mean(baseline_totals),
+                "artifact_size_bytes": int(mean(baseline_sizes)),
+            },
             "time_advantage": time_advantage,
             "size_advantage": size_advantage,
             "winner": "Nova" if time_advantage > 1.0 else "Standard",
@@ -568,6 +650,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--warmup-runs", type=int, default=1, help="Number of warmup runs discarded before each measurement")
     p.add_argument("--repetitions", type=int, default=3, help="Number of measured repetitions per count; means are reported")
     p.add_argument("--mode", type=str, choices=["warm", "cold"], default="cold", help="Warm keeps artifacts (prewarmed), Cold cleans artifacts per run")
+    p.add_argument("--batch-size", type=int, default=3, help="Nova step size (values per step) to compile and use")
+    p.add_argument("--nova-compress", action="store_true", help="Use Nova compression (prove+compress+verify). If omitted, run uncompressed and skip verify.")
     return p.parse_args()
 
 
@@ -583,6 +667,8 @@ def main() -> None:
         warmup_runs=max(0, args.warmup_runs),
         repetitions=max(1, args.repetitions),
         warm_mode=(args.mode == "warm"),
+        batch_size=max(1, args.batch_size),
+        nova_compress=bool(args.nova_compress),
     )
 
     print("\n🎯 REAL CROSSOVER MEASUREMENT COMPLETED")

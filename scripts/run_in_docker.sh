@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-READING_COUNTS=${1:-"10,20"}
+READING_COUNTS=${1:-"50,100"}
+BATCH_SIZE=${2:-10}
+# Toggle Nova compression ("true" to compress, anything else = uncompressed)
+NOVA_COMPRESS=${3:-true}
 
 # Extrahiere den größten Wert aus READING_COUNTS
 MAX_COUNT=$(echo $READING_COUNTS | tr ',' '\n' | sort -n | tail -1)
@@ -16,8 +19,8 @@ docker build --no-cache -t ${IMAGE_NAME} .
 
 echo "[INFO] Running container.."
 docker run --rm \
-  --cpus=4 \
-  --memory=2g \
+  --cpus=0.5 \
+  --memory=1g \
   -v "${HOST_PROJECT_DIR}:${CONTAINER_PROJECT_DIR}" \
   -w "${CONTAINER_PROJECT_DIR}" \
   -e NUM_READINGS=${MAX_COUNT} \
@@ -39,6 +42,9 @@ docker run --rm \
       --warmup-runs 1 \
       --repetitions 3 \
       --mode warm \
+      --batch-size ${BATCH_SIZE} \
+      $( [ "${NOVA_COMPRESS}" = "true" ] && echo "--nova-compress" ) \
+      \
   "
 
 echo "[INFO] Done."
