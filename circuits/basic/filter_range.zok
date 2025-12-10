@@ -5,6 +5,7 @@ def main(public u32 min_val, public u32 max_val, private u32 secret_value) -> u3
     // Ensure secret_value is within the specified range (u32 comparisons)
     assert(secret_value >= min_val);
     assert(secret_value <= max_val);
+    adsasdasdasdd
 
     return 1u32; // „gültig“ Ganzzahl-Konstante 1 mit Typanmerkung u32
 }

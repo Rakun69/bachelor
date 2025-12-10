@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-READING_COUNTS=${1:-"50,100"}
-BATCH_SIZE=${2:-10}
-# Toggle Nova compression ("true" to compress, anything else = uncompressed)
-NOVA_COMPRESS=${3:-true}
+READING_COUNTS=${1:-"3,5"}
+BATCH_SIZE=${2:-3}
 
 # Extrahiere den größten Wert aus READING_COUNTS
 MAX_COUNT=$(echo $READING_COUNTS | tr ',' '\n' | sort -n | tail -1)
@@ -19,11 +17,16 @@ docker build --no-cache -t ${IMAGE_NAME} .
 
 echo "[INFO] Running container.."
 docker run --rm \
-  --cpus=0.5 \
-  --memory=1g \
+  --cpus=4 \
+  --memory=2g \
   -v "${HOST_PROJECT_DIR}:${CONTAINER_PROJECT_DIR}" \
   -w "${CONTAINER_PROJECT_DIR}" \
   -e NUM_READINGS=${MAX_COUNT} \
+  -e TRACE_ALL_FILES=1 \
+  -e TRACE_SUBPROCESS=1 \
+  -e TRACE_PROJECT_ROOT=${CONTAINER_PROJECT_DIR} \
+  -e TRACE_OUT=${CONTAINER_PROJECT_DIR}/used_files_all_runtime.txt \
+  -e PYTHONPATH=${CONTAINER_PROJECT_DIR} \
   ${IMAGE_NAME} \
   bash -c " \
     # Clean old caches
@@ -43,7 +46,6 @@ docker run --rm \
       --repetitions 3 \
       --mode warm \
       --batch-size ${BATCH_SIZE} \
-      $( [ "${NOVA_COMPRESS}" = "true" ] && echo "--nova-compress" ) \
       \
   "
 

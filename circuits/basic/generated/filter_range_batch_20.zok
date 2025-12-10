@@ -1,0 +1,8 @@
+// Auto-generated range filter for batch_size=20
+def main(public u32 min_val, public u32 max_val, private u32[20] secret_values) -> u32 {
+    for u32 i in 0..20 {
+        assert(secret_values[i] >= min_val);
+        assert(secret_values[i] <= max_val);
+    }
+    return 1u32;
+}
