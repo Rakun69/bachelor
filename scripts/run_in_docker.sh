@@ -1,7 +1,6 @@
-#!/usr/bin/env bash
 set -euo pipefail
 
-READING_COUNTS=${1:-"100,200,300,400"}
+READING_COUNTS=${1:-"100,200,300,400,500,600,700,800,900,1000"}
 BATCH_SIZE=${2:-20}
 
 NOVA_COMPRESS=${3:-true}
