@@ -17,21 +17,14 @@ from cryptography import x509
 
 import numpy as np
 
-# Local imports
 from src.proof_systems.snark_manager import SNARKManager
 
 
 LOGGER = logging.getLogger("measure_crossover_real")
 
 
-def load_public_key():
-    with open("data/device_keys/device1_public.pem", "rb") as f:
-        return serialization.load_pem_public_key(f.read())
-
+# Lädt CA- und Device-Zertifikate, prüft Vertrauenskette und gibt Device-Public-Key zurück
 def load_and_verify_device_cert():
-    """Load CA and device cert, verify issuer and signature.
-    Returns the device public key if verification succeeds, else raises.
-    """
     ca_cert_path = Path("data/device_keys/ca_cert.pem")
     dev_cert_path = Path("data/device_keys/device1_cert.pem")
     if not ca_cert_path.exists() or not dev_cert_path.exists():
@@ -42,18 +35,15 @@ def load_and_verify_device_cert():
     with open(dev_cert_path, "rb") as f:
         dev_cert = x509.load_pem_x509_certificate(f.read())
 
-    # Check issuer -> subject match
     if dev_cert.issuer != ca_cert.subject:
         raise ValueError("Device cert issuer does not match CA subject")
 
-    # Verify certificate signature (Ed25519)
     ca_pub = ca_cert.public_key()
     try:
         ca_pub.verify(dev_cert.signature, dev_cert.tbs_certificate_bytes)
     except Exception as e:
         raise ValueError(f"Device certificate signature invalid: {e}")
 
-    # Optional: validity window
     now = time.time()
     if dev_cert.not_valid_before.timestamp() - 60 > now or dev_cert.not_valid_after.timestamp() + 60 < now:
         raise ValueError("Device certificate not currently valid")
@@ -61,6 +51,7 @@ def load_and_verify_device_cert():
     return dev_cert.public_key()
 
 
+# Verifiziert Signatur eines einzelnen IoT-Readings
 def verify_entry(public_key, entry):
     data = entry["data"]
     sig = bytes.fromhex(entry["signature"])
@@ -71,8 +62,9 @@ def verify_entry(public_key, entry):
     except InvalidSignature:
         return False
 
+
+# Lädt IoT-Readings, validiert Zertifikate, gibt nur gültige Messdaten zurück
 def load_iot_data(project_root: Path) -> List[Dict[str, Any]]:
-    """Load real IoT readings with signature verification"""
     fp = project_root / "data/raw/iot_readings_1_month.json"
     if not fp.exists():
         raise FileNotFoundError(f"IoT readings file not found: {fp}")
@@ -80,7 +72,6 @@ def load_iot_data(project_root: Path) -> List[Dict[str, Any]]:
     with open(fp, "r", encoding="utf-8") as f:
         raw_data = json.load(f)
 
-    # Prefer PKI-verified device certificate; fallback to pinned key for legacy setups
     try:
         public_key = load_and_verify_device_cert()
         LOGGER.info("Using device public key from verified certificate (CA)")
@@ -98,12 +89,14 @@ def load_iot_data(project_root: Path) -> List[Dict[str, Any]]:
     return verified
 
 
+# Checkt Ausgabeordner
 def ensure_dirs(project_root: Path) -> Path:
     out_dir = project_root / "data/real_measurements"
     out_dir.mkdir(parents=True, exist_ok=True)
     return out_dir
 
 
+# Bereitet Standard-Messpfad vor
 def compile_and_setup_standard(manager: SNARKManager, project_root: Path) -> str:
     circuit_file = project_root / "circuits/basic/filter_range.zok"
     circuit_name = "filter_range"
@@ -117,10 +110,8 @@ def compile_and_setup_standard(manager: SNARKManager, project_root: Path) -> str
     return circuit_name
 
 
+# Standard-ZoKrates-Pfad
 def measure_standard(manager: SNARKManager, circuit_name: str, readings: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Generate N real proofs and aggreDU gate metrics.
-    Symmetrisch zu Nova: Proving explizit gemessen, Verify separat gestoppt.
-    """
     total_proof_time = 0.0
     total_verify_time = 0.0
     total_size = 0
@@ -140,16 +131,13 @@ def measure_standard(manager: SNARKManager, circuit_name: str, readings: List[Di
 
         inputs = [MIN_VAL, MAX_VAL, secret_value]
 
-        # --- Proving ---
         t0 = time.time()
         result = manager.generate_proof(circuit_name, inputs)
         t1 = time.time()
         prove_duration = t1 - t0
 
-        # Verification already done in generate_proof, use those results
         verify_duration = result.metrics.verify_time if result.metrics else 0.0
-        verify_ok = result.success  # If proof generation succeeded, verification also succeeded
-
+        verify_ok = result.success
         individual_times.append(prove_duration + verify_duration)
         LOGGER.info(
             f"[measure_standard] Proof #{idx+1}/{len(readings)}: "
@@ -177,17 +165,8 @@ def measure_standard(manager: SNARKManager, circuit_name: str, readings: List[Di
     }
 
 
-
-
-
+# Nova-Input-Dateien
 def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: bool = True, batch_size: int = 3) -> Tuple[Path, int]:
-    """Prepare Nova workspace and write inputs; returns nova dir and number of steps.
-
-    - If isolated=True (default), create a fresh temp workspace under circuits/nova_runs/
-      and copy the static artifacts from circuits/nova. This avoids cross-run caching
-      effects which can cause time irregularities.
-    - Circuit expects 3 items per step (as in iot_recursive.zok). We pad with zeros.
-    """
     project_root = Path.cwd()
     base_dir = project_root / "circuits/nova"
     if not base_dir.exists():
@@ -198,7 +177,6 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
         runs_root.mkdir(parents=True, exist_ok=True)
         nova_dir = runs_root / f"run_{n}_{int(time.time()*1000)}"
         nova_dir.mkdir(parents=True, exist_ok=True)
-        # Copy only source circuit; compiled artifacts will be regenerated
         for fname in ["iot_recursive.zok"]:
             src = base_dir / fname
             if src.exists():
@@ -206,7 +184,6 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
     else:
         nova_dir = base_dir
 
-    # Build steps of 3 integers
     steps: List[Dict[str, Any]] = []
     vals: List[int] = []
     for i in range(n):
@@ -216,16 +193,13 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
             v = 0
         vals.append(max(0, v))
 
-    # Konfigurierbare Batch-Größe (per Argument)
     batch_size = max(1, int(batch_size))
 
-    # pad to multiple of batch_size
     while len(vals) % batch_size != 0:
         vals.append(0)
 
     batch_id = 1
     for i in range(0, len(vals), batch_size):
-        # Dynamisch die Werte für diesen Batch extrahieren
         batch_values = [str(vals[i + j]) for j in range(batch_size)]
         steps.append({
             "values": batch_values,
@@ -238,41 +212,35 @@ def prepare_nova_inputs(n: int, readings: List[Dict[str, Any]], *, isolated: boo
     with open(nova_dir / "steps.json", "w", encoding="utf-8") as f:
         json.dump(steps, f)
 
-    # Passe das Nova-Circuit an die gewünschte Schrittgröße an und kompiliere neu
     try:
         zok_path = nova_dir / "iot_recursive.zok"
         if zok_path.exists():
             import re
             contents = zok_path.read_text(encoding="utf-8")
-            # Ersetze field[<n>] -> field[batch_size] und 0..<n> -> 0..batch_size
             contents = re.sub(r"field\[\d+\]", f"field[{batch_size}]", contents)
             contents = re.sub(r"0\.\.\d+", f"0..{batch_size}", contents)
             zok_path.write_text(contents, encoding="utf-8")
         _compile_nova_circuit(nova_dir)
     except Exception:
-        # Fallback: wenn Kompilierung fehlschlägt, belasse vorhandene Artefakte
         pass
 
     return nova_dir, len(steps)
 
 
+# Nova-Circuit mit Setup
 def _compile_nova_circuit(nova_dir: Path) -> None:
-    """Kompiliert das Nova Circuit automatisch mit ZoKrates."""
     import subprocess
     import os
     
-    # Wechsle in das Nova-Verzeichnis
     original_cwd = os.getcwd()
     os.chdir(nova_dir)
     
     try:
-        # Always recompile to ensure consistency with current batch size and curve
         LOGGER.info("Recompiling Nova circuit to ensure consistency with batch size.")
 
         if not Path("iot_recursive.zok").exists():
             raise FileNotFoundError(f"iot_recursive.zok missing in {nova_dir}")
 
-        # Kompiliere das Circuit mit unterstützter Nova-Kurve (pallas)
         result = subprocess.run(
             ["zokrates", "compile", "-i", "iot_recursive.zok", "--curve", "pallas"],
             capture_output=True,
@@ -280,7 +248,6 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
             timeout=300
         )
         
-        # Falls das fehlschlägt, versuche mit Standard Library Pfaden
         if result.returncode != 0:
             stdlib_paths = [
                 "/usr/local/bin/stdlib",
@@ -303,7 +270,6 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
         if result.returncode != 0:
             raise RuntimeError(f"ZoKrates compile failed\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}")
         
-        # Setup für Nova (Parameter passend zum aktuellen Circuit erzeugen)
         result = subprocess.run(
             ["zokrates", "nova", "setup"],
             capture_output=True,
@@ -322,12 +288,11 @@ def _compile_nova_circuit(nova_dir: Path) -> None:
         LOGGER.error(f"Fehler beim Kompilieren des Nova Circuits: {e}")
         raise
     finally:
-        # Zurück zum ursprünglichen Verzeichnis
         os.chdir(original_cwd)
 
 
+# Vorwärmen, um Messungen mit weniger Dateisystem-Einflüssen zu stabilisieren
 def _prewarm_nova_artifacts(nova_dir: Path) -> None:
-    """Read large/static files to warm the OS page cache for stable timings."""
     targets = [
         nova_dir / "out.r1cs",
         nova_dir / "nova.params",
@@ -341,10 +306,10 @@ def _prewarm_nova_artifacts(nova_dir: Path) -> None:
                     while fh.read(8 * 1024 * 1024):
                         pass
         except Exception:
-            # Best-effort warmup
             pass
 
 
+# Nova-Proof-Workflow
 def run_nova(
     nova_dir: Path,
     *,
@@ -352,9 +317,6 @@ def run_nova(
     prewarm: bool = False,
     compress: bool = True,
 ) -> Dict[str, Any]:
-    """Run zokrates nova prove and optionally compress/verify; measure durations and artifact size.
-    If compress=False, we skip compress/verify and report size of the uncompressed accumulator.
-    """
     import subprocess
 
     original_cwd = Path.cwd()
@@ -378,12 +340,10 @@ def run_nova(
         if prewarm:
             _prewarm_nova_artifacts(nova_dir)
 
-        # Sanity-Checks vor dem Prove
         for req in ["out.r1cs", "out", "abi.json", "nova.params", "init.json", "steps.json"]:
             if not (nova_dir / req).exists():
                 raise RuntimeError(f"Missing required artifact: {req}")
 
-        # --- Prove (+ optional Compress) ---
         t0 = time.time()
         r_prove = subprocess.run(["zokrates", "nova", "prove"], capture_output=True, text=True)
         if r_prove.returncode != 0:
@@ -396,7 +356,6 @@ def run_nova(
                 raise RuntimeError(f"nova compress failed:\nSTDOUT:\n{r_comp.stdout}\nSTDERR:\n{r_comp.stderr}")
             prove_time = time.time() - t0
 
-            # Verify compressed proof
             t1 = time.time()
             r_ver = subprocess.run(["zokrates", "nova", "verify"], capture_output=True, text=True)
             if r_ver.returncode != 0:
@@ -406,7 +365,6 @@ def run_nova(
             proof_path = nova_dir / "proof.json"
             proof_size = proof_path.stat().st_size if proof_path.exists() else 0
         else:
-            # No compression; report size of running_instance (+steps) and skip verify
             prove_time = time.time() - t0
             acc = nova_dir / "running_instance.json"
             steps = nova_dir / "steps.json"
@@ -428,7 +386,7 @@ def run_nova(
         os.chdir(original_cwd)
 
 
-
+# Non-ZK-Range-Check
 def _compute_nonzk_range_pass(values_scaled_100: List[int], lower: int, upper: int) -> Dict[str, Any]:
     total = len(values_scaled_100)
     passes = 0
@@ -438,11 +396,8 @@ def _compute_nonzk_range_pass(values_scaled_100: List[int], lower: int, upper: i
     return {"total": total, "passes": passes, "fails": max(0, total - passes)}
 
 
+# Non-ZK-Baseline
 def measure_nonzk(readings: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Non-ZK baseline aligned to the filter_range circuit.
-    Scales values x100 like the standard circuit and checks lower<=value<=upper per reading.
-    Returns runtime and a compact artifact size for a like-for-like reference.
-    """
     t0 = time.time()
     vals: List[int] = []
     for r in readings:
@@ -451,7 +406,6 @@ def measure_nonzk(readings: List[Dict[str, Any]]) -> Dict[str, Any]:
         except Exception:
             v = 0
         vals.append(v)
-    # Use same bounds as measure_standard
     lower = 0
     upper = 10_000_000
     stats = _compute_nonzk_range_pass(vals, lower, upper)
@@ -465,13 +419,7 @@ def measure_nonzk(readings: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 
-def _median(values: List[float]) -> float:
-    if not values:
-        return 0.0
-    arr = np.array(values, dtype=float)
-    return float(np.median(arr))
-
-
+# Messreihe über verschiedene Reading-Anzahlen und vergleicht Standard und Nova
 def measure_for_counts(
     project_root: Path,
     counts: List[int],
@@ -493,7 +441,6 @@ def measure_for_counts(
         LOGGER.info("\n=== Measuring with %d IoT readings ===", n)
         subset = data[:n]
 
-        # Optional warm-up runs (discarded) to stabilize caches/keys
         for _ in range(max(0, warmup_runs)):
             _ = measure_standard(manager, circuit_name, subset)
             nova_dir_tmp, _ = prepare_nova_inputs(n, subset, isolated=not warm_mode, batch_size=batch_size)
@@ -505,7 +452,6 @@ def measure_for_counts(
             except Exception:
                 pass
 
-        # Replicated measurements for robustness
         std_totals: List[float] = []
         std_proves: List[float] = []
         std_verifs: List[float] = []
@@ -523,7 +469,6 @@ def measure_for_counts(
         baseline_totals: List[float] = []
         baseline_sizes: List[float] = []
         for _ in range(max(1, repetitions)):
-            # Standard replicate
             std_m = measure_standard(manager, circuit_name, subset)
             std_totals.append(std_m["total_time_s"])
             std_proves.append(std_m["prove_time_s"])
@@ -531,17 +476,14 @@ def measure_for_counts(
             std_sizes.append(float(std_m["total_proof_size_bytes"]))
             std_all_individual_times.append(std_m.get("individual_times", []))
 
-            # Nova replicate
             nova_dir, steps = prepare_nova_inputs(n, subset, isolated=not warm_mode, batch_size=batch_size)
             nova_m = run_nova(nova_dir, cleanup_artifacts=not warm_mode, prewarm=warm_mode, compress=nova_compress)
             nova_totals.append(nova_m["total_time_s"])
             nova_proves.append(nova_m["prove_time_s"])
-            # keep placeholder for backward compat; we no longer split compress time
             nova_compress.append(0.0)
             nova_verifs.append(nova_m["verify_time_s"])
             nova_sizes.append(float(nova_m["proof_size_bytes"]))
 
-            # Non-ZK baseline replicate
             bz = measure_nonzk(subset)
             baseline_totals.append(bz.get("total_time_s", 0.0))
             baseline_sizes.append(float(bz.get("artifact_size_bytes", 0)))
@@ -553,12 +495,11 @@ def measure_for_counts(
             except Exception:
                 pass
 
-        # Statt Median: benutze Mean für total_time und andere Felder
         std_metrics = {
             "success": True,
             "proofs_attempted": len(subset),
             "proofs_successful": len(subset),
-            "witness_time_s": 0.0,  # falls du keine witness_times über Replikationen trackst
+            "witness_time_s": 0.0,  
             "prove_time_s": mean(std_proves),
             "verify_time_s": mean(std_verifs),
             "total_time_s": mean(std_totals),
@@ -613,7 +554,6 @@ def measure_for_counts(
         except Exception:
             pass
 
-    # Determine crossover
     crossover_point = None
     for row in sorted(results, key=lambda r: r["iot_readings"]):
         if row["time_advantage"] > 1.0:
@@ -639,12 +579,13 @@ def measure_for_counts(
 
 
 
+# Standard Argumente für Config
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Measure real crossover under resource limits")
     p.add_argument(
         "--reading-counts",
         type=str,
-        default="36,43,88",  #hier reading anzahl verändern
+        default="36,43,88", 
         help="Comma-separated IoT reading counts to test",
     )
     p.add_argument("--warmup-runs", type=int, default=1, help="Number of warmup runs discarded before each measurement")
@@ -655,6 +596,7 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+# Main
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     args = parse_args()

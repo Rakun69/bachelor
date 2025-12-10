@@ -9,7 +9,7 @@ struct State {
 
 // Define StepInput (input for each step)
 struct StepInput {
-    field[3] values;   // 3 sensor readings per step
+    field[20] values;   // 3 sensor readings per step
     field batch_id;    // Batch identifier
 }
 
@@ -21,7 +21,7 @@ def main(public State state, private StepInput step_input) -> State {
     field mut new_count = state.count;
     
     // Process each value in this step
-    for u32 i in 0..3 {
+    for u32 i in 0..20 {
         field value = step_input.values[i];
         
         // Simply add to sum (including zeros)

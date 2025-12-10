@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-READING_COUNTS=${1:-"3,5"}
-BATCH_SIZE=${2:-3}
+READING_COUNTS=${1:-"100,200,300,400"}
+BATCH_SIZE=${2:-20}
 
-# Extrahiere den größten Wert aus READING_COUNTS
+NOVA_COMPRESS=${3:-true}
+
 MAX_COUNT=$(echo $READING_COUNTS | tr ',' '\n' | sort -n | tail -1)
 
 IMAGE_NAME=iot-zk-snark-eval
-# Allow override via env; default to current directory on host for portability
+
 HOST_PROJECT_DIR="${HOST_PROJECT_DIR:-$(pwd)}"
 CONTAINER_PROJECT_DIR="/app"
 
@@ -22,11 +23,6 @@ docker run --rm \
   -v "${HOST_PROJECT_DIR}:${CONTAINER_PROJECT_DIR}" \
   -w "${CONTAINER_PROJECT_DIR}" \
   -e NUM_READINGS=${MAX_COUNT} \
-  -e TRACE_ALL_FILES=1 \
-  -e TRACE_SUBPROCESS=1 \
-  -e TRACE_PROJECT_ROOT=${CONTAINER_PROJECT_DIR} \
-  -e TRACE_OUT=${CONTAINER_PROJECT_DIR}/used_files_all_runtime.txt \
-  -e PYTHONPATH=${CONTAINER_PROJECT_DIR} \
   ${IMAGE_NAME} \
   bash -c " \
     # Clean old caches
@@ -46,6 +42,7 @@ docker run --rm \
       --repetitions 3 \
       --mode warm \
       --batch-size ${BATCH_SIZE} \
+      $( [ "${NOVA_COMPRESS}" = "true" ] && echo "--nova-compress" ) \
       \
   "
 
